@@ -1,15 +1,21 @@
-import { allTeams } from './api/getAllTeams'
 import TeamCard from './components/TeamCard'
 
-export default function Home() {
+import { getAllTeams } from './api/getAllTeams'
+
+const allTeams = getAllTeams()
+console.log(allTeams)
+
+const Home = () => {
   return (
-    <main className=" flex flex-col m-auto">
+    <main className="flex flex-col m-auto">
       <h1 className="text-center">Lagene</h1>
       <div className="flex flex-wrap">
-        {allTeams.map((team) => {
-          return <TeamCard key={team} teamName={team} />
-        })}
+        {/* {allTeams.map((team) => (
+          <TeamCard key={team._id} teamName={team.teamName} />
+        ))} */}
       </div>
     </main>
   )
 }
+
+export default Home

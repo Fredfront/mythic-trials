@@ -1,4 +1,3 @@
-'use client'
 import React, { useEffect, useState } from 'react'
 import { getTeamData } from '../api/getTeamData'
 
@@ -7,27 +6,7 @@ type TeamCardProps = {
 }
 
 const TeamCard: React.FC<TeamCardProps> = ({ teamName }: TeamCardProps) => {
-  const [teamInfo, setTeamInfo] = useState<any>(null)
-
-  useEffect(() => {
-    const fetchTeamData = async () => {
-      const data = await getTeamData({ teamName })
-      setTeamInfo(data)
-    }
-
-    fetchTeamData()
-  }, [teamName])
-
-  return (
-    <>
-      {teamInfo && (
-        <div className="w-96 bg-white p-3 m-3 text-black flex justify-between h-24">
-          <div>image</div>
-          {teamInfo.team.name}
-        </div>
-      )}
-    </>
-  )
+  return <></>
 }
 
 export default TeamCard
