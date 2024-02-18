@@ -15,6 +15,18 @@ export const schema: { types: SchemaTypeDefinition[] } = {
           validation: (Rule: any) => Rule.required(),
         },
         {
+          type: 'string',
+          name: 'teamSlug',
+          title: 'Team Slug',
+          description: 'The slug for the Mythic Plus team (used in URLs)',
+          validation: (Rule: any) => Rule.required(),
+          options: {
+            source: 'teamName',
+            maxLength: 200, // Adjust maximum length as needed
+            slugify: (input: string) => input.toLowerCase().replace(/\s+/g, '-').slice(0, 200),
+          },
+        },
+        {
           type: 'image',
           name: 'teamImage',
           title: 'Team Image',
