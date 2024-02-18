@@ -14,12 +14,13 @@ const Home = () => {
     }
     fetchData()
   }, [])
+
   return (
     <main className="flex flex-col max-w-7xl m-auto ">
       <h1 className="text-center mt-20 text-6xl font-semibold">LAGENE</h1>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mt-10 p-2 min-w-full ">
         {allTeams.map((team) => (
-          <Link href={`/team/${team.teamName}`} key={team._id}>
+          <Link href={`/team/${team.teamSlug}`} key={team._id}>
             <TeamCard key={team._id} team={team} />
           </Link>
         ))}
@@ -48,6 +49,7 @@ type Player = {
 export type MythicPlusTeam = {
   _updatedAt: string
   teamName: string
+  teamSlug: string
   teamImage: ImageAsset
   players: Player[]
   _createdAt: string

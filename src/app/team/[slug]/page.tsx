@@ -4,7 +4,6 @@ import { urlForImage } from '../../../../sanity/lib/image'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const data = await getTeamByNameFromSanity(params.slug)
-  console.log(data)
 
   return (
     <div>
