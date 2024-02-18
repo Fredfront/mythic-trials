@@ -1,5 +1,5 @@
 import { allTeams } from './api/getAllTeams'
-import TeamCard from './components/teamCard'
+import TeamCard from './components/TeamCard'
 
 export default function Home() {
   return (
