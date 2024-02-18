@@ -1,0 +1,12 @@
+# Ignore artifacts:
+dist
+/src/i18n
+/node_modules
+*.html
+*.json
+*.md
+*.yaml
+*.yml
+.env
+.eslintrc.cjs
+.prettierrc
