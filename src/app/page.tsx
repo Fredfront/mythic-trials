@@ -18,12 +18,17 @@ const Home = () => {
   return (
     <main className="flex flex-col max-w-7xl m-auto ">
       <h1 className="text-center mt-20 text-6xl font-semibold">LAGENE</h1>
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mt-10 p-2 min-w-full ">
-        {allTeams.map((team) => (
-          <Link href={`/team/${team.teamSlug}`} key={team._id}>
-            <TeamCard key={team._id} team={team} />
-          </Link>
-        ))}
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 mt-10 p-2 min-w-full ">
+        {allTeams
+          .slice()
+          .sort((a, b) => {
+            return a.teamSlug.localeCompare(b.teamSlug)
+          })
+          .map((team) => (
+            <Link href={`/team/${team.teamSlug}`} key={team._id}>
+              <TeamCard key={team._id} team={team} />
+            </Link>
+          ))}
       </div>
     </main>
   )
@@ -39,7 +44,7 @@ type ImageAsset = {
   }
 }
 
-type Player = {
+export type Player = {
   realmName: string
   _type: string
   characterName: string

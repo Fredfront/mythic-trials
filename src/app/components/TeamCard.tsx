@@ -2,6 +2,7 @@
 import React from 'react'
 import { MythicPlusTeam } from '../page'
 import { urlForImage } from '../../../sanity/lib/image'
+import Image from 'next/image'
 
 type TeamCardProps = {
   team: MythicPlusTeam
@@ -9,14 +10,16 @@ type TeamCardProps = {
 
 const TeamCard: React.FC<TeamCardProps> = ({ team }: TeamCardProps) => {
   return (
-    <div className="p-4 flex items-center bg-[#1e2225]  w-full min-w-full hover:bg-slate-500 cursor-pointer">
-      <img
-        style={{ borderRadius: '50%', width: '120px', height: '120px', marginLeft: '1rem', marginRight: '1rem' }}
+    <div className=" rounded-lg p-4 flex items-center bg-[#1e2225] text-white w-full min-w-full hover:bg-slate-500 cursor-pointer">
+      <Image
         src={urlForImage(team.teamImage.asset._ref as any)}
         alt={team.teamName}
+        className="rounded-full mr-4 ml-1 w-28 h-28"
+        width={120}
+        height={120}
+        style={{ border: '6px solid #2e2c37' }}
       />
-
-      <div className="text-3xl font-medium">{team.teamName}</div>
+      <div className="text-2xl font-extrabold">{team.teamName}</div>
     </div>
   )
 }
