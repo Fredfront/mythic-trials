@@ -1,11 +1,9 @@
 import { type SchemaTypeDefinition } from 'sanity'
 
-import { Affixes } from './schemas/Affixes'
-import { TeamScore } from './schemas/TeamScore'
-import { WeekData } from './schemas/WeekData'
-import { DungeonData } from './schemas/DungeonData'
 import { MythicPlusTeam, Player } from './schemas/Teams/Team'
+import { TyrannicalLeaderboard } from './schemas/leaderboard/tyrannical'
+import { fortifiedLeaderboard } from './schemas/leaderboard/fortified'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [MythicPlusTeam, Player, Affixes, WeekData, DungeonData, TeamScore],
+  types: [MythicPlusTeam, Player, TyrannicalLeaderboard, fortifiedLeaderboard],
 }

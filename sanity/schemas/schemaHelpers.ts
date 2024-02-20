@@ -1,39 +1,58 @@
-export const dungeonNames = [
-  "Dawn of the Infinites: Galakrond's Fall",
-  "Dawn of the Infinites: Murozond's Rise",
-  'Waycrest Manor',
-  "Atal'Dazar",
-  'Darkheart Thicket',
-  'Black Rook Hold ',
-  'Everbloom',
-  'Throne of the Tides',
+export const dungeonConfig = [
+  {
+    name: "Dawn of the Infinites: Galakrond's Fall",
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
+  {
+    name: "Dawn of the Infinites: Murozond's Rise",
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
+  {
+    name: 'Waycrest Manor',
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
+  {
+    name: "Atal'Dazar",
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
+  {
+    name: 'Darkheart Thicket',
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
+  {
+    name: 'Black Rook Hold ',
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
+  {
+    name: 'Everbloom',
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
+  {
+    name: 'Throne of the Tides',
+    timer: {
+      minutes: 30,
+      seconds: 0,
+    },
+  },
 ]
-
-export function generateDungeonFields(dungeonNames: any) {
-  const dungeonFields: any = []
-  dungeonNames.forEach((name: any) => {
-    dungeonFields.push({
-      type: 'object',
-      name: name.replace(/[^a-zA-Z0-9]/g, ''),
-      title: name,
-      fields: [{ type: 'array', name: 'teams', title: 'Teams', of: [{ type: 'TeamScore' }] }],
-    })
-  })
-  return dungeonFields
-}
-
-export function generateWeeksFields() {
-  const weeksFields = []
-  for (let i = 1; i <= 3; i++) {
-    weeksFields.push({
-      type: 'object',
-      name: `week_${i}`,
-      title: `Week ${i}`,
-      fields: generateDungeonFields(dungeonNames),
-    })
-  }
-  return weeksFields
-}
-
-// Usage:
-export const dungeonFields = generateDungeonFields(dungeonNames)

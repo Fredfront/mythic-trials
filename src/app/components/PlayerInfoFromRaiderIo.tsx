@@ -1,9 +1,19 @@
 import { WoWCharacter, getRaiderIOCharacerData } from '../api/getCharacerData'
 import { Player } from '../page'
 import Image from 'next/image'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { CharacterData, getWowCharacterFromBlizzard } from '../api/blizzard/getWowCharacterInfo'
 import { getMythicPlusInfo } from '../api/blizzard/getMythicPlusInfo'
+import { classColors } from '@/lib/utils'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 type PlayerInfoProps = {
   player: Player
@@ -46,18 +56,11 @@ type HoverStuffProps = {
   mythicPlusInfo: any
 }
 const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }: HoverStuffProps) => {
-  const lastCrawledDate = new Date(data.last_crawled_at)
-
-  const day = lastCrawledDate.getDate()
-  const month = lastCrawledDate.getMonth()
-  const year = lastCrawledDate.getFullYear()
-
-  const combined = `${day}.${month + 1}.${year}`
-
+  const ratingColor = `rgb(${mythicPlusInfo.color.r}, ${mythicPlusInfo.color.g}, ${mythicPlusInfo.color.b})`
+  console.log(blizzCharacterData?.equipped_item_level)
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        {/* <a href={data?.profile_url} target="_blank" className="hover:scale-105 transition-transform"> */}
+    <Dialog>
+      <DialogTrigger asChild className="hover: cursor-pointer zoom-in-50">
         <div className="mb-3">
           <div className="flex flex-col items-center">
             {data?.thumbnail_url ? (
@@ -77,38 +80,21 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }:
             </div>
           </div>
         </div>
-        {/* </a> */}
-      </HoverCardTrigger>
-      <HoverCardContent className="w-80">
-        <div className="flex justify-between space-x-4">
-          <div className="space-y-1">
-            <h4 className="text-sm font-semibold">Role: {data?.active_spec_role}</h4>
-            <p className="text-sm">Spec: {data?.active_spec_name}</p>
-            <p className="text-sm">Guild: {blizzCharacterData?.guild?.name}</p>
-            <p className="text-sm">Mythic+ Rating: {Math.floor(parseInt(mythicPlusInfo?.rating))}</p>
-
-            <div className="flex items-center pt-2">
-              <span className="text-xs text-muted-foreground">Last updated {combined}</span>
-            </div>
-          </div>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{data.name}</DialogTitle>
+          <DialogDescription>Guild: {blizzCharacterData?.guild?.name}</DialogDescription>
+          <DialogDescription style={{ color: ratingColor }}>
+            {' '}
+            M+ {Math.floor(parseInt(mythicPlusInfo?.rating))}
+          </DialogDescription>
+          <DialogDescription>Ilvl {blizzCharacterData?.equipped_item_level}</DialogDescription>
+        </DialogHeader>
+        <a href={data.profile_url} target="_blank">
+          <DialogFooter>Gå til raider.io</DialogFooter>{' '}
+        </a>
+      </DialogContent>
+    </Dialog>
   )
-}
-
-const classColors = {
-  DeathKnight: '#C41F3B',
-  DemonHunter: '#A330C9',
-  Druid: '#FF7D0A',
-  Hunter: '#ABD473',
-  Mage: '#40C7EB',
-  Monk: '#00FF96',
-  Paladin: '#F58CBA',
-  Priest: '#FFFFFF',
-  Rogue: '#FFF569',
-  Shaman: '#0070DE',
-  Warlock: '#8787ED',
-  Warrior: '#C79C6E',
-  Evoker: '#69CCF0',
 }
