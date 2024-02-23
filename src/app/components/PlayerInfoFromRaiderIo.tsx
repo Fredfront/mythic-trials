@@ -1,5 +1,4 @@
 import { WoWCharacter, getRaiderIOCharacerData } from '../api/getCharacerData'
-import { Player } from '../page'
 import Image from 'next/image'
 import { CharacterData, getWowCharacterFromBlizzard } from '../api/blizzard/getWowCharacterInfo'
 import { getMythicPlusInfo } from '../api/blizzard/getMythicPlusInfo'
@@ -13,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Player } from '../api/getAllTeams'
 
 type PlayerInfoProps = {
   player: Player

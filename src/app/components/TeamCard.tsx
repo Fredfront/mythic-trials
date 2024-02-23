@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
-import { MythicPlusTeam } from '../page'
 import { urlForImage } from '../../../sanity/lib/image'
 import Image from 'next/image'
+import { MythicPlusTeam } from '../api/getAllTeams'
 
 type TeamCardProps = {
   team: MythicPlusTeam

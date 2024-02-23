@@ -1,5 +1,5 @@
+import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { LeaderboardData, TeamEntry } from '@/app/api/leaderboard/tyrannical'
-import { MythicPlusTeam } from '@/app/page'
 
 export type teamPointsType = {
   teamName: string

@@ -1,6 +1,5 @@
 import client from '../../../sanity/lib/client'
 import { GET_ALL_TEAMS } from '../../../sanity/lib/queries'
-import {} from '../page'
 
 export async function getAllTeams() {
   const teams = await client.fetch({
