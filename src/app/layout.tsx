@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: 'Nerdelandslaget - Mythic Trials ',
 }
 
-export const fontSans = FontSans({
+const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans',
 })
