@@ -13,14 +13,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 
 type PlayerInfoProps = {
   player: Player
   token: string
 }
 export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps) => {
-  const data = await getRaiderIOCharacerData({ characterName: player.characterName, realmName: player.realmName })
+  const raiderIo = await getRaiderIOCharacerData({ characterName: player.characterName, realmName: player.realmName })
   const blizzCharacterData = await getWowCharacterFromBlizzard({
     token,
     realm: player.realmName.toLowerCase(),
@@ -29,7 +28,7 @@ export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps)
 
   const mythicPlusInfo = await getMythicPlusInfo({ token, endpoint: blizzCharacterData?.mythic_keystone_profile.href })
 
-  let wowClass = data?.class
+  let wowClass = raiderIo?.class
   if (wowClass === 'Death Knight') {
     wowClass = 'DeathKnight'
   }
@@ -41,7 +40,7 @@ export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps)
 
   return (
     <CharacterInfo
-      data={data}
+      data={raiderIo}
       classColor={classColor}
       blizzCharacterData={blizzCharacterData}
       mythicPlusInfo={mythicPlusInfo?.current_mythic_rating}
@@ -56,8 +55,7 @@ type HoverStuffProps = {
   mythicPlusInfo: any
 }
 const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }: HoverStuffProps) => {
-  const ratingColor = `rgb(${mythicPlusInfo.color.r}, ${mythicPlusInfo.color.g}, ${mythicPlusInfo.color.b})`
-  console.log(blizzCharacterData?.equipped_item_level)
+  const ratingColor = `rgb(${mythicPlusInfo?.color?.r}, ${mythicPlusInfo?.color.g}, ${mythicPlusInfo?.color.b})`
   return (
     <Dialog>
       <DialogTrigger asChild className="hover: cursor-pointer zoom-in-50">

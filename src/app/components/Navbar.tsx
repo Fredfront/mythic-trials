@@ -87,31 +87,33 @@ const Navbar = () => {
               </button>
             )
           })}
-          <div className="mt-1">
+          {/* <div className="mt-1">
             <ModeToggle />
-          </div>
+          </div> */}
         </div>
       </div>
 
       {isOpen && (
         <div className="z-10 fixed inset-0 transition-opacity">
-          <div onClick={() => setIsOpen(false)} className="absolute inset-0 bg-black opacity-50" tabIndex={0}></div>
+          <div onClick={() => setIsOpen(false)} className="absolute inset-0 bg-black " tabIndex={0}></div>
         </div>
       )}
 
       <aside
-        className={`transform top-0 left-0 w-64  fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={` transform top-0 left-0 w-64  fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full '
         }`}
       >
         <span className="flex w-full items-center p-4 border-b">
           <h3 className="h-auto w-32 mx-auto font-bold">Mythic Trials</h3>
         </span>
-        {navList.map(({ icon, title }, index) => {
+        {navList.map(({ icon, title, href }, index) => {
           return (
-            <span key={index} className="flex items-center p-4 hover:bg-pink-500 hover:text-white ">
-              <span className="mr-2">{icon}</span> <span>{title}</span>
-            </span>
+            <Link href={href} key={index}>
+              <span key={index} className="flex items-center p-4  hover:text-white ">
+                <span className="mr-2">{icon}</span> <span>{title}</span>
+              </span>
+            </Link>
           )
         })}
       </aside>

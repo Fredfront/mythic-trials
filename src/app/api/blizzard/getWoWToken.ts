@@ -2,7 +2,7 @@ export async function getToken() {
   const client_id = 'd34a81ec46a047b9a1811057551b5ce5'
   const client_secret = 'DzpHAsctVQQ1MmHPJ3osYOIX8BZa7B59'
 
-  const url = 'https://us.battle.net/oauth/token'
+  const url = 'https://eu.battle.net/oauth/token'
 
   const credentials = `${client_id}:${client_secret}`
   const encodedCredentials = Buffer.from(credentials).toString('base64')

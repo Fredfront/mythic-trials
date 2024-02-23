@@ -1,5 +1,3 @@
-// schemas/tyrannicalLeaderboard.js
-
 export const TyrannicalLeaderboard = {
   name: 'tyrannicalLeaderboard',
   title: 'Tyrannical Leaderboard',
@@ -49,11 +47,15 @@ export const TyrannicalLeaderboard = {
               name: 'minutes',
               title: 'Minutes',
               type: 'number',
+              validation: (Rule: { min: (arg0: number) => any }) => Rule.min(10),
             },
             {
               name: 'seconds',
               title: 'Seconds',
               type: 'number',
+              validation: (Rule: {
+                min: (arg0: number) => { (): any; new (): any; max: { (arg0: number): any; new (): any } }
+              }) => Rule.min(0).max(59),
             },
           ],
           preview: {
@@ -71,6 +73,23 @@ export const TyrannicalLeaderboard = {
           },
         },
       ],
+    },
+    {
+      name: 'baseTimer',
+      title: 'Base Timer',
+      type: 'string',
+      options: {
+        list: [
+          { title: "Dawn of the Infinites: Galakrond's Fall", value: '35:00' },
+          { title: "Dawn of the Infinites: Murozond's Rise", value: '37:00' },
+          { title: "Atal'Dazar", value: '30:00' },
+          { title: 'Waycrest Manor', value: '36:40' },
+          { title: 'Black Rook Hold', value: '36:00' },
+          { title: 'Darkheart Thicket', value: '30:00' },
+          { title: 'Everbloom', value: '33:00' },
+          { title: 'Throne of the Tides', value: '34:00' },
+        ],
+      },
     },
   ],
 }

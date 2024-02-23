@@ -6,10 +6,8 @@ export async function getRaiderIOCharacerData({
   realmName: string
 }) {
   const res = await fetch(
-    `https://raider.io/api/v1/characters/profile?region=eu&realm=${realmName}&name=${characterName}`,
+    `https://raider.io/api/v1/characters/profile?region=eu&realm=${realmName}&name=${characterName}&fields=mythic_plus_recent_runs`,
   )
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
 
   return res.json() as Promise<WoWCharacter>
 }
