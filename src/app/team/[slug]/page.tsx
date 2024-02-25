@@ -15,6 +15,7 @@ import fallImg from '../../../../public/dungeons/fall.webp'
 import riseImg from '../../../../public/dungeons/rise.webp'
 import throneImg from '../../../../public/dungeons/throne.webp'
 import waycrestImg from '../../../../public/dungeons/waycrest.webp'
+import { Icons } from '@/components/loading'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const token = await getToken()
@@ -66,7 +67,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
 
         <div className=" mt-20 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4 ">
-          <Suspense fallback={<div>Loading</div>}>
+          <Suspense
+            fallback={
+              <div className="ml-8 flex">
+                Loading <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" />
+              </div>
+            }
+          >
             {data?.players.map((player) => {
               if (data.players === null || data.players === undefined) return
               return <PlayerInfoFromRaiderIo key={player._key} player={player} token={token} />
@@ -75,11 +82,16 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
         <div className="ml-4 mt-20">
           <h3 className="mb-4 font-extrabold">Dungeon times</h3>
-          <Suspense fallback={<div>Loading</div>}>
+          <Suspense
+            fallback={
+              <div>
+                Loading <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" />
+              </div>
+            }
+          >
             {dungtimes.map((dungeon) => {
               if (dungeon.time === undefined) return null
               let imgSrc
-              console.log(dungeon.dungeon)
               if (dungeon.dungeon?.trim() === 'Black Rook Hold') imgSrc = blackrookholdImg
               if (dungeon.dungeon === "Atal'Dazar") imgSrc = atalImg
               if (dungeon.dungeon === 'Darkheart Thicket') imgSrc = darkheartImg

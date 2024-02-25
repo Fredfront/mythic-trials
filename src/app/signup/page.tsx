@@ -36,8 +36,6 @@ function CreateMythicPlusTeam() {
     fetchAllTeams()
   }, [])
 
-  console.log(allTeams)
-
   const [signupData, setSignupData] = useState<SignupPage | null>(null)
 
   useEffect(() => {
