@@ -7,7 +7,8 @@ import { Icons } from '@/components/loading'
 import { projectId, dataset, apiVersion, useCdn, token } from '../../../sanity/env'
 import { createClient } from '@sanity/client'
 import Image from 'next/image'
-import { set } from 'sanity'
+import { SignupPage, getSignupData } from '../api/signup/getSignupInfo'
+import { urlForImage } from '../../../sanity/lib/image'
 
 const client = createClient({
   projectId,
@@ -23,6 +24,18 @@ function CreateMythicPlusTeam() {
   const [players, setPlayers] = useState<{ characterName: string; realmName: string }[]>([
     { characterName: '', realmName: '' },
   ])
+
+  const [signupData, setSignupData] = useState<SignupPage | null>(null)
+
+  useEffect(() => {
+    async function fetchSignupData() {
+      const data = await getSignupData()
+      setSignupData(data)
+    }
+    fetchSignupData()
+  }, [])
+
+  console.log(signupData)
 
   // State for image preview
   const [previewImage, setPreviewImage] = useState<any>(null)
@@ -204,6 +217,9 @@ function CreateMythicPlusTeam() {
     return (
       <div className="flex justify-center flex-col items-center bg-black text-white py-8">
         <h1 className="text-4xl font-bold font-sans mb-10">Opprett lag</h1>
+        <p className="mb-4 pl-4">
+          Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag.{' '}
+        </p>
         <form className="flex flex-col w-full p-4 lg:w-2/4" onSubmit={handleSubmit}>
           <label htmlFor="contactPerson" className="mb-2">
             Kontakt person
@@ -312,8 +328,23 @@ function CreateMythicPlusTeam() {
     )
   } else {
     return (
-      <div>
-        <button onClick={() => signIn('google')}>sign in with gooogle</button>
+      <div className="w-full flex justify-center lg:mt-20 md:mt-20 mt-5">
+        <div className="w-full justify-center flex flex-col lg:flex-row md:flex-row">
+          <div className="p-4  w-full lg:w-1/4 md:w-1/4  text-start justify-flex flex-col ">
+            <h1 className="text-4xl font-bold font-sans mb-10">Opprett lag</h1>
+
+            <p className="mb-2">Du må først logge på for å kunne opprette lag </p>
+            <Button className=" lg:max-w-48 md:max-w-48 mt-auto w-full " onClick={() => signIn('google')}>
+              Logg på med google
+            </Button>
+          </div>
+          <div className=" w-full lg:w-3/4 md:w-2/4 md:max-w-3xl md:min-h-96 lg:max-w-3xl  p-4 lg:min-h-96 lg:mr-4 lg:ml-4 ">
+            <div
+              className=" bg-cover bg-center bg-no-repeat min-h-80 rounded-md  "
+              style={{ backgroundImage: `url(${urlForImage(signupData?.mainImage.asset._ref as string) as string})` }}
+            />
+          </div>
+        </div>
       </div>
     )
   }

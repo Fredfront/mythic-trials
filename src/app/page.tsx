@@ -18,9 +18,9 @@ const Home = async () => {
           style={{
             backgroundImage: `url(${urlForImage(frontpageData.mainImage.asset._ref as string) as string})`,
           }}
-          className={`flex flex-col items-center justify-center h-svh w-full bg-cover bg-center bg-no-repeat mb-32`}
+          className={`flex flex-col items-center justify-center h-screen w-full bg-cover bg-center bg-no-repeat `}
         >
-          <h1 className="  text-5xl md:text-5xl lg:text-6xl font-bold">{frontpageData.headline}</h1>
+          <h1 className="  text-4xl md:text-5xl lg:text-6xl font-bold">{frontpageData.headline}</h1>
           <h2 className="font-thin">{frontpageData.smallTextDescription}</h2>
           <div className="flex gap-4 mt-10 ">
             <Link href="/signup">
@@ -34,7 +34,7 @@ const Home = async () => {
             <LeaderboardDrawer />
           </div>
         </div>
-        <div className="max-w-7xl  h-svh grid place-content-center ">
+        <div className="max-w-7xl  grid place-content-center mt-12">
           <h1 id="teams" className="text-center text-6xl font-extrabold  ">
             LAGENE
           </h1>
