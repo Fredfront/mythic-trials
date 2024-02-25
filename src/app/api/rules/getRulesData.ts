@@ -6,7 +6,7 @@ export async function getRulesData() {
   const data = (await client.fetch({
     query: groq`*[_type == "rulesPage"] `,
     config: {
-      next: { revalidate: 1 },
+      next: { revalidate: 3600 },
     },
   })) as RulesPage[]
 

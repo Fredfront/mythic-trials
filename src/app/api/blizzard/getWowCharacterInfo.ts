@@ -15,7 +15,7 @@ export async function getWowCharacterFromBlizzard({
     `https://eu.api.blizzard.com/profile/wow/character/${realm}/${character}?namespace=profile-eu&locale=en_US&access_token=${token}`,
     {
       next: {
-        revalidate: 1,
+        revalidate: 3600,
       },
     },
   )

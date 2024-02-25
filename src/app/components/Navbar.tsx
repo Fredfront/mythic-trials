@@ -7,6 +7,9 @@ const Navbar = () => {
     <nav className="flex items-center justify-between flex-wrap bg-black p-6">
       <div className=" flex-grow flex items-center w-auto">
         <div className="text-sm flex-grow">
+          <Link href="/" className="inline-block mt-0  hover:text-white mr-4">
+            Forside
+          </Link>
           <Link href="/#teams" className="inline-block mt-0  hover:text-white mr-4">
             Lag
           </Link>

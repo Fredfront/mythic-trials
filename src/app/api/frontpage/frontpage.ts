@@ -5,7 +5,7 @@ export async function getFrontpageData() {
   const data = (await client.fetch({
     query: groq`*[_type == "frontPage"] `,
     config: {
-      next: { revalidate: 1 },
+      next: { revalidate: 3600 },
     },
   })) as FrontPage[]
 

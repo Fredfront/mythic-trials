@@ -9,7 +9,7 @@ export async function getFortifiedLeaderboardData() {
       teams
     }`,
     config: {
-      next: { revalidate: 1 },
+      next: { revalidate: 3600 },
     },
   })
 

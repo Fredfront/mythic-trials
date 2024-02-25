@@ -5,7 +5,7 @@ export async function getSignupData() {
   const data = (await client.fetch({
     query: groq`*[_type == "signupPage"] `,
     config: {
-      next: { revalidate: 1 },
+      next: { revalidate: 3600 },
     },
   })) as SignupPage[]
 
