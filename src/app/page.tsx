@@ -3,7 +3,6 @@ import { getAllTeams } from './api/getAllTeams'
 import Link from 'next/link'
 import { getFrontpageData } from './api/frontpage/frontpage'
 import { urlForImage } from '../../sanity/lib/image'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { LeaderboardDrawer } from './components/DrawerComponent'
 

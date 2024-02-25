@@ -20,36 +20,34 @@ export const calculatePoints = ({
     const [minutes, seconds] = time.split(':').map(Number)
     return minutes * 60 + seconds
   }
-  const pointsData = {} as any
+
+  const pointsData: { [key: string]: teamPointsType } = {}
 
   leaderboardData?.forEach(({ baseTimer, teams }: { teams: TeamEntry[]; baseTimer: string }) => {
     const baseTimerSeconds = baseTimer ? timeToSeconds(baseTimer) : 0
 
-    // Iterate through each team
     teams.forEach(
       ({ minutes, seconds, team }: { team: { _key: string; _ref: string }; minutes: number; seconds: number }) => {
         const teamTimeSeconds = minutes * 60 + seconds
         const timeDifference = baseTimerSeconds - teamTimeSeconds
 
-        // Assign points based on time difference
-        const points = Math.max(0, Math.floor(timeDifference / 60)) // Each minute under base timer gives 1 point
+        // Calculate points per second under the base timer (0.1 point per second)
+        const points = Math.max(0, timeDifference) * 0.01
 
-        // Add points to the team's totalScore
         const teamKey = team._ref
         if (!pointsData[teamKey]) {
           pointsData[teamKey] = {
-            teamName: allTeams?.find((e) => e._id === teamKey)?.teamName,
-            teamSlug: allTeams?.find((e) => e._id === teamKey)?.teamSlug,
+            teamName: allTeams?.find((e) => e._id === teamKey)?.teamName as string,
+            teamSlug: allTeams?.find((e) => e._id === teamKey)?.teamSlug as string,
             _ref: teamKey,
             totalScore: 0,
           }
         }
-        pointsData[teamKey as string].totalScore += points
+        pointsData[teamKey].totalScore += points
       },
     )
   })
 
-  // Convert pointsData object to array
   const pointsArray = Object.values(pointsData) as teamPointsType[]
 
   return pointsArray.sort((a, b) => {

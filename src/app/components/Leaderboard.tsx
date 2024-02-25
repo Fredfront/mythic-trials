@@ -53,7 +53,9 @@ async function LeaderboardComponent() {
                     : false
                 return <TableCell key={leadIndex}>{hasTime ? timeString : '-'}</TableCell>
               })}
-              <TableCell>{combinedPoints?.find((e) => e._ref === team._ref)?.totalScore}</TableCell>
+              <TableCell>
+                {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
+              </TableCell>
             </TableRow>
           )
         })}

@@ -13,6 +13,11 @@ export async function getWowCharacterFromBlizzard({
 
   const res = await fetch(
     `https://eu.api.blizzard.com/profile/wow/character/${realm}/${character}?namespace=profile-eu&locale=en_US&access_token=${token}`,
+    {
+      next: {
+        revalidate: 1,
+      },
+    },
   )
 
   if (res.status !== 200) {

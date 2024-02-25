@@ -25,7 +25,6 @@ export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps)
     realm: player.realmName.toLowerCase(),
     character: player.characterName.toLowerCase(),
   })
-  console.log(token)
 
   const mythicPlusInfo = await getMythicPlusInfo({ token, endpoint: blizzCharacterData?.mythic_keystone_profile.href })
 
@@ -86,7 +85,7 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }:
           <DialogDescription>Guild: {blizzCharacterData?.guild?.name}</DialogDescription>
           <DialogDescription style={{ color: ratingColor }}>
             {' '}
-            M+ {Math.floor(parseInt(mythicPlusInfo?.rating))}
+            M+ {(mythicPlusInfo?.rating ? Math.floor(parseInt(mythicPlusInfo?.rating)) : 'N/A') || 'N/A'}
           </DialogDescription>
           <DialogDescription>Ilvl {blizzCharacterData?.equipped_item_level}</DialogDescription>
         </DialogHeader>
