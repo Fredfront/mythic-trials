@@ -144,7 +144,7 @@ function CreateMythicPlusTeam() {
         {
           createOrReplace: {
             _type: 'MythicPlusTeam',
-            _id: teamName.toLowerCase().replace(/\s+/g, '-').slice(0, 200),
+            _id: `drafts.${uuidv4()}`,
             _key: uuidv4(),
             teamName,
             contactPerson: data?.user?.email,
@@ -153,7 +153,7 @@ function CreateMythicPlusTeam() {
               _type: 'image',
               asset: {
                 _type: 'reference',
-                _ref: uploadedImage._id,
+                _ref: uploadedImage?._id,
               },
             },
             players: players.map((player) => ({
@@ -166,7 +166,7 @@ function CreateMythicPlusTeam() {
         },
       ]
 
-      // Send the mutation to create the document
+      // Send the mutation to create the draft document
       const response = await fetch(`https://${projectId}.api.sanity.io/v${apiVersion}/data/mutate/${dataset}`, {
         method: 'POST',
         headers: {
@@ -209,6 +209,7 @@ function CreateMythicPlusTeam() {
       <div className="w-full grid place-content-center items-center h-screen">
         <div className="flex flex-col items-center">
           <h1 className="text-4xl font-bold font-sans mb-10">Laget ditt er opprettet!</h1>
+          <p>En av våre administratorer vil gå over laget, og godkjenne det før det blir synlig på sidene våre.</p>
         </div>
       </div>
     )

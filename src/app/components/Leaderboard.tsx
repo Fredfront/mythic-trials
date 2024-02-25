@@ -88,7 +88,7 @@ function LeaderboardComponent() {
   const [hideTyrannical, setHideTyrannical] = React.useState(false)
   const [hideFortified, setHideFortified] = React.useState(false)
 
-  if (searchTeam) {
+  if (searchTeam && searchTeam.length > 0) {
     combinedPoints = combinedPoints.filter((team) => team.teamName.toLowerCase().includes(searchTeam.toLowerCase()))
   }
 
