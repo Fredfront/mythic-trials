@@ -12,6 +12,13 @@ export const MythicPlusTeam = {
     },
     {
       type: 'string',
+      name: 'contactPerson',
+      title: 'Contact Person',
+      description: 'Email of contact person for the Mythic Plus team',
+      validation: (Rule: { required: () => any }) => Rule.required(),
+    },
+    {
+      type: 'string',
       name: 'teamSlug',
       title: 'Team Slug',
       description: 'The slug for the Mythic Plus team (used in URLs)',

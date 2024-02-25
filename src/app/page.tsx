@@ -13,21 +13,31 @@ const Home = async () => {
 
   return (
     <main>
-      <div className="flex flex-col max-w-7xl m-auto ">
-        <div className="flex flex-col items-center justify-center h-svh">
-          <Image
-            className=" rounded-2xl w-3/4"
-            width={400}
-            height={400}
-            src={urlForImage(frontpageData.mainImage.asset._ref)}
-            alt="main image"
-          />
-          <h1 className=" mt-6 mb-4 text-4xl md:text-5xl lg:text-6xl font-extrabold">{frontpageData.headline}</h1>
+      <div className="flex flex-col items-center ">
+        <div
+          style={{
+            backgroundImage: `url(${urlForImage(frontpageData.mainImage.asset._ref as string) as string})`,
+          }}
+          className={`flex flex-col items-center justify-center h-svh w-full bg-cover bg-center bg-no-repeat mb-32`}
+        >
+          <h1 className="  text-5xl md:text-5xl lg:text-6xl font-bold">{frontpageData.headline}</h1>
           <h2 className="font-thin">{frontpageData.smallTextDescription}</h2>
-          <Button className="mt-4 font-extrabold w-2/6">Påmelding</Button>
+          <div className="flex gap-4 mt-10 ">
+            <Link href="/signup">
+              <Button
+                variant="outline"
+                className="font-extrabold w-40 min-h-12 bg-white text-black hover:bg-black hover:text-white  "
+              >
+                Påmelding
+              </Button>
+            </Link>
+            <LeaderboardDrawer />
+          </div>
         </div>
-        <div>
-          <h1 className="text-center text-6xl font-extrabold">LAGENE</h1>
+        <div className="max-w-7xl  h-svh grid place-content-center ">
+          <h1 id="teams" className="text-center text-6xl font-extrabold  ">
+            LAGENE
+          </h1>
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 mt-10 p-2 min-w-full mb-10 ">
             {allTeams &&
               allTeams
@@ -36,15 +46,12 @@ const Home = async () => {
                   return a.teamSlug.localeCompare(b.teamSlug)
                 })
                 .map((team) => (
-                  <Link href={`/team/${team.teamSlug}`} key={team._id}>
+                  <Link prefetch={true} href={`/team/${team.teamSlug}`} key={team._id}>
                     <TeamCard key={team._id} team={team} />
                   </Link>
                 ))}
           </div>
         </div>
-      </div>
-      <div className="p-4 flex flex-col items-center justify-center">
-        <LeaderboardDrawer />
       </div>
     </main>
   )

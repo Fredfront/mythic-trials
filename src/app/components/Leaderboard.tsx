@@ -13,27 +13,27 @@ async function LeaderboardComponent() {
   const combinedPoints = combineScore(tyrannicalPoints, fortifiedPoints)
 
   return (
-    <Table className=" max-w-screen-xlg">
-      <TableHeader>
+    <Table className=" max-w-screen-xlg  ">
+      <TableHeader className="bg-orange-400 ">
         <TableRow>
-          <TableHead className="text-white font-extrabold">Lagnavn</TableHead>
+          <TableHead className="text-black font-extrabold">Lagnavn</TableHead>
           {tyrannical.map((leader, index) => (
-            <TableHead className="text-white font-extrabold min-w-24" key={index}>
+            <TableHead className="text-black  font-extrabold min-w-24" key={index}>
               {shortenDungeonName(leader.dungeon)} (T)
             </TableHead>
           ))}
           {fortified.map((leader, index) => (
-            <TableHead className="text-white font-extrabold min-w-24" key={index}>
+            <TableHead className="text-black font-extrabold min-w-24" key={index}>
               {shortenDungeonName(leader.dungeon)} (F)
             </TableHead>
           ))}
-          <TableHead className="text-white font-extrabold">Poeng</TableHead>
+          <TableHead className="text-black  font-extrabold">Poeng</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {combinedPoints.map((team, index) => {
           return (
-            <TableRow key={index}>
+            <TableRow key={index} className=" bg-gray-950 even:bg-gray-900">
               <TableCell className=" min-w-32">{team.teamName}</TableCell>
               {tyrannical.map((lead, leadIndex) => {
                 const timeString = `${lead.teams.find((a) => a.team._ref === team._ref)?.minutes}:${lead.teams.find((a) => a.team._ref === team._ref)?.seconds}`
