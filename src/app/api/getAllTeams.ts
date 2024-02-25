@@ -17,6 +17,7 @@ export type MythicPlusTeam = {
   _createdAt: string
   _rev: string
   _type: string
+  _key: string
   _id: string
 }
 type ImageAsset = {

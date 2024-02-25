@@ -2,11 +2,10 @@ import { urlForImage } from '../../../../sanity/lib/image'
 import Image from 'next/image'
 import { PlayerInfoFromRaiderIo } from '@/app/components/PlayerInfoFromRaiderIo'
 import { getToken } from '@/app/api/blizzard/getWoWToken'
-import { LeaderboardData, getTyrannicalLeaderboardData } from '@/app/api/leaderboard/tyrannical'
+import { getTyrannicalLeaderboardData } from '@/app/api/leaderboard/tyrannical'
 import { getAllTeams } from '@/app/api/getAllTeams'
 import { Suspense } from 'react'
 import { dungeonConfig, getDungeonInfo } from '@/utils/dungeonHelpers'
-import { getMythicPlusInfoDetails } from '@/app/api/blizzard/getMythicPlusInfoDetails'
 import atalImg from '../../../../public/dungeons/atal.webp'
 import blackrookholdImg from '../../../../public/dungeons/blackrookhold.webp'
 import darkheartImg from '../../../../public/dungeons/darkheart.webp'
@@ -15,7 +14,7 @@ import fallImg from '../../../../public/dungeons/fall.webp'
 import riseImg from '../../../../public/dungeons/rise.webp'
 import throneImg from '../../../../public/dungeons/throne.webp'
 import waycrestImg from '../../../../public/dungeons/waycrest.webp'
-import { Icons } from '@/components/loading'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const token = await getToken()
@@ -24,11 +23,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const allTeams = await getAllTeams()
   const data = allTeams.find((e) => e.teamSlug === params.slug)
   const idForRef = allTeams.find((e) => e.teamName === data?.teamName)?._id
-  const mythicPlusDetails = await getMythicPlusInfoDetails({
-    token,
-    realm: 'draenor',
-    character: 'girfaen',
-  })
+  // const mythicPlusDetails = await getMythicPlusInfoDetails({
+  //   token,
+  //   realm: 'draenor',
+  //   character: 'girfaen',
+  // })
   const { dungeons, timeForTeam } = getDungeonInfo(leaderboard, idForRef)
 
   const dungtimes = Object.keys(timeForTeam).map((e) => {
@@ -42,18 +41,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     <div className="max-w-full flex justify-center">
       <div className="mt-32">
         <div className="flex  items-center">
-          <Suspense
-            fallback={
-              <Image
-                alt=""
-                style={{ border: '10px solid #2e2c37' }}
-                src={''}
-                width={200}
-                height={200}
-                className="rounded-full h-44 w-44 "
-              />
-            }
-          >
+          <Suspense fallback={<Skeleton className="h-12 w-12 rounded-full" />}>
             <Image
               alt=""
               style={{ border: '10px solid #2e2c37' }}
@@ -62,7 +50,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
               height={200}
               className="rounded-full h-44 w-44 "
             />
-            <div className="text-2xl font-medium ml-4">{data?.teamName?.toUpperCase()}</div>
+            <Suspense fallback={<Skeleton className="h-4 w-[250px]" />}>
+              <div className="text-2xl font-medium ml-4">{data?.teamName?.toUpperCase()}</div>
+            </Suspense>
           </Suspense>
         </div>
 
@@ -70,7 +60,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           <Suspense
             fallback={
               <div className="ml-8 flex">
-                Loading <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" />
+                <Skeleton className="h-12 w-12 rounded-full" />
               </div>
             }
           >
@@ -81,11 +71,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </Suspense>
         </div>
         <div className="ml-4 mt-20">
-          <h3 className="mb-4 font-extrabold">Dungeon times</h3>
+          {dungtimes && dungtimes.length > 0 && <h3 className="mb-4 font-extrabold">Dungeon times</h3>}
+
           <Suspense
             fallback={
-              <div>
-                Loading <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" />
+              <div className="flex">
+                <Skeleton className="h-12 w-12 rounded-full" /> <Skeleton className="h-4 w-[250px]" />
               </div>
             }
           >

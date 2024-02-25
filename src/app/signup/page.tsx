@@ -26,6 +26,8 @@ function CreateMythicPlusTeam() {
     { characterName: '', realmName: '' },
   ])
 
+  const [hasEditedPlayers, setHasEditedPlayers] = useState(false)
+
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
 
   useEffect(() => {
@@ -58,11 +60,15 @@ function CreateMythicPlusTeam() {
   const [missingPlayersError, setMissingPlayersError] = useState(false)
   const [teamHasBeenCreated, setTeamHasBeenCreated] = useState(false)
   const [loadingCreateTeam, setLoadingCreateTeam] = useState(false)
+  const [editTeam, setEditTeam] = useState(false)
+  const [teamHasBeenUpdated, setTeamHasBeenUpdate] = useState(false)
+  const [teamNameAlreadyExists, setTeamNameAlreadyExists] = useState(false)
 
   const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
 
     setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [name]: value } : player)))
+    setHasEditedPlayers(true)
   }
   const handleAddPlayer = () => {
     setPlayers([...players, { characterName: '', realmName: '' }])
@@ -110,6 +116,12 @@ function CreateMythicPlusTeam() {
   }
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    if (allTeams?.find((e) => e.teamName === teamName)) {
+      setTeamNameAlreadyExists(true)
+      return
+    }
+
     if (players && players.length < 5) {
       setMissingPlayersError(true)
     }
@@ -204,12 +216,100 @@ function CreateMythicPlusTeam() {
     }
   }, [createMythicPlusTeam, imageUploaded])
 
-  if (teamHasBeenCreated) {
+  const updateMythicPlusTeam = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event?.preventDefault()
+
+      setLoadingCreateTeam(true)
+
+      try {
+        const mutations = [
+          {
+            createOrReplace: {
+              _type: 'MythicPlusTeam',
+              _id: allTeams?.find((e) => e.contactPerson === data?.user?.email)?._id,
+              _key: allTeams?.find((e) => e.contactPerson === data?.user?.email)?._key,
+              teamName: allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName,
+              contactPerson: allTeams?.find((e) => e.contactPerson === data?.user?.email)?.contactPerson,
+              teamSlug: allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamSlug,
+              teamImage: {
+                ...allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamImage,
+              },
+              players: players.map((player) => ({
+                _type: 'Player',
+                _key: uuidv4(),
+                characterName: player.characterName,
+                realmName: player.realmName,
+              })),
+            },
+          },
+        ]
+
+        // Send the mutation to create the draft document
+        const response = await fetch(`https://${projectId}.api.sanity.io/v${apiVersion}/data/mutate/${dataset}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ mutations }),
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+
+          if (data) {
+            setTeamHasBeenUpdate(true)
+            setLoadingCreateTeam(false)
+          }
+
+          // Handle success
+        } else {
+          // Handle error response
+          console.error('Failed to create Mythic Plus team:', response.statusText)
+        }
+      } catch (error) {
+        console.error('Failed to create Mythic Plus team:', error)
+        setLoadingCreateTeam(false)
+
+        // Handle error
+      }
+    },
+    [allTeams, data?.user?.email, players],
+  )
+
+  useEffect(() => {
+    if (editTeam && allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName) {
+      setTeamName(allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName as string)
+      allTeams
+        ?.find((e) => e.contactPerson === data?.user?.email)
+        ?.players.map((player, index) => {
+          setPlayers((prevPlayers) => [
+            ...prevPlayers,
+            { characterName: player.characterName, realmName: player.realmName },
+          ])
+
+          //remove the first empty player
+          if (index === 0) {
+            setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== 0))
+          }
+        })
+    }
+  }, [allTeams, data?.user?.email, editTeam])
+
+  if (teamHasBeenCreated || teamHasBeenUpdated) {
     return (
       <div className="w-full grid place-content-center items-center h-screen">
         <div className="flex flex-col items-center">
-          <h1 className="text-4xl font-bold font-sans mb-10">Laget ditt er opprettet!</h1>
-          <p>En av våre administratorer vil gå over laget, og godkjenne det før det blir synlig på sidene våre.</p>
+          <h1 className="text-4xl font-bold font-sans mb-10">
+            {teamHasBeenCreated ? 'Laget ditt er opprettet!' : null}{' '}
+            {teamHasBeenUpdated ? 'Laget ditt er blitt oppdatert' : null}{' '}
+          </h1>
+          <p>
+            {teamHasBeenCreated
+              ? 'En av våre administratorer vil gå over laget, og godkjenne det før det blir synlig på sidene våre.'
+              : null}{' '}
+          </p>
         </div>
       </div>
     )
@@ -224,7 +324,7 @@ function CreateMythicPlusTeam() {
       </div>
     )
 
-  if (allTeams && allTeams.find((e) => e.contactPerson === data?.user?.email)) {
+  if (allTeams && allTeams.find((e) => e.contactPerson === data?.user?.email && !editTeam)) {
     return (
       <div className="w-full flex justify-center text-center ">
         <div className="flex flex-col items-center">
@@ -236,11 +336,111 @@ function CreateMythicPlusTeam() {
               .find((e) => e.contactPerson === data?.user?.email)
               ?.players.map((player, index) => (
                 <li key={index}>
-                  {player.characterName} - {player.realmName}
+                  Navn: {player.characterName} - Realm: {player.realmName}
                 </li>
               ))}
           </ul>
+          <Button onClick={() => setEditTeam(true)} className="mt-4">
+            Legg til eller fjern spillere
+          </Button>
         </div>
+      </div>
+    )
+  }
+
+  if (editTeam) {
+    return (
+      <div className="flex justify-center flex-col items-center bg-black text-white py-8">
+        <h1 className="text-4xl font-bold font-sans mb-10">Oppdater ditt lag</h1>
+
+        <form className="flex flex-col w-full p-4 lg:w-2/4" onSubmit={updateMythicPlusTeam}>
+          <label htmlFor="contactPerson" className="mb-2">
+            Kontakt person
+          </label>
+          <input
+            className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
+            name="contactPerson"
+            type="email"
+            value={data?.user?.email ?? ''}
+            readOnly
+          />
+          <label htmlFor="teamName" className="mb-2">
+            Lagnavn (Om du ønsker endre lagnavn, ta kontakt med en administrator)
+          </label>
+          <input
+            id="teamName"
+            name="teamName"
+            type="text"
+            placeholder="Lagnavn"
+            className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
+            readOnly
+            value={teamName}
+          />
+
+          <label className="mb-4 mt-10">Spillere:</label>
+          {players.map((player, index) => (
+            <div key={index} className="mb-4">
+              <input
+                type="text"
+                value={player.characterName.trim()}
+                onChange={(e) => handlePlayerChange(index, e)}
+                name={'characterName'} // Set a unique name for character names
+                placeholder="Character Name"
+                className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
+              />
+
+              <input
+                type="text"
+                value={player.realmName.trim()}
+                onChange={(e) => {
+                  setPlayerErrors((prevErrors) => prevErrors.map((error, i) => (i === index ? false : error)))
+                  handlePlayerChange(index, e)
+                }}
+                name={'realmName'}
+                placeholder="Realm Name"
+                className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
+              />
+              {playerErrors[index] && (
+                <p className="text-red-500 mb-2">Fyll inn både karakternavn og realm for spiller {index + 1}.</p>
+              )}
+
+              <Button
+                className="max-w-40 bg-red-500"
+                type="button"
+                onClick={() => handleRemovePlayer(index)}
+                aria-label={`Remove player ${index + 1}`}
+              >
+                Fjern spiller {index + 1}
+              </Button>
+            </div>
+          ))}
+          <Button className="mb-4 max-w-40" type="button" onClick={handleAddPlayer}>
+            Legg til spiller
+          </Button>
+          {missingPlayersError && <p className="text-red-500 mb-4">Legg til minst 5 spillere.</p>}
+
+          <Button
+            disabled={
+              players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
+              loadingCreateTeam ||
+              (players && players.length <= 4) ||
+              !hasEditedPlayers
+            }
+            className="mt-10"
+            type="submit"
+          >
+            {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
+            teamNameError ||
+            playerErrors.some((e) => e === true) ||
+            (players && players.length <= 4) ||
+            !hasEditedPlayers
+              ? 'Mangler info for å oppdatere lag'
+              : loadingCreateTeam
+                ? 'Oppdaterer lag'
+                : 'Oppdater lag'}
+            {loadingCreateTeam ? <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" /> : null}
+          </Button>
+        </form>
       </div>
     )
   }
@@ -279,6 +479,9 @@ function CreateMythicPlusTeam() {
               setTeamName(e.target.value)
             }}
           />
+          {teamNameAlreadyExists && (
+            <p className="text-red-500 mb-4">Lagnavnet eksisterer allerede. Vennligst velg et annet navn.</p>
+          )}
           {teamNameError && <p className="text-red-500 mb-4">Fyll inn et lagnavn.</p>}
 
           <label htmlFor="teamImage" className="mb-2">
@@ -340,6 +543,8 @@ function CreateMythicPlusTeam() {
           <Button
             disabled={
               players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
+              loadingCreateTeam ||
+              teamNameAlreadyExists ||
               teamNameError ||
               (players && players.length <= 4)
             }
@@ -347,6 +552,7 @@ function CreateMythicPlusTeam() {
             type="submit"
           >
             {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
+            teamNameAlreadyExists ||
             teamNameError ||
             playerErrors.some((e) => e === true) ||
             (players && players.length <= 4)
