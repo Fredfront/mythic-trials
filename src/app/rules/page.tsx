@@ -4,7 +4,6 @@ import { PortableText } from '@portabletext/react'
 
 async function page() {
   const rulesData = await getRulesData()
-  console.log(rulesData)
 
   return (
     <div className="w-full min-h-56 flex flex-col justify-between pt-10">

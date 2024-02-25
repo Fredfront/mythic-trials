@@ -12,6 +12,7 @@ export type MythicPlusTeam = {
   teamName: string
   teamSlug: string
   teamImage: ImageAsset
+  contactPerson: string
   players: Player[]
   _createdAt: string
   _rev: string

@@ -9,6 +9,7 @@ import { createClient } from '@sanity/client'
 import Image from 'next/image'
 import { SignupPage, getSignupData } from '../api/signup/getSignupInfo'
 import { urlForImage } from '../../../sanity/lib/image'
+import { MythicPlusTeam, getAllTeams } from '../api/getAllTeams'
 
 const client = createClient({
   projectId,
@@ -25,6 +26,18 @@ function CreateMythicPlusTeam() {
     { characterName: '', realmName: '' },
   ])
 
+  const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
+
+  useEffect(() => {
+    async function fetchAllTeams() {
+      const data = await getAllTeams()
+      setAllTeams(data)
+    }
+    fetchAllTeams()
+  }, [])
+
+  console.log(allTeams)
+
   const [signupData, setSignupData] = useState<SignupPage | null>(null)
 
   useEffect(() => {
@@ -34,8 +47,6 @@ function CreateMythicPlusTeam() {
     }
     fetchSignupData()
   }, [])
-
-  console.log(signupData)
 
   // State for image preview
   const [previewImage, setPreviewImage] = useState<any>(null)
@@ -213,12 +224,35 @@ function CreateMythicPlusTeam() {
         </div>
       </div>
     )
+
+  if (allTeams && allTeams.find((e) => e.contactPerson === data?.user?.email)) {
+    return (
+      <div className="w-full flex justify-center text-center ">
+        <div className="flex flex-col items-center">
+          <h1 className="text-4xl font-bold font-sans mb-10">Du har allerede opprettet et lag</h1>
+          <p className="font-bold">Lagnavn: {allTeams.find((e) => e.contactPerson === data?.user?.email)?.teamName}</p>
+          <p>Spillere:</p>
+          <ul>
+            {allTeams
+              .find((e) => e.contactPerson === data?.user?.email)
+              ?.players.map((player, index) => (
+                <li key={index}>
+                  {player.characterName} - {player.realmName}
+                </li>
+              ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+
   if (status === 'authenticated') {
     return (
       <div className="flex justify-center flex-col items-center bg-black text-white py-8">
         <h1 className="text-4xl font-bold font-sans mb-10">Opprett lag</h1>
         <p className="mb-4 pl-4">
-          Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag.{' '}
+          Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag. NB: Husk også å
+          legge til eventuelle alts som skal være med i laget.
         </p>
         <form className="flex flex-col w-full p-4 lg:w-2/4" onSubmit={handleSubmit}>
           <label htmlFor="contactPerson" className="mb-2">
@@ -329,20 +363,21 @@ function CreateMythicPlusTeam() {
   } else {
     return (
       <div className="w-full flex justify-center lg:mt-20 md:mt-20 mt-5">
-        <div className="w-full justify-center flex flex-col lg:flex-row md:flex-row">
-          <div className="p-4  w-full lg:w-1/4 md:w-1/4  text-start justify-flex flex-col ">
-            <h1 className="text-4xl font-bold font-sans mb-10">Opprett lag</h1>
-
-            <p className="mb-2">Du må først logge på for å kunne opprette lag </p>
-            <Button className=" lg:max-w-48 md:max-w-48 mt-auto w-full " onClick={() => signIn('google')}>
-              Logg på med google
-            </Button>
-          </div>
-          <div className=" w-full lg:w-3/4 md:w-2/4 md:max-w-3xl md:min-h-96 lg:max-w-3xl  p-4 lg:min-h-96 lg:mr-4 lg:ml-4 ">
-            <div
-              className=" bg-cover bg-center bg-no-repeat min-h-80 rounded-md  "
-              style={{ backgroundImage: `url(${urlForImage(signupData?.mainImage.asset._ref as string) as string})` }}
-            />
+        <div className="w-full lg:w-11/12 xl:w-10/12">
+          <div className="flex flex-col lg:flex-row md:flex-row">
+            <div className="p-4 w-full lg:w-1/2">
+              <h1 className="text-4xl font-bold font-sans mb-6 lg:mb-10">Opprett lag</h1>
+              <p className="mb-4 lg:mb-6">Du må først logge på for å kunne opprette lag</p>
+              <Button className="w-full lg:w-max" onClick={() => signIn('google')}>
+                Logg på med Google
+              </Button>
+            </div>
+            <div className="w-full lg:w-1/2 lg:ml-4 p-4 lg:p-0 ">
+              <div
+                className="bg-cover bg-center bg-no-repeat h-80 lg:h-auto lg:min-h-96 rounded-md"
+                style={{ backgroundImage: `url(${urlForImage(signupData?.mainImage.asset._ref as string) as string})` }}
+              />
+            </div>
           </div>
         </div>
       </div>
