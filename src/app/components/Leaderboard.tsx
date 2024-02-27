@@ -117,7 +117,7 @@ function LeaderboardComponent() {
       </div>
 
       <Table className=" max-w-screen-xlg  ">
-        <TableHeader className="bg-orange-400 ">
+        <TableHeader className="bg-primary">
           <TableRow>
             <TableHead className="text-black font-extrabold">Lagnavn</TableHead>
             {hideTyrannical

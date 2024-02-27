@@ -7,10 +7,7 @@ export async function LeaderboardDrawer() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          className="font-extrabold w-40 min-h-12 bg-white text-black hover:bg-black hover:text-white  "
-        >
+        <Button variant="outline" className="font-extrabold w-40 min-h-12  ">
           Se leaderboard
         </Button>
       </DrawerTrigger>

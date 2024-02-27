@@ -23,11 +23,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const allTeams = await getAllTeams()
   const data = allTeams.find((e) => e.teamSlug === params.slug)
   const idForRef = allTeams.find((e) => e.teamName === data?.teamName)?._id
-  // const mythicPlusDetails = await getMythicPlusInfoDetails({
-  //   token,
-  //   realm: 'draenor',
-  //   character: 'girfaen',
-  // })
+
   const { dungeons, timeForTeam } = getDungeonInfo(leaderboard, idForRef)
 
   const dungtimes = Object.keys(timeForTeam).map((e) => {
@@ -37,11 +33,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
     }
   })
 
+  const hasDungTimes = Object.entries(dungtimes).some((e) => e[1].time !== undefined)
+
   return (
     <div className="max-w-full flex justify-center">
       <div className="mt-32">
         <div className="flex  items-center">
-          <Suspense fallback={<Skeleton className="h-12 w-12 rounded-full" />}>
+          <Suspense fallback={<Skeleton className="h-36 w-36 rounded-full" />}>
             <Image
               alt=""
               style={{ border: '10px solid #2e2c37' }}
@@ -59,9 +57,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
         <div className=" mt-20 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4 ">
           <Suspense
             fallback={
-              <div className="ml-8 flex">
-                <Skeleton className="h-12 w-12 rounded-full" />
-              </div>
+              <>
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+              </>
             }
           >
             {data?.players.map((player) => {
@@ -71,7 +73,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </Suspense>
         </div>
         <div className="ml-4 mt-20">
-          {dungtimes && dungtimes.length > 0 && <h3 className="mb-4 font-extrabold">Dungeon times</h3>}
+          {hasDungTimes && <h3 className="mb-4 font-extrabold">Dungeon times</h3>}
 
           <Suspense
             fallback={

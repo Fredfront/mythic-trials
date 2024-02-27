@@ -7,23 +7,23 @@ const Navbar = () => {
     <nav className="flex items-center justify-between flex-wrap bg-black p-6 ">
       <div className=" flex-grow flex items-center w-auto">
         <div className="flex-grow text-xs ">
-          <Link href="/" className="inline-block mt-0  hover:text-white mr-2">
+          <Link href="/" className="inline-block mt-0   text-primary  hover:text-white mr-2">
             Forside
           </Link>
-          <Link href="/#teams" className="inline-block mt-0  hover:text-white mr-2">
+          <Link href="/#teams" className="inline-block mt-0   text-primary  hover:text-white mr-2">
             Lag
           </Link>
-          <Link href="/leaderboard" className="mt-0 inline-block  hover:text-white mr-2">
+          <Link href="/leaderboard" className="mt-0 inline-block  text-primary   hover:text-white mr-2">
             Leaderboard
           </Link>
-          <Link href="/rules" className=" inline-block mt-0  hover:text-white">
+          <Link href="/rules" className=" inline-block mt-0 text-primary  hover:text-white">
             Regler
           </Link>
         </div>
         <div>
           <Link
             href="/signup"
-            className="inline-block text-xs px-2 py-2 leading-none border rounded text-white border-white hover:border-transparent  hover:bg-white mt-0"
+            className="inline-block text-xs px-2 py-2 leading-none border rounded  text-primary  mt-0"
           >
             Påmelding
           </Link>

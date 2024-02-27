@@ -19,14 +19,11 @@ const Home = async () => {
           }}
           className={`flex flex-col items-center justify-center h-screen w-full bg-cover bg-center bg-no-repeat `}
         >
-          <h1 className="  text-4xl md:text-5xl lg:text-6xl font-bold">{frontpageData.headline}</h1>
+          <h1 className="  text-4xl md:text-5xl lg:text-6xl font-bold text-primary">{frontpageData.headline}</h1>
           <h2 className="font-thin">{frontpageData.smallTextDescription}</h2>
           <div className="flex gap-4 mt-10 ">
             <Link href="/signup">
-              <Button
-                variant="outline"
-                className="font-extrabold w-40 min-h-12 bg-white text-black hover:bg-black hover:text-white  "
-              >
+              <Button variant="outline" className="font-extrabold w-40 min-h-12 bg-primary ">
                 Påmelding
               </Button>
             </Link>
@@ -34,7 +31,7 @@ const Home = async () => {
           </div>
         </div>
         <div className="max-w-7xl  grid place-content-center mt-12">
-          <h1 id="teams" className="text-center text-6xl font-extrabold  ">
+          <h1 id="teams" className="text-center text-6xl font-extrabold text-primary  ">
             LAGENE
           </h1>
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 mt-10 p-2 min-w-full mb-10 ">

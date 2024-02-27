@@ -9,7 +9,10 @@ import { createClient } from '@sanity/client'
 import Image from 'next/image'
 import { SignupPage, getSignupData } from '../api/signup/getSignupInfo'
 import { urlForImage } from '../../../sanity/lib/image'
-import { MythicPlusTeam, getAllTeams } from '../api/getAllTeams'
+import { MythicPlusTeam, Player, getAllTeams } from '../api/getAllTeams'
+
+import { getRaiderIOCharacerData } from '../api/getCharacerData'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 
 const client = createClient({
   projectId,
@@ -329,17 +332,14 @@ function CreateMythicPlusTeam() {
       <div className="w-full flex justify-center text-center ">
         <div className="flex flex-col items-center">
           <h1 className="text-4xl font-bold font-sans mb-10">Du har allerede opprettet et lag</h1>
-          <p className="font-bold">Lagnavn: {allTeams.find((e) => e.contactPerson === data?.user?.email)?.teamName}</p>
-          <p>Spillere:</p>
-          <ul>
+          <p className="font-bold mb-4 text-3xl">
+            {allTeams.find((e) => e.contactPerson === data?.user?.email)?.teamName}
+          </p>
+          <div className="grid grid-cols-3 place-content-center text-center ">
             {allTeams
               .find((e) => e.contactPerson === data?.user?.email)
-              ?.players.map((player, index) => (
-                <li key={index}>
-                  Navn: {player.characterName} - Realm: {player.realmName}
-                </li>
-              ))}
-          </ul>
+              ?.players.map((player, index) => <PlayerInfo key={index} player={player} />)}
+          </div>
           <Button onClick={() => setEditTeam(true)} className="mt-4">
             Legg til eller fjern spillere
           </Button>
@@ -591,3 +591,25 @@ function CreateMythicPlusTeam() {
 }
 
 export default CreateMythicPlusTeam
+
+const PlayerInfo = ({ player }: { player: Player }) => {
+  const [playerInfo, setPlayerInfo] = useState<any>(null)
+
+  useEffect(() => {
+    async function fetchPlayerInfo() {
+      const data = await getRaiderIOCharacerData({ characterName: player.characterName, realmName: player.realmName })
+      setPlayerInfo(data)
+    }
+    fetchPlayerInfo()
+  }, [player.characterName, player.realmName])
+
+  return (
+    <div className="flex flex-col items-center mb-2 mt-2">
+      <Avatar className="mr-1">
+        <AvatarImage src={playerInfo?.thumbnail_url} alt="" />
+      </Avatar>
+      <p className="">{player.characterName}</p>
+      <p className="m-0 text-xs">{player.realmName}</p>
+    </div>
+  )
+}

@@ -17,9 +17,9 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }: TeamCardProps) => {
         className="rounded-full mr-4 ml-1 w-28 h-28"
         width={120}
         height={120}
-        style={{ border: '6px solid #2e2c37' }}
+        style={{ border: '6px solid primary' }}
       />
-      <div className="text-2xl font-extrabold">{team.teamName}</div>
+      <div className="text-2xl font-extrabold text-white">{team.teamName}</div>
     </div>
   )
 }

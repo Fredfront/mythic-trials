@@ -4,6 +4,11 @@ import { GET_ALL_TEAMS } from '../../../sanity/lib/queries'
 export async function getAllTeams() {
   const teams = await client.fetch({
     query: GET_ALL_TEAMS,
+    config: {
+      next: {
+        revalidate: 60,
+      },
+    },
   })
   return teams as MythicPlusTeam[]
 }
