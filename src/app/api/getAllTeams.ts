@@ -35,7 +35,11 @@ type ImageAsset = {
 
 export type Player = {
   realmName: string
-  _type: string
   characterName: string
-  _key: string
+  alts: AltPlayer[]
+}
+
+export type AltPlayer = {
+  altRealmName: string
+  altCharacterName: string
 }

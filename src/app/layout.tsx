@@ -9,6 +9,9 @@ import { cn } from '@/lib/utils'
 export const metadata: Metadata = {
   title: 'Nerdelandslaget - Mythic Trials',
   description: 'Nerdelandslaget - Mythic Trials ',
+  icons: {
+    icon: '/NL_logo_stor_liten.webp',
+  },
 }
 
 const fontSans = FontSans({

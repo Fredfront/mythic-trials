@@ -5,6 +5,10 @@ export async function getRaiderIOCharacerData({
   characterName: string
   realmName: string
 }) {
+  if (!characterName || !realmName) {
+    return null
+  }
+
   const res = await fetch(
     `https://raider.io/api/v1/characters/profile?region=eu&realm=${realmName}&name=${characterName}&fields=mythic_plus_recent_runs`,
   )

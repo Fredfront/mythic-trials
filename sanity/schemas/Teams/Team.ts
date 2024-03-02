@@ -59,14 +59,41 @@ export const Player = {
       name: 'characterName',
       title: 'Character Name',
       description: 'The name of the player character',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: { required: () => any }) => Rule.required(),
     },
     {
       type: 'string',
       name: 'realmName',
       title: 'Realm Name',
       description: 'The name of the realm for the player character',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: { required: () => any }) => Rule.required(),
+    },
+    {
+      type: 'array',
+      name: 'alts',
+      title: 'Alts',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              type: 'string',
+              name: 'altCharacterName',
+              title: 'Alt Character Name',
+              description: 'The name of the alt character',
+              validation: (Rule: { required: () => any }) => Rule.required(),
+            },
+            {
+              type: 'string',
+              name: 'altRealmName',
+              title: 'Alt Realm Name',
+              description: 'The name of the realm for the alt character',
+              validation: (Rule: { required: () => any }) => Rule.required(),
+            },
+          ],
+        },
+      ],
+      description: 'Other characters (players) of the player',
     },
   ],
   preview: {
