@@ -49,7 +49,7 @@ export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps)
 }
 
 type HoverStuffProps = {
-  data: WoWCharacter
+  data: WoWCharacter | null
   classColor: string
   blizzCharacterData: CharacterData | null
   mythicPlusInfo: any
@@ -81,7 +81,7 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }:
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{data.name}</DialogTitle>
+          <DialogTitle>{data?.name}</DialogTitle>
           <DialogDescription>Guild: {blizzCharacterData?.guild?.name}</DialogDescription>
           <DialogDescription style={{ color: ratingColor }}>
             {' '}
@@ -89,7 +89,7 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }:
           </DialogDescription>
           <DialogDescription>Ilvl {blizzCharacterData?.equipped_item_level}</DialogDescription>
         </DialogHeader>
-        <a href={data.profile_url} target="_blank">
+        <a href={data?.profile_url} target="_blank">
           <DialogFooter>Gå til raider.io</DialogFooter>{' '}
         </a>
       </DialogContent>
