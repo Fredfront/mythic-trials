@@ -19,10 +19,11 @@ const Home = async () => {
           }}
           className={`flex flex-col items-center justify-center h-screen w-full bg-cover bg-center bg-no-repeat `}
         >
-          <h1 className=" mb-20 text-3xl  md:text-5xl lg:text-8xl xl:text-8xl font-bold font-poppins text-white">
+          <h1 className="text-3xl md:text-5xl lg:text-8xl xl:text-8xl font-poppins text-white rounded-lg p-4 bg-opacity-10">
             {frontpageData.headline.toUpperCase()}
           </h1>
-          <h2 className="font-thin">{frontpageData.smallTextDescription}</h2>
+
+          <h2 className="font-thin">Presentert av Nerdelandslaget WoW Community</h2>
           <div className="flex gap-4 mt-10 ">
             <Link href="/signup">
               <Button variant="outline" className="font-extrabold w-40 min-h-12 bg-primary font-poppins ">
@@ -32,7 +33,7 @@ const Home = async () => {
             <LeaderboardDrawer />
           </div>
         </div>
-        <div className="max-w-7xl  grid place-content-center mt-12">
+        <div className="max-w-7xl  mt-12 min-h-dvh ">
           <h2 id="teams" className="text-center text-6xl font-extrabold text-primary  ">
             LAGENE
           </h2>

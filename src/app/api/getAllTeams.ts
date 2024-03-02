@@ -6,7 +6,7 @@ export async function getAllTeams() {
     query: GET_ALL_TEAMS,
     config: {
       next: {
-        revalidate: 60,
+        revalidate: 30,
       },
     },
   })
