@@ -410,10 +410,28 @@ function CreateMythicPlusTeam() {
           <p className="font-bold mb-4 text-3xl">
             Lagnavn: {allTeams.find((e) => e.contactPerson === data?.user?.email)?.teamName}
           </p>
+          <h2 className=" font-poppins font-bold">MAINS</h2>
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 place-content-center text-center ">
             {allTeams
               .find((e) => e.contactPerson === data?.user?.email)
               ?.players.map((player, index) => <PlayerInfo key={index} player={player} />)}
+          </div>
+          <h2 className=" font-poppins font-bold">ALTS</h2>
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 place-content-center text-center ">
+            {allTeams
+              .find((e) => e.contactPerson === data?.user?.email)
+              ?.players.map((player, index) =>
+                player.alts?.map((alt, altIndex) => (
+                  <PlayerInfo
+                    key={altIndex}
+                    player={{
+                      characterName: alt.altCharacterName,
+                      realmName: alt.altRealmName,
+                      altOf: player.characterName,
+                    }}
+                  />
+                )),
+              )}
           </div>
           <Button onClick={() => setEditTeam(true)} className="mt-4 mb-4">
             Legg til eller fjern spillere
@@ -834,7 +852,13 @@ function CreateMythicPlusTeam() {
 
 export default CreateMythicPlusTeam
 
-const PlayerInfo = ({ player }: { player: Player }) => {
+type ExtendedPlayer = {
+  characterName: string
+  realmName: string
+  altOf?: string
+}
+
+const PlayerInfo = ({ player }: { player: ExtendedPlayer }) => {
   const [playerInfo, setPlayerInfo] = useState<any>(null)
 
   useEffect(() => {
@@ -852,6 +876,7 @@ const PlayerInfo = ({ player }: { player: Player }) => {
       </Avatar>
       <p className="">{player.characterName}</p>
       <p className="m-0 text-xs">{player.realmName}</p>
+      {player.altOf && <p className="m-0 text-xs">Alt av: {player.altOf}</p>}
     </div>
   )
 }
