@@ -27,8 +27,16 @@ function ExistingTeam() {
   )?.teamSlug
 
   useEffect(() => {
-    router.replace(`/signup/existingTeam/${teamSlug}`)
-  }, [router, teamSlug])
+    if (allTeams?.find((e) => e.contactPerson === auth?.user?.email)) {
+      router.push(`/signup/existingTeam/${teamSlug}`)
+    }
+  }, [allTeams, auth?.user?.email, router, teamSlug])
+
+  const hasAltCharacters = useMemo(
+    () =>
+      allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.players.some((player) => player.alts.length > 0),
+    [allTeams, auth?.user?.email],
+  )
 
   if (loading) {
     return (
@@ -41,20 +49,20 @@ function ExistingTeam() {
   }
 
   return (
-    <div className="w-full flex justify-center text-center ">
+    <div className="w-full flex justify-center ">
       <div className="flex flex-col items-center">
         <h1 className="text-4xl font-bold font-sans mb-4">Du har allerede opprettet et lag</h1>
         <p className="mb-10">NB! Det kan ta noen minutter før endringene er synlig på denne siden.</p>
         <p className="font-bold mb-4 text-3xl">
           Lagnavn: {allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.teamName}
         </p>
-        <h2 className=" font-poppins font-bold">MAINS</h2>
+        <h2 className=" text-left font-poppins font-bold">MAINS</h2>
         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 place-content-center text-center ">
           {allTeams
             ?.find((e) => e.contactPerson === auth?.user?.email)
             ?.players.map((player, index) => <PlayerInfo key={index} player={player} />)}
         </div>
-        <h2 className=" font-poppins font-bold">ALTS</h2>
+        {hasAltCharacters ? <h2 className=" font-poppins font-bold mt-4 ">ALTS</h2> : null}
         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 place-content-center text-center ">
           {allTeams
             ?.find((e) => e.contactPerson === auth?.user?.email)
