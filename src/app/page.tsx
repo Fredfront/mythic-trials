@@ -5,7 +5,7 @@ import { getFrontpageData } from './api/frontpage/frontpage'
 import { urlForImage } from '../../sanity/lib/image'
 import { Button } from '@/components/ui/button'
 import { LeaderboardDrawer } from './components/DrawerComponent'
-
+import { Headline, SubHeadline } from './components/text-generate-effect'
 const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
@@ -19,16 +19,14 @@ const Home = async () => {
           }}
           className={`flex flex-col items-center justify-center h-screen w-full bg-cover bg-center bg-no-repeat `}
         >
-          <h1 className="text-3xl md:text-5xl lg:text-8xl xl:text-8xl font-poppins text-white rounded-lg p-4 bg-opacity-10">
-            {frontpageData.headline.toUpperCase()}
-          </h1>
-
-          <h2 className="font-thin">Presentert av Nerdelandslaget WoW Community</h2>
+          <Headline
+            className="text-3xl md:text-5xl lg:text-8xl xl:text-8xl font-poppins text-white"
+            words={frontpageData.headline}
+          />
+          <SubHeadline words="Presentert av Nerdelandslaget WoW Community" />
           <div className="flex gap-4 mt-10 ">
             <Link href="/signup">
-              <Button variant="outline" className="font-extrabold w-40 min-h-12 bg-primary font-poppins ">
-                Påmelding
-              </Button>
+              <Button className="w-40 min-h-12 font-poppins font-bold ">Påmelding</Button>
             </Link>
             <LeaderboardDrawer />
           </div>

@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Navbar from './components/Navbar'
 import Image from 'next/image'
+import { DiscordLogoIcon, InstagramLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
+import { TwitchIcon, Youtube } from 'lucide-react'
 
 export default function Template({ children }: { children: React.ReactNode }) {
   return (
@@ -20,6 +22,33 @@ const Footer = () => {
           <a href="https://nl-wow.no/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
             <Image width="30" height="30" src="/NL_logo_stor_liten.webp" alt="NL logo" />
           </a>
+          <ul className="flex gap-4">
+            <li>
+              <a href="https://discord.gg/wownl">
+                <DiscordLogoIcon className=" h-5  w-5 " />
+              </a>
+            </li>
+            <li>
+              <a href="https://www.twitch.tv/nerdelandslaget_wow">
+                <TwitchIcon className="   h-5 w-5" />
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/@nerdelandslagetwow">
+                <Youtube className=" h-5 w-5" />
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/nerdelandslaget.wow/">
+                <InstagramLogoIcon className="h-5 w-5" />{' '}
+              </a>
+            </li>
+            <li>
+              <a href="https://twitter.com/NL_Draenor/">
+                <TwitterLogoIcon className="h-5 w-5" />
+              </a>
+            </li>
+          </ul>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
             <li>
               <Link className="hover:underline me-4 md:me-6" href="/">
