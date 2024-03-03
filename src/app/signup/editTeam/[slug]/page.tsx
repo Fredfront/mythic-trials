@@ -40,7 +40,7 @@ function EditTeam() {
 
   useEffect(() => {
     if (allTeams?.find((e) => e.contactPerson === data?.user?.email)) {
-      router.push(`/signup/existingTeam/${teamSlug}`)
+      router.push(`/signup/editTeam/${teamSlug}`)
     }
   }, [allTeams, data?.user?.email, router, teamSlug])
 

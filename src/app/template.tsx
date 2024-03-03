@@ -22,7 +22,7 @@ const Footer = () => {
           <a href="https://nl-wow.no/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
             <Image width="30" height="30" src="/NL_logo_stor_liten.webp" alt="NL logo" />
           </a>
-          <ul className="flex gap-4">
+          <ul className="flex gap-4 mt-4 mb-4">
             <li>
               <a href="https://discord.gg/wownl">
                 <DiscordLogoIcon className=" h-5  w-5 " />

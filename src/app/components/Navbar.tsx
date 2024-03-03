@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const Navbar = () => {
-  const router = useRouter()
   return (
     <nav className="flex items-center justify-between flex-wrap bg-black p-6 ">
       <div className=" flex-grow flex items-center w-auto">
