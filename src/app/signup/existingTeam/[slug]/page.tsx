@@ -34,7 +34,9 @@ function ExistingTeam() {
 
   const hasAltCharacters = useMemo(
     () =>
-      allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.players.some((player) => player.alts.length > 0),
+      allTeams
+        ?.find((e) => e.contactPerson === auth?.user?.email)
+        ?.players.some((player) => player.alts && player.alts.length > 0),
     [allTeams, auth?.user?.email],
   )
 

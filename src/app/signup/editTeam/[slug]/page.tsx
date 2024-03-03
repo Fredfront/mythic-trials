@@ -114,11 +114,10 @@ function EditTeam() {
         ]
 
         // Send the mutation to create the draft document
-        const response = await fetch(`https://${projectId}.api.sanity.io/v${apiVersion}/data/mutate/${dataset}`, {
+        const response = await fetch(`https://mythic-trials-sanity-api.vercel.app/postToSanity`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ mutations }),
         })

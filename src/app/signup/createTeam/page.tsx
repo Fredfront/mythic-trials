@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { colourStyles } from '../utils/styles'
-import { projectId, dataset, apiVersion, token, useCdn } from '../../../../sanity/env'
 import { v4 as uuidv4 } from 'uuid'
 import Select from 'react-select'
 import Image from 'next/image'
@@ -237,11 +236,11 @@ function CreateTeam() {
       ]
 
       // Send the mutation to create the draft document
-      const response = await fetch(`https://${projectId}.api.sanity.io/v${apiVersion}/data/mutate/${dataset}`, {
+      // Send the mutation to create the draft document
+      const response = await fetch(`https://mythic-trials-sanity-api.vercel.app/postToSanity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ mutations }),
       })
@@ -297,7 +296,7 @@ function CreateTeam() {
   if (status === 'loading' || status === 'unauthenticated') return <Loading />
 
   return (
-    hasTeam && (
+    status === 'authenticated' && (
       <div className="flex justify-center flex-col items-center bg-black text-white py-8">
         <h1 className="text-4xl font-bold font-sans mb-10">Opprett lag</h1>
         <p className="mb-4 pl-4">
