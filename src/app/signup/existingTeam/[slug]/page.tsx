@@ -51,9 +51,9 @@ function ExistingTeam() {
   return (
     <div className="w-full flex justify-center ">
       <div className="flex flex-col items-center">
-        <h1 className="text-4xl font-bold font-sans mb-4">Du har allerede opprettet et lag</h1>
-        <p className="mb-10">NB! Det kan ta noen minutter før endringene er synlig på denne siden.</p>
-        <p className="font-bold mb-4 text-3xl">
+        <h1 className=" p-2 text-2xl md:text-3xl font-bold font-sans mb-4">Du har allerede opprettet et lag</h1>
+        <p className="p-2 mb-10">NB! Det kan ta noen minutter før endringene er synlig på denne siden.</p>
+        <p className="font-bold mb-4 text-xl md:text-3xl">
           Lagnavn: {allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.teamName}
         </p>
         <h2 className=" text-left font-poppins font-bold">MAINS</h2>
