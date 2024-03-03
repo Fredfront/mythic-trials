@@ -1,9 +1,8 @@
 'use client'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const Navbar = () => {
+const Navbar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
   return (
     <nav className="flex items-center justify-between flex-wrap bg-black p-6 ">
       <div className=" flex-grow flex items-center w-auto">
@@ -14,9 +13,12 @@ const Navbar = () => {
           <Link href="/#teams" className="inline-block mt-0   text-primary  hover:text-white mr-2">
             Lag
           </Link>
-          <Link href="/leaderboard" className="mt-0 inline-block  text-primary   hover:text-white mr-2">
-            Leaderboard
-          </Link>
+          {showLeaderboard === true ? (
+            <Link href="/leaderboard" className="mt-0 inline-block  text-primary   hover:text-white mr-2">
+              Leaderboard
+            </Link>
+          ) : null}
+
           <Link href="/rules" className=" inline-block mt-0 text-primary  hover:text-white">
             Regler
           </Link>

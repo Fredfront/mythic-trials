@@ -53,7 +53,10 @@ function EditTeam() {
   }, [])
 
   useEffect(() => {
-    if (allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName) {
+    if (
+      allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName &&
+      allTeams?.find((e) => e.contactPerson === data?.user?.email)?.players
+    ) {
       allTeams
         ?.find((e) => e.contactPerson === data?.user?.email)
         ?.players.map((player, index) => {

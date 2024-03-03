@@ -6,9 +6,11 @@ import { urlForImage } from '../../sanity/lib/image'
 import { Button } from '@/components/ui/button'
 import { LeaderboardDrawer } from './components/DrawerComponent'
 import { Headline, SubHeadline } from './components/text-generate-effect'
+import { get } from '@vercel/edge-config'
 const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
+  const showLeaderboard = await get('showLeaderboard')
 
   return (
     <main>
@@ -28,7 +30,7 @@ const Home = async () => {
             <Link href="/signup">
               <Button className="w-40 min-h-12 font-poppins font-bold ">Påmelding</Button>
             </Link>
-            <LeaderboardDrawer />
+            {showLeaderboard ? <LeaderboardDrawer /> : null}
           </div>
         </div>
         <div className="max-w-7xl  mt-12 min-h-dvh ">

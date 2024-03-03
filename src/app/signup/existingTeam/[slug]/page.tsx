@@ -84,7 +84,7 @@ function ExistingTeam() {
             onClick={() => {
               setLoading(true)
             }}
-            className="mt-4 mb-4"
+            className="mt-10 mb-8"
           >
             Legg til eller fjern spillere
           </Button>
