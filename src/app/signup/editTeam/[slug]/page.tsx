@@ -32,12 +32,17 @@ function EditTeam() {
   )
 
   useEffect(() => {
-    router.replace(`/signup/editTeam/${teamSlug}`)
     if (status === 'unauthenticated') {
       router.prefetch('/signup/signin')
       router.push('/signup/signin')
     }
   }, [router, status, teamSlug])
+
+  useEffect(() => {
+    if (allTeams?.find((e) => e.contactPerson === data?.user?.email)) {
+      router.push(`/signup/existingTeam/${teamSlug}`)
+    }
+  }, [allTeams, data?.user?.email, router, teamSlug])
 
   useEffect(() => {
     async function fetchAllTeams() {
