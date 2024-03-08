@@ -297,7 +297,7 @@ function CreateTeam() {
 
   return (
     status === 'authenticated' && (
-      <div className="flex justify-center flex-col items-center bg-black text-white py-8">
+      <div className="flex justify-center flex-col items-center  text-white py-8">
         <h1 className="text-4xl font-bold  mb-10">Opprett lag</h1>
         <p className="mb-4 pl-4">
           Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag. NB: Husk også å
@@ -431,7 +431,7 @@ function CreateTeam() {
                     }}
                   />
                   <Button
-                    className="bg-red-500 mt-2"
+                    className="bg-red-500 mt-2 hover:bg-red-500 hover:scale-105"
                     type="button"
                     onClick={() => handleRemoveAltPlayer(index, altIndex)}
                   >
@@ -445,7 +445,7 @@ function CreateTeam() {
 
               <div className="flex">
                 <Button
-                  className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2"
+                  className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 hover:bg-red-500 hover:scale-105 rounded-xl"
                   type="button"
                   onClick={() => handleRemovePlayer(index)}
                   aria-label={`Remove player ${index + 1}`}
@@ -453,7 +453,7 @@ function CreateTeam() {
                   Fjern spiller {index + 1}
                 </Button>
                 <Button
-                  className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2"
+                  className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2 bg-white text-black  hover:bg-white  hover:scale-105  rounded-xl"
                   type="button"
                   onClick={() => handleAddAltPlayer(index)} // Call handleAddAltPlayer function with the index of the main player
                 >
@@ -468,7 +468,11 @@ function CreateTeam() {
           {players && players.length >= 7 ? (
             <p className="text-white mb-4">Du har nådd maks antall spillere (7)</p>
           ) : (
-            <Button className="mb-4 max-w-52" type="button" onClick={handleAddPlayer}>
+            <Button
+              className="mb-4 max-w-52 bg-white text-black hover:bg-white hover:scale-105  rounded-xl"
+              type="button"
+              onClick={handleAddPlayer}
+            >
               Legg til ny spiller
             </Button>
           )}

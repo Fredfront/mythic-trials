@@ -52,7 +52,10 @@ function Signin() {
           <div className="p-4 w-full lg:w-1/2">
             <h1 className="text-4xl font-bold  mb-6 lg:mb-10">Opprett lag</h1>
             <p className="mb-4 lg:mb-6">Du må først logge på for å kunne opprette lag</p>
-            <Button className="w-full lg:w-max" onClick={() => signIn('google').then}>
+            <Button
+              className="w-full lg:w-max bg-white text-black rounded-xl font-bold hover:bg-white  hover:scale-105"
+              onClick={() => signIn('google').then}
+            >
               Logg på med Google
             </Button>
           </div>

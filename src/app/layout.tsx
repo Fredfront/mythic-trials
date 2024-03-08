@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Nerdelandslaget - Mythic Trials ',
 
   icons: {
-    icon: 'MT_logo_white.png',
+    icon: 'Logo.png',
   },
 }
 
