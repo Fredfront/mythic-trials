@@ -43,13 +43,12 @@ const Home = async () => {
             </Link>
           </div>
         </div>
-        <div className="flex gap-4 text-[#FCD20A] mt-10 font-normal ">
+        <div className="gap-4  text-[#FCD20A] mt-10 font-normal hidden lg:flex">
           <div>RUNDE 1: 20.05.2024 </div>|<div>RUNDE 2: 20.05.2024</div>
           <div>RUNDE 3: 20.05.2024</div> |<div>RUNDE 4: 20.05.2024</div>|<div>RUNDE 5: 20.05.2024</div>|
           <div>RUNDE 6: 20.05.2024</div>|<div>FINALE 1: 20.05.2024</div>|<div>FINALE 2: 20.05.2024</div>
         </div>
         <div id="teams" className=" mt-12 ">
-          {/* <div className=" max-w-fit flex flex-nowrap overflow-x-scroll gap-4 pr-16 pl-16  "> */}
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 mt-10 p-2 min-w-full mb-10 ">
             {allTeams &&
               allTeams
@@ -64,8 +63,8 @@ const Home = async () => {
                 ))}
           </div>
         </div>
-        <div className="flex max-w-7xl mt-32 gap-10 ">
-          <div className="w-1/2">
+        <div className="flex flex-col lg:flex-row p-2 max-w-7xl lg:mt-32 mt-2 gap-10 ">
+          <div className="lg:w-1/2 w-full ">
             <h3 className="text-4xl mb-6 font-bold">Nyhet 1</h3>
             <p className=" font-medium">
               Nyheten cras sagittis sem arcu, et faucibus ipsum porttitor ac. Quisque sodales sem eu accumsan maximus.
@@ -76,7 +75,7 @@ const Home = async () => {
               eget eros vehicula, quis viverra mauris pulvinar.
             </p>
           </div>
-          <div className="w-1/2">
+          <div className="lg:w-1/2 w-full">
             <Image
               src={urlForImage(frontpageData.mainImage.asset._ref)}
               alt=""
@@ -86,7 +85,7 @@ const Home = async () => {
             />
           </div>
         </div>
-        <div className="mt-24">
+        <div className="mt-10 md:mt-24 lg:mt-24">
           <LeaderboardDrawer />
         </div>
       </div>
