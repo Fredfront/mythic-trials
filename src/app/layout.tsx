@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -11,14 +10,9 @@ export const metadata: Metadata = {
   description: 'Nerdelandslaget - Mythic Trials ',
 
   icons: {
-    icon: '/NL_logo_stor_liten.webp',
+    icon: 'MT_logo_white.png',
   },
 }
-
-const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
 
 export default function RootLayout({
   children,
@@ -27,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('min-h-screen bg-black font-sans antialiased', fontSans.variable)}>
+      <body className={cn(`min-h-screen bg-[#011624] antialiased font-DMSans`)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children} <Analytics /> <SpeedInsights />
         </ThemeProvider>

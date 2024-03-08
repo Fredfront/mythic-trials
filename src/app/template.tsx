@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Navbar from './components/Navbar'
+import NavBar from './components/Navbar'
 import Image from 'next/image'
 import { DiscordLogoIcon, InstagramLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 import { TwitchIcon, Youtube } from 'lucide-react'
@@ -10,7 +10,7 @@ export default async function Template({ children }: { children: React.ReactNode
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar showLeaderboard={showLeaderboard} />
+      <NavBar />
       <div className="flex-grow">{children}</div>
       <Footer />
     </div>
@@ -21,12 +21,9 @@ const Footer = async () => {
   const showLeaderboard = (await get('showLeaderboard')) as any
 
   return (
-    <footer className=" mt-10 rounded-lg shadow dark:bg-[#272727] ">
+    <footer className=" mt-10  shadow dark:bg-[#272727]">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
-          <a href="https://nl-wow.no/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
-            <Image width="30" height="30" src="/NL_logo_stor_liten.webp" alt="NL logo" />
-          </a>
           <ul className="flex gap-4 mt-4 mb-4">
             <li>
               <a href="https://discord.gg/wownl">

@@ -41,7 +41,7 @@ const Component = (item: any) => {
       realmName: item?.item?.realmName,
     })
     setPlayerInfo(info)
-  }, 100)
+  }, 1)
 
   useEffect(() => {
     // Call the debounced function when player changes

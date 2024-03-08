@@ -50,7 +50,7 @@ function Signin() {
       <div className="w-full lg:w-11/12 xl:w-10/12">
         <div className="flex flex-col lg:flex-row md:flex-row">
           <div className="p-4 w-full lg:w-1/2">
-            <h1 className="text-4xl font-bold font-sans mb-6 lg:mb-10">Opprett lag</h1>
+            <h1 className="text-4xl font-bold  mb-6 lg:mb-10">Opprett lag</h1>
             <p className="mb-4 lg:mb-6">Du må først logge på for å kunne opprette lag</p>
             <Button className="w-full lg:w-max" onClick={() => signIn('google').then}>
               Logg på med Google

@@ -93,7 +93,7 @@ function LeaderboardComponent() {
   }
 
   return (
-    <div className=" p-4 mt-4 ">
+    <div className=" p-4 mt-4 overflow-scroll ">
       <div className="flex gap-4 pb-2 justify-end w-full flex-col lg:flex-row md:flex-row">
         <div>
           <Checkbox checked={hideTyrannical} onClick={() => setHideTyrannical(!hideTyrannical)} />
@@ -116,8 +116,8 @@ function LeaderboardComponent() {
         </div>
       </div>
 
-      <Table className=" max-w-screen-xlg  ">
-        <TableHeader className="bg-primary">
+      <Table className="max-w-screen-xlg">
+        <TableHeader className=" bg-[#fcd20a] ">
           <TableRow>
             <TableHead className="text-black font-extrabold">Lagnavn</TableHead>
             {hideTyrannical

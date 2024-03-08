@@ -38,7 +38,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <div className="max-w-full flex justify-center">
       <div className="mt-32">
-        <div className="flex  items-center">
+        <div className="flex  items-center lg:flex-row md:flex-row flex-col">
           <Suspense fallback={<Skeleton className="h-36 w-36 rounded-full" />}>
             <Image
               alt=""
@@ -49,21 +49,21 @@ export default async function Page({ params }: { params: { slug: string } }) {
               className="rounded-full h-44 w-44 "
             />
             <Suspense fallback={<Skeleton className="h-4 w-[250px]" />}>
-              <div className="text-2xl font-medium ml-4">{data?.teamName?.toUpperCase()}</div>
+              <div className=" font-LifeCraft text-xl md:text-2xl ml-4 mt-4">{data?.teamName?.toUpperCase()}</div>
             </Suspense>
           </Suspense>
         </div>
 
-        <div className=" mt-20 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4 ">
+        <div className="mt-20 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4 ">
           <Suspense
             fallback={
-              <>
+              <div>
                 <Skeleton className="h-24 w-24 rounded-full" />
                 <Skeleton className="h-24 w-24 rounded-full" />
                 <Skeleton className="h-24 w-24 rounded-full" />
                 <Skeleton className="h-24 w-24 rounded-full" />
                 <Skeleton className="h-24 w-24 rounded-full" />
-              </>
+              </div>
             }
           >
             {data?.players.map((player, index) => {

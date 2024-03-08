@@ -19,7 +19,7 @@ type PlayerInfoProps = {
   token: string
 }
 export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps) => {
-  const raiderIo = await getRaiderIOCharacerData({ characterName: player.characterName, realmName: player.realmName })
+  const raiderIo = await getRaiderIOCharacerData({ characterName: player?.characterName, realmName: player?.realmName })
   const blizzCharacterData = await getWowCharacterFromBlizzard({
     token,
     realm: player.realmName.toLowerCase(),

@@ -77,9 +77,7 @@ function ExistingTeam() {
   return (
     <div className="w-full flex justify-center ">
       <div className="flex flex-col items-center">
-        <h1 className="p-6 text-center text-2xl md:text-3xl font-bold font-sans mb-4">
-          Du har allerede opprettet et lag
-        </h1>
+        <h1 className="p-6 text-center text-2xl md:text-3xl font-bold  mb-4">Du har allerede opprettet et lag</h1>
         <p className="p-6 text-center mb-10">NB! Det kan ta noen minutter før endringene er synlig på denne siden.</p>
         <h1 className="text-2xl font-bold mb-4">
           {allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.teamName}
@@ -103,7 +101,7 @@ function ExistingTeam() {
             onClick={() => {
               setLoading(true)
             }}
-            className="mt-10 mb-8"
+            className=" mt-10 mb-8  inline-block text-xs px-2 py-2 leading-none  rounded-xl  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
           >
             Legg til eller fjern spillere
           </Button>

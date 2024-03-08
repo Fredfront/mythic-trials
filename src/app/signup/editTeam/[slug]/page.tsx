@@ -224,7 +224,7 @@ function EditTeam() {
   return (
     hasTeam && (
       <div className="flex justify-center flex-col items-center bg-black text-white py-8">
-        <h1 className="text-4xl font-bold font-sans mb-10">Oppdater ditt lag</h1>
+        <h1 className="text-4xl font-bold mb-10">Oppdater ditt lag</h1>
 
         <form className="flex flex-col w-full p-4 lg:w-2/4   rounded-lg " onSubmit={updateMythicPlusTeam}>
           <label htmlFor="contactPerson" className="mb-2 text-lg font-bold">
@@ -356,7 +356,7 @@ function EditTeam() {
                   Fjern spiller {index + 1}
                 </Button>
                 <Button
-                  className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2"
+                  className=" w-2/3 lg:w-44 md:w-44 ml-2 mt-2 inline-block text-xs px-2 py-2 leading-none border rounded-xl  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
                   type="button"
                   onClick={() => handleAddAltPlayer(index)} // Call handleAddAltPlayer function with the index of the main player
                 >
@@ -368,7 +368,11 @@ function EditTeam() {
           {players && players.length >= 7 ? (
             <p className="text-white mb-4">Du har nådd maks antall spillere (7)</p>
           ) : (
-            <Button className="mb-4 max-w-52" type="button" onClick={handleAddPlayer}>
+            <Button
+              className=" mb-4 max-w-52inline-block text-xs px-2 py-2 leading-none border rounded-xl  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
+              type="button"
+              onClick={handleAddPlayer}
+            >
               Legg til ny spiller
             </Button>
           )}

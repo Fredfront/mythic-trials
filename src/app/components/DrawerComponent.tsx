@@ -11,7 +11,7 @@ export async function LeaderboardDrawer() {
           Se leaderboard
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-black">
+      <DrawerContent className="bg-[#011624]">
         <LeaderboardComponent />
       </DrawerContent>
     </Drawer>

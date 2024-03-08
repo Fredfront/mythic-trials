@@ -12,7 +12,7 @@ function TeamHasBeenChanged() {
   return (
     <div className="w-full grid place-content-center items-center h-screen">
       <div className="flex flex-col items-center">
-        <h1 className="text-4xl font-bold font-sans mb-10">
+        <h1 className="text-4xl font-bold  mb-10">
           {teamHasBeenCreated ? 'Laget ditt er opprettet!' : null}{' '}
           {teamHasBeenUpdated ? 'Laget ditt er blitt oppdatert' : null}{' '}
         </h1>

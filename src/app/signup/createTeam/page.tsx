@@ -298,7 +298,7 @@ function CreateTeam() {
   return (
     status === 'authenticated' && (
       <div className="flex justify-center flex-col items-center bg-black text-white py-8">
-        <h1 className="text-4xl font-bold font-sans mb-10">Opprett lag</h1>
+        <h1 className="text-4xl font-bold  mb-10">Opprett lag</h1>
         <p className="mb-4 pl-4">
           Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag. NB: Husk også å
           legge til eventuelle alts som skal være med i laget.
