@@ -140,7 +140,7 @@ function LeaderboardComponent() {
         <TableBody>
           {combinedPoints.map((team, index) => {
             return (
-              <TableRow key={index} className=" bg-gray-950 even:bg-gray-900">
+              <TableRow key={index} className="  bg-[#0b3f86] even:bg-[#106abc] border-none">
                 <TableCell className=" min-w-32">{team.teamName}</TableCell>
                 {hideTyrannical
                   ? null

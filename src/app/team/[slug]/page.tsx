@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { PlayerInfoFromRaiderIo } from '@/app/components/PlayerInfoFromRaiderIo'
 import { getToken } from '@/app/api/blizzard/getWoWToken'
 import { getTyrannicalLeaderboardData } from '@/app/api/leaderboard/tyrannical'
-import { getAllTeams } from '@/app/api/getAllTeams'
+import { Player, getAllTeams } from '@/app/api/getAllTeams'
 import { Suspense } from 'react'
 import { dungeonConfig, getDungeonInfo } from '@/utils/dungeonHelpers'
 import atalImg from '../../../../public/dungeons/atal.webp'
@@ -23,6 +23,22 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const allTeams = await getAllTeams()
   const data = allTeams.find((e) => e.teamSlug === params.slug)
   const idForRef = allTeams.find((e) => e.teamName === data?.teamName)?._id
+
+  const alts = data?.players
+    .map((player) => {
+      return player.alts?.map((alt) => {
+        return {
+          id: alt.altCharacterName,
+          characterName: alt.altCharacterName,
+          realmName: alt.altRealmName,
+          altOf: player.characterName,
+          alts: [],
+        }
+      })
+    })
+    .filter((e) => e !== undefined && e.length > 0)
+
+  const hasAltCharacters = data?.players.some((player) => player.alts && player.alts.length > 0)
 
   const { dungeons, timeForTeam } = getDungeonInfo(leaderboard, idForRef)
 
@@ -70,6 +86,24 @@ export default async function Page({ params }: { params: { slug: string } }) {
               if (data.players === null || data.players === undefined) return
               return <PlayerInfoFromRaiderIo key={index} player={player} token={token} />
             })}
+          </Suspense>
+        </div>
+        <div className="mt-20 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4 ">
+          <Suspense
+            fallback={
+              <div>
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-24 w-24 rounded-full" />
+              </div>
+            }
+          >
+            {hasAltCharacters &&
+              alts?.map((alt, index) => {
+                return <PlayerInfoFromRaiderIo key={index} player={alt?.[0] as unknown as Player} token={token} />
+              })}
           </Suspense>
         </div>
         <div className="ml-4 mt-20">

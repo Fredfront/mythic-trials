@@ -7,9 +7,7 @@ export async function getWowCharacterFromBlizzard({
   realm?: string
   character?: string
 }) {
-  if (!token || !realm || !character) {
-    throw new Error('Missing parameters')
-  }
+  if (!token || !realm || !character) return null
 
   const res = await fetch(
     `https://eu.api.blizzard.com/profile/wow/character/${realm}/${character}?namespace=profile-eu&locale=en_US&access_token=${token}`,

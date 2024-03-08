@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
@@ -16,10 +17,10 @@ const NavBar = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center flex-shrink-0 text-white mr-auto">
           <Link href="/">
-            <img className="h-8 w-8 mr-2" src="/MT_logo_white.webp" alt="Logo" />
+            <Image width={45} height={45} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
           </Link>
         </div>
-        <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1">
+        <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1 ">
           {/* Navigation links for large screens */}
           <Link href="/" className="text-gray-200 hover:text-white mx-4 font-bold">
             Hovedside
@@ -40,7 +41,7 @@ const NavBar = () => {
               Påmelding
             </Button>
           </Link>
-          <div className="block lg:hidden">
+          <div className="block lg:hidden ">
             {/* Hamburger icon for mobile */}
             <button
               className="flex items-center px-3 py-2 border rounded text-gray-200 border-gray-400 hover:text-white hover:border-white"
@@ -55,22 +56,24 @@ const NavBar = () => {
         </div>
       </div>
       {/* Navigation links for small screens */}
-      <div className={`lg:hidden mt-4 ${isMenuOpen ? 'block' : 'hidden'} transition-all duration-500 ease-in-out`}>
-        <div className="flex flex-col">
+      <div
+        className={`lg:hidden mt-4 ${isMenuOpen ? 'flex' : 'hidden'} transition-all duration-500 ease-in-out text-center min-h-screen items-center justify-center text-2xl  `}
+      >
+        <div className="flex flex-col gap-8 text-left ">
           <Link href="/" className="text-gray-200 hover:text-white mb-2 font-bold">
-            Hovedside
+            1. Hovedside
           </Link>
           <Link href="/#teams" className="text-gray-200 hover:text-white mb-2 font-bold">
-            Lagene
+            2. Lagene
           </Link>
           <Link href="/rules" className="text-gray-200 hover:text-white mb-2 font-bold">
-            Regler
+            3. Regler
           </Link>
           <Link href="/leaderboard" className="text-gray-200 hover:text-white mb-2 font-bold">
-            Resultater
+            4. Resultater
           </Link>
           <Link href="/signup" className="text-gray-200 hover:text-white mb-2 font-bold">
-            Påmelding
+            5. Påmelding
           </Link>
         </div>
       </div>

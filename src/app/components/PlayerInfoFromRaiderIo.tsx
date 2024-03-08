@@ -22,11 +22,11 @@ export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps)
   const raiderIo = await getRaiderIOCharacerData({ characterName: player?.characterName, realmName: player?.realmName })
   const blizzCharacterData = await getWowCharacterFromBlizzard({
     token,
-    realm: player.realmName.toLowerCase(),
-    character: player.characterName.toLowerCase(),
+    realm: player?.realmName?.toLowerCase(),
+    character: player?.characterName?.toLowerCase(),
   })
 
-  const mythicPlusInfo = await getMythicPlusInfo({ token, endpoint: blizzCharacterData?.mythic_keystone_profile.href })
+  const mythicPlusInfo = await getMythicPlusInfo({ token, endpoint: blizzCharacterData?.mythic_keystone_profile?.href })
 
   let wowClass = raiderIo?.class
   if (wowClass === 'Death Knight') {
@@ -44,6 +44,7 @@ export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps)
       classColor={classColor}
       blizzCharacterData={blizzCharacterData}
       mythicPlusInfo={mythicPlusInfo?.current_mythic_rating}
+      player={player}
     />
   )
 }
@@ -53,12 +54,13 @@ type HoverStuffProps = {
   classColor: string
   blizzCharacterData: CharacterData | null
   mythicPlusInfo: any
+  player: any
 }
-const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }: HoverStuffProps) => {
+const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, player }: HoverStuffProps) => {
   const ratingColor = `rgb(${mythicPlusInfo?.color?.r}, ${mythicPlusInfo?.color.g}, ${mythicPlusInfo?.color.b})`
   return (
     <Dialog>
-      <DialogTrigger asChild className="hover: cursor-pointer zoom-in-50">
+      <DialogTrigger asChild className="hover: cursor-pointer zoom-in-50 ">
         <div className="mb-3">
           <div className="flex flex-col items-center">
             {data?.thumbnail_url ? (
@@ -73,13 +75,16 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo }:
             ) : null}
 
             <div>{data?.name}</div>
+            {player && player.altOf && player.altOf.length > 0 ? (
+              <div className=" text-xs">Alt av {player.altOf}</div>
+            ) : null}
             <div className="text-sm" style={{ color: classColor }}>
               {data?.class}
             </div>
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-black">
         <DialogHeader>
           <DialogTitle>{data?.name}</DialogTitle>
           <DialogDescription>Guild: {blizzCharacterData?.guild?.name}</DialogDescription>
