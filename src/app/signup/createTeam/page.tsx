@@ -14,6 +14,7 @@ import Loading from '../components/Loading'
 import { mutateClient } from '../client'
 import { wowRealmsMapped } from '../utils/wowRealms'
 import { LogOut } from 'lucide-react'
+import { revalidatePath } from 'next/cache'
 
 function CreateTeam() {
   const { data, status } = useSession()

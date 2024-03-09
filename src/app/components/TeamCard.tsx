@@ -10,7 +10,7 @@ type TeamCardProps = {
 
 const TeamCard: React.FC<TeamCardProps> = ({ team }: TeamCardProps) => {
   return (
-    <div className="p-4 flex items-center rounded-md bg-[#021F33] text-white w-full  hover:bg-slate-500 cursor-pointer max-w-full md:max-w-80  ">
+    <div className="p-4 flex items-center rounded-md bg-[#021F33] text-white  hover:bg-slate-500 cursor-pointer max-w-full md:max-w-80  w-screen md:min-w-80 ">
       <Image
         src={urlForImage(team.teamImage.asset._ref as any)}
         alt={team.teamName}

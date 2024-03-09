@@ -43,7 +43,7 @@ const Home = async () => {
             </Link>
           </div>
         </div>
-        <div className="gap-4  text-[#FCD20A] mt-10 font-normal hidden lg:flex">
+        <div className="gap-4  text-[#FCD20A] font-normal hidden lg:flex  p-4  ">
           <div>RUNDE 1: 20.05.2024 </div>|<div>RUNDE 2: 20.05.2024</div>
           <div>RUNDE 3: 20.05.2024</div> |<div>RUNDE 4: 20.05.2024</div>|<div>RUNDE 5: 20.05.2024</div>|
           <div>RUNDE 6: 20.05.2024</div>|<div>FINALE 1: 20.05.2024</div>|<div>FINALE 2: 20.05.2024</div>
