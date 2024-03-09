@@ -169,11 +169,11 @@ function LeaderboardComponent() {
                 <TableCell className=" min-w-32 text-white font-bold">{team.teamName}</TableCell>
                 {hideTyrannical
                   ? null
-                  : tyrannical.map((lead, leadIndex) => {
-                      const timeString = `${lead.teams.find((a) => a.team._ref === team._ref)?.minutes}:${lead.teams.find((a) => a.team._ref === team._ref)?.seconds}`
+                  : tyrannical?.map((lead, leadIndex) => {
+                      const timeString = `${lead?.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${lead?.teams?.find((a) => a.team._ref === team._ref)?.seconds}`
                       const hasTime =
-                        lead.teams.find((a) => a.team._ref === team._ref)?.minutes !== undefined &&
-                        lead.teams.find((a) => a.team._ref === team._ref)?.seconds !== undefined
+                        lead.teams?.find((a) => a.team._ref === team._ref)?.minutes !== undefined &&
+                        lead.teams?.find((a) => a.team._ref === team._ref)?.seconds !== undefined
                           ? true
                           : false
                       return (
@@ -185,10 +185,10 @@ function LeaderboardComponent() {
                 {hideFortified
                   ? null
                   : fortified.map((lead, leadIndex) => {
-                      const timeString = `${lead.teams.find((a) => a.team._ref === team._ref)?.minutes}:${lead.teams.find((a) => a.team._ref === team._ref)?.seconds}`
+                      const timeString = `${lead.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${lead.teams?.find((a) => a.team._ref === team._ref)?.seconds}`
                       const hasTime =
-                        lead.teams.find((a) => a.team._ref === team._ref)?.minutes !== undefined &&
-                        lead.teams.find((a) => a.team._ref === team._ref)?.seconds !== undefined
+                        lead.teams?.find((a) => a.team._ref === team._ref)?.minutes !== undefined &&
+                        lead.teams?.find((a) => a.team._ref === team._ref)?.seconds !== undefined
                           ? true
                           : false
                       return (
