@@ -2,15 +2,15 @@
 import { MythicPlusTeam, getAllTeams } from '@/app/api/getAllTeams'
 import { Button } from '@/components/ui/button'
 import React, { useEffect, useMemo, useState } from 'react'
-import { PlayerInfo } from '../../components/PlayerInfo'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Icons } from '@/components/loading'
 import { useRouter } from 'next/navigation'
 import { AnimatedTooltip } from '@/app/components/AnimatedTooltip'
+import { LogOut } from 'lucide-react'
 
 function ExistingTeam() {
-  const { data: auth } = useSession()
+  const { data: auth, status } = useSession()
   const router = useRouter()
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -21,6 +21,12 @@ function ExistingTeam() {
     }
     fetchAllTeams()
   }, [])
+
+  useEffect(() => {
+    if ((!auth?.user && status !== 'loading') || status === 'unauthenticated') {
+      router.push('/signup')
+    }
+  }, [auth?.user, router, status])
 
   const teamSlug = useMemo(
     () => allTeams?.find((e) => e.contactPerson === auth?.user?.email),
@@ -75,39 +81,47 @@ function ExistingTeam() {
   }
 
   return (
-    <div className="w-full flex justify-center ">
-      <div className="flex flex-col items-center">
-        <h1 className="p-6 text-center text-2xl md:text-3xl font-bold  mb-4">Du har allerede opprettet et lag</h1>
-        <p className="p-6 text-center mb-10">NB! Det kan ta noen minutter før endringene er synlig på denne siden.</p>
-        <h1 className="text-2xl font-bold mb-4">
-          {allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.teamName}
-        </h1>
-        <h2>Main characters</h2>
-
-        <div className="flex flex-row items-center justify-center mb-10 w-full">
-          <AnimatedTooltip items={mappedTeam as any} />
-        </div>
-        {hasAltCharacters ? (
-          <>
-            <h2>Alt characters</h2>
-            <div className="flex flex-row items-center justify-center mb-10 w-full">
-              <AnimatedTooltip items={mappedAlts?.[0] as any} />
-            </div>
-          </>
-        ) : null}
-
-        <Link href={`/signup/editTeam/${teamSlug}`}>
-          <Button
-            onClick={() => {
-              setLoading(true)
-            }}
-            className=" mt-10 mb-8  inline-block text-xs px-2 py-2 leading-none  rounded-xl  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
-          >
-            Legg til eller fjern spillere
-          </Button>
-        </Link>
+    <>
+      <div className="flex justify-end p-2">
+        <button className="text-white mr-2" onClick={() => signOut()}>
+          Logg ut
+        </button>
+        <LogOut />
       </div>
-    </div>
+      <div className="w-full flex justify-center ">
+        <div className="flex flex-col items-center">
+          <h1 className="p-6 text-center text-2xl md:text-3xl font-bold  mb-4">Du har allerede opprettet et lag</h1>
+          <p className="p-6 text-center mb-10">NB! Det kan ta noen minutter før endringene er synlig på denne siden.</p>
+          <h1 className="text-2xl font-bold mb-4">
+            {allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.teamName}
+          </h1>
+          <h2>Main characters</h2>
+
+          <div className="flex flex-row items-center justify-center mb-10 w-full">
+            <AnimatedTooltip items={mappedTeam as any} />
+          </div>
+          {hasAltCharacters ? (
+            <>
+              <h2>Alt characters</h2>
+              <div className="flex flex-row items-center justify-center mb-10 w-full">
+                <AnimatedTooltip items={mappedAlts?.[0] as any} />
+              </div>
+            </>
+          ) : null}
+
+          <Link href={`/signup/editTeam/${teamSlug}`}>
+            <Button
+              onClick={() => {
+                setLoading(true)
+              }}
+              className=" mt-10 mb-8  inline-block text-xs px-2 py-2 leading-none  rounded-xl  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
+            >
+              Legg til eller fjern spillere
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }
 

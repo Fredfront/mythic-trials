@@ -2,7 +2,7 @@
 import { AltPlayer, MythicPlusTeam, getAllTeams, Player } from '@/app/api/getAllTeams'
 import { Icons } from '@/components/loading'
 import { Button } from '@/components/ui/button'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { colourStyles } from '../utils/styles'
 import { v4 as uuidv4 } from 'uuid'
@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 import { mutateClient } from '../client'
 import { wowRealmsMapped } from '../utils/wowRealms'
+import { LogOut } from 'lucide-react'
 
 function CreateTeam() {
   const { data, status } = useSession()
@@ -297,211 +298,221 @@ function CreateTeam() {
 
   return (
     status === 'authenticated' && (
-      <div className="flex justify-center flex-col items-center  text-white py-8">
-        <h1 className="text-4xl font-bold  mb-10">Opprett lag</h1>
-        <p className="mb-4 pl-4">
-          Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag. NB: Husk også å
-          legge til eventuelle alts som skal være med i laget.
-        </p>
-        <form className="flex flex-col w-full p-4 lg:w-2/4" onSubmit={handleSubmit}>
-          <label htmlFor="contactPerson" className="mb-2 text-lg font-bold">
-            Kontakt person
-          </label>
-          <input
-            className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
-            name="contactPerson"
-            type="email"
-            value={data?.user?.email ?? ''}
-            readOnly
-          />
-          <label htmlFor="teamName" className="mb-2 text-lg font-bold">
-            Lagnavn
-          </label>
-          <input
-            id="teamName"
-            name="teamName"
-            type="text"
-            placeholder="Lagnavn"
-            className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
-            value={teamName}
-            onChange={(e) => {
-              setTeamNameError(false)
-              setTeamName(e.target.value)
-            }}
-          />
-          {teamNameAlreadyExists && (
-            <p className="text-red-500 mb-4">Lagnavnet eksisterer allerede. Vennligst velg et annet navn.</p>
-          )}
-          {teamNameError && <p className="text-red-500 mb-4">Fyll inn et lagnavn.</p>}
+      <>
+        <div className="flex justify-end p-2">
+          <button className="text-white mr-2" onClick={() => signOut()}>
+            Logg ut
+          </button>
+          <LogOut />
+        </div>
+        <div className="flex justify-center flex-col items-center  text-white py-8">
+          <h1 className="text-4xl font-bold  mb-10">Opprett lag</h1>
+          <p className="mb-4 pl-4">
+            Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag. NB: Husk også å
+            legge til eventuelle alts som skal være med i laget.
+          </p>
+          <form className="flex flex-col w-full p-4 lg:w-2/4" onSubmit={handleSubmit}>
+            <label htmlFor="contactPerson" className="mb-2 text-lg font-bold">
+              Kontakt person
+            </label>
+            <input
+              className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
+              name="contactPerson"
+              type="email"
+              value={data?.user?.email ?? ''}
+              readOnly
+            />
+            <label htmlFor="teamName" className="mb-2 text-lg font-bold">
+              Lagnavn
+            </label>
+            <input
+              id="teamName"
+              name="teamName"
+              type="text"
+              placeholder="Lagnavn"
+              className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
+              value={teamName}
+              onChange={(e) => {
+                setTeamNameError(false)
+                setTeamName(e.target.value)
+              }}
+            />
+            {teamNameAlreadyExists && (
+              <p className="text-red-500 mb-4">Lagnavnet eksisterer allerede. Vennligst velg et annet navn.</p>
+            )}
+            {teamNameError && <p className="text-red-500 mb-4">Fyll inn et lagnavn.</p>}
 
-          <label htmlFor="teamImage" className="mb-2 font-bold text-lg">
-            Team Image:
-          </label>
-          <input type="file" id="teamImage" onChange={handleFileUpload} accept="image/*" className="mb-4" />
-          {missingImageError && teamImage === null && <p className="text-red-500 mb-4">Last opp et bilde for laget.</p>}
+            <label htmlFor="teamImage" className="mb-2 font-bold text-lg">
+              Team Image:
+            </label>
+            <input type="file" id="teamImage" onChange={handleFileUpload} accept="image/*" className="mb-4" />
+            {missingImageError && teamImage === null && (
+              <p className="text-red-500 mb-4">Last opp et bilde for laget.</p>
+            )}
 
-          {/* Display the image preview if available */}
-          {previewImage && (
-            <div className="mb-4">
-              <label>Image Preview:</label>
-              <Image width={250} height={250} src={previewImage} alt="Team" className="max-w-full h-auto" />
-            </div>
-          )}
-
-          <label className="mb-4 mt-10 font-bold text-lg">Spillere:</label>
-          {players.map((player, index) => (
-            <div key={index} className="mb-4">
-              <div className="flex">
-                <input
-                  type="text"
-                  value={player.characterName?.trim()}
-                  onChange={(e) => handlePlayerChange(index, e)}
-                  name={'characterName'} // Set a unique name for character names
-                  placeholder="Karakter navn"
-                  className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
-                />
-                {player.characterName &&
-                player.realmName &&
-                wowRealmsMapped.find((e) => e.name === player.realmName)?.name ? (
-                  <PlayerInfoImage player={player as Player} />
-                ) : null}
+            {/* Display the image preview if available */}
+            {previewImage && (
+              <div className="mb-4">
+                <label>Image Preview:</label>
+                <Image width={250} height={250} src={previewImage} alt="Team" className="max-w-full h-auto" />
               </div>
+            )}
 
-              <Select
-                styles={colourStyles}
-                options={wowRealmsMapped}
-                value={wowRealmsMapped.find((e) => e.name === player.realmName)}
-                isClearable
-                isSearchable
-                name="realmName"
-                placeholder="Velg realm"
-                onChange={(e: any) => {
-                  const event = {
-                    target: {
-                      value: e?.name,
-                      name: 'realmName',
-                    },
-                  }
-
-                  setPlayerErrors((prevErrors) => prevErrors.map((error, i) => (i === index ? false : error)))
-                  handlePlayerChange(index, event as React.ChangeEvent<HTMLInputElement>)
-                }}
-              />
-              {player.alts && player.alts.length > 0 ? (
-                <div className="mt-4"> Alts av {player.characterName} </div>
-              ) : null}
-              {player.alts?.map((alt, altIndex) => (
-                <div key={altIndex} className="mb-4">
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={alt?.altCharacterName?.trim()}
-                      onChange={(e) => handleAltPlayerChange(index, altIndex, e)}
-                      name={'altCharacterName'} // Set a unique name for character names
-                      placeholder="Karakter navn"
-                      className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
-                    />
-                    {alt.altCharacterName &&
-                    alt.altRealmName &&
-                    wowRealmsMapped.find((e) => e.name === alt.altRealmName)?.name ? (
-                      <PlayerInfoImage
-                        player={{ characterName: alt.altCharacterName, realmName: alt.altRealmName } as Player}
-                      />
-                    ) : null}
-                  </div>
-
-                  <Select
-                    styles={colourStyles}
-                    options={wowRealmsMapped}
-                    value={wowRealmsMapped.find((e) => e.name === alt.altRealmName)}
-                    isClearable
-                    isSearchable
-                    name="altRealmName"
-                    placeholder="Velg realm"
-                    onChange={(e: any) => {
-                      const event = {
-                        target: {
-                          value: e?.name,
-                          name: 'altRealmName',
-                        },
-                      }
-
-                      setPlayerErrors((prevErrors) => prevErrors.map((error, i) => (i === index ? false : error)))
-                      handleAltPlayerChange(index, altIndex, event as React.ChangeEvent<HTMLInputElement>)
-                    }}
+            <label className="mb-4 mt-10 font-bold text-lg">Spillere:</label>
+            {players.map((player, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex">
+                  <input
+                    type="text"
+                    value={player.characterName?.trim()}
+                    onChange={(e) => handlePlayerChange(index, e)}
+                    name={'characterName'} // Set a unique name for character names
+                    placeholder="Karakter navn"
+                    className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
                   />
+                  {player.characterName &&
+                  player.realmName &&
+                  wowRealmsMapped.find((e) => e.name === player.realmName)?.name ? (
+                    <PlayerInfoImage player={player as Player} />
+                  ) : null}
+                </div>
+
+                <Select
+                  styles={colourStyles}
+                  options={wowRealmsMapped}
+                  value={wowRealmsMapped.find((e) => e.name === player.realmName)}
+                  isClearable
+                  isSearchable
+                  name="realmName"
+                  placeholder="Velg realm"
+                  onChange={(e: any) => {
+                    const event = {
+                      target: {
+                        value: e?.name,
+                        name: 'realmName',
+                      },
+                    }
+
+                    setPlayerErrors((prevErrors) => prevErrors.map((error, i) => (i === index ? false : error)))
+                    handlePlayerChange(index, event as React.ChangeEvent<HTMLInputElement>)
+                  }}
+                />
+                {player.alts && player.alts.length > 0 ? (
+                  <div className="mt-4"> Alts av {player.characterName} </div>
+                ) : null}
+                {player.alts?.map((alt, altIndex) => (
+                  <div key={altIndex} className="mb-4">
+                    <div className="flex">
+                      <input
+                        type="text"
+                        value={alt?.altCharacterName?.trim()}
+                        onChange={(e) => handleAltPlayerChange(index, altIndex, e)}
+                        name={'altCharacterName'} // Set a unique name for character names
+                        placeholder="Karakter navn"
+                        className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
+                      />
+                      {alt.altCharacterName &&
+                      alt.altRealmName &&
+                      wowRealmsMapped.find((e) => e.name === alt.altRealmName)?.name ? (
+                        <PlayerInfoImage
+                          player={{ characterName: alt.altCharacterName, realmName: alt.altRealmName } as Player}
+                        />
+                      ) : null}
+                    </div>
+
+                    <Select
+                      styles={colourStyles}
+                      options={wowRealmsMapped}
+                      value={wowRealmsMapped.find((e) => e.name === alt.altRealmName)}
+                      isClearable
+                      isSearchable
+                      name="altRealmName"
+                      placeholder="Velg realm"
+                      onChange={(e: any) => {
+                        const event = {
+                          target: {
+                            value: e?.name,
+                            name: 'altRealmName',
+                          },
+                        }
+
+                        setPlayerErrors((prevErrors) => prevErrors.map((error, i) => (i === index ? false : error)))
+                        handleAltPlayerChange(index, altIndex, event as React.ChangeEvent<HTMLInputElement>)
+                      }}
+                    />
+                    <Button
+                      className="bg-red-500 mt-2 hover:bg-red-500 hover:scale-105"
+                      type="button"
+                      onClick={() => handleRemoveAltPlayer(index, altIndex)}
+                    >
+                      Fjern alt {altIndex + 1}
+                    </Button>
+                  </div>
+                ))}
+                {playerErrors[index] && (
+                  <p className="text-red-500 mb-2">Fyll inn både karakternavn og realm for spiller {index + 1}.</p>
+                )}
+
+                <div className="flex">
                   <Button
-                    className="bg-red-500 mt-2 hover:bg-red-500 hover:scale-105"
+                    className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 hover:bg-red-500 hover:scale-105 rounded-xl"
                     type="button"
-                    onClick={() => handleRemoveAltPlayer(index, altIndex)}
+                    onClick={() => handleRemovePlayer(index)}
+                    aria-label={`Remove player ${index + 1}`}
                   >
-                    Fjern alt {altIndex + 1}
+                    Fjern spiller {index + 1}
+                  </Button>
+                  <Button
+                    className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2 bg-white text-black  hover:bg-white  hover:scale-105  rounded-xl"
+                    type="button"
+                    onClick={() => handleAddAltPlayer(index)} // Call handleAddAltPlayer function with the index of the main player
+                  >
+                    Legg til alt av{' '}
+                    {player.characterName && player.characterName.length > 0
+                      ? player.characterName
+                      : 'spiller ' + (index + 1)}
                   </Button>
                 </div>
-              ))}
-              {playerErrors[index] && (
-                <p className="text-red-500 mb-2">Fyll inn både karakternavn og realm for spiller {index + 1}.</p>
-              )}
-
-              <div className="flex">
-                <Button
-                  className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 hover:bg-red-500 hover:scale-105 rounded-xl"
-                  type="button"
-                  onClick={() => handleRemovePlayer(index)}
-                  aria-label={`Remove player ${index + 1}`}
-                >
-                  Fjern spiller {index + 1}
-                </Button>
-                <Button
-                  className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2 bg-white text-black  hover:bg-white  hover:scale-105  rounded-xl"
-                  type="button"
-                  onClick={() => handleAddAltPlayer(index)} // Call handleAddAltPlayer function with the index of the main player
-                >
-                  Legg til alt av{' '}
-                  {player.characterName && player.characterName.length > 0
-                    ? player.characterName
-                    : 'spiller ' + (index + 1)}
-                </Button>
               </div>
-            </div>
-          ))}
-          {players && players.length >= 7 ? (
-            <p className="text-white mb-4">Du har nådd maks antall spillere (7)</p>
-          ) : (
-            <Button
-              className="mb-4 max-w-52 bg-white text-black hover:bg-white hover:scale-105  rounded-xl"
-              type="button"
-              onClick={handleAddPlayer}
-            >
-              Legg til ny spiller
-            </Button>
-          )}
-          {missingPlayersError && <p className="text-red-500 mb-4">Legg til minst 5 spillere.</p>}
+            ))}
+            {players && players.length >= 7 ? (
+              <p className="text-white mb-4">Du har nådd maks antall spillere (7)</p>
+            ) : (
+              <Button
+                className="mb-4 max-w-52 bg-white text-black hover:bg-white hover:scale-105  rounded-xl"
+                type="button"
+                onClick={handleAddPlayer}
+              >
+                Legg til ny spiller
+              </Button>
+            )}
+            {missingPlayersError && <p className="text-red-500 mb-4">Legg til minst 5 spillere.</p>}
 
-          <Button
-            disabled={
-              players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
-              loadingCreateTeam ||
+            <Button
+              disabled={
+                players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
+                loadingCreateTeam ||
+                teamNameAlreadyExists ||
+                teamNameError ||
+                (players && players.length <= 4)
+              }
+              className="mt-10"
+              type="submit"
+            >
+              {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
               teamNameAlreadyExists ||
               teamNameError ||
+              playerErrors.some((e) => e === true) ||
               (players && players.length <= 4)
-            }
-            className="mt-10"
-            type="submit"
-          >
-            {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
-            teamNameAlreadyExists ||
-            teamNameError ||
-            playerErrors.some((e) => e === true) ||
-            (players && players.length <= 4)
-              ? 'Mangler info for å opprette lag'
-              : loadingCreateTeam
-                ? 'Opretter lag'
-                : 'Opprett lag'}
-            {loadingCreateTeam ? <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" /> : null}
-          </Button>
-        </form>
-      </div>
+                ? 'Mangler info for å opprette lag'
+                : loadingCreateTeam
+                  ? 'Opretter lag'
+                  : 'Opprett lag'}
+              {loadingCreateTeam ? <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" /> : null}
+            </Button>
+          </form>
+        </div>
+      </>
     )
   )
 }

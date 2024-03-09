@@ -60,9 +60,9 @@ const NavBar = () => {
       </div>
       {/* Navigation links for small screens */}
       <div
-        className={`lg:hidden mt-4 ${isMenuOpen ? 'flex' : 'hidden'} -mt-8 transition-all duration-500 ease-in-out text-center min-h-screen items-center justify-center text-2xl  `}
+        className={`lg:hidden mt-4 ${isMenuOpen ? 'flex translate transition-all duration-500 ease-in-out' : 'hidden'} text-center min-h-screen justify-center text-2xl  `}
       >
-        <div className="flex flex-col gap-8 text-left ">
+        <div className="flex flex-col gap-8 text-left mt-10 ">
           <Link href="/" className="text-gray-200 hover:text-white mb-2 font-bold">
             1. Hovedside
           </Link>
