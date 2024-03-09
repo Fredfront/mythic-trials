@@ -487,6 +487,9 @@ function CreateTeam() {
               </Button>
             )}
             {missingPlayersError && <p className="text-red-500 mb-4">Legg til minst 5 spillere.</p>}
+            {teamName === '' && players && players.length > 4 && (
+              <p className="text-red-500 mb-4">* Fyll inn et lagnavn.</p>
+            )}
 
             <Button
               disabled={
@@ -494,7 +497,8 @@ function CreateTeam() {
                 loadingCreateTeam ||
                 teamNameAlreadyExists ||
                 teamNameError ||
-                (players && players.length <= 4)
+                (players && players.length <= 4) ||
+                teamName === ''
               }
               className="mt-10"
               type="submit"
