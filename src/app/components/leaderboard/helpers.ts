@@ -26,7 +26,7 @@ export const calculatePoints = ({
   leaderboardData?.forEach(({ baseTimer, teams }: { teams: TeamEntry[]; baseTimer: string }) => {
     const baseTimerSeconds = baseTimer ? timeToSeconds(baseTimer) : 0
 
-    teams.forEach(
+    teams?.forEach(
       ({ minutes, seconds, team }: { team: { _key: string; _ref: string }; minutes: number; seconds: number }) => {
         const teamTimeSeconds = minutes * 60 + seconds
         const timeDifference = baseTimerSeconds - teamTimeSeconds

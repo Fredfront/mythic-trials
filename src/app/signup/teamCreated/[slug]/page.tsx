@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import React from 'react'
 
 function TeamHasBeenChanged() {
@@ -16,11 +16,7 @@ function TeamHasBeenChanged() {
           {teamHasBeenCreated ? 'Laget ditt er opprettet!' : null}{' '}
           {teamHasBeenUpdated ? 'Laget ditt er blitt oppdatert' : null}{' '}
         </h1>
-        {/* <p>
-          {teamHasBeenCreated
-            ? 'En av våre administratorer vil gå over laget, og godkjenne det før det blir synlig på sidene våre.'
-            : null}{' '}
-        </p> */}
+
         <Link href="/" className="mt-4">
           <Button>Gå tilbake til forsiden</Button>
         </Link>

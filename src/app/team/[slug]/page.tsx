@@ -15,10 +15,11 @@ import riseImg from '../../../../public/dungeons/rise.webp'
 import throneImg from '../../../../public/dungeons/throne.webp'
 import waycrestImg from '../../../../public/dungeons/waycrest.webp'
 import { Skeleton } from '@/components/ui/skeleton'
+import { notFound } from 'next/navigation'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const token = await getToken()
-
+  console.log(params.slug)
   const leaderboard = await getTyrannicalLeaderboardData()
   const allTeams = await getAllTeams()
   const data = allTeams.find((e) => e.teamSlug === params.slug)
@@ -50,6 +51,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
   })
 
   const hasDungTimes = Object.entries(dungtimes).some((e) => e[1].time !== undefined)
+
+  if (allTeams.find((e) => e.teamSlug === params.slug) === undefined) return notFound()
 
   return (
     <div className="max-w-full flex justify-center">
@@ -93,7 +96,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         <div className="mt-10 grid grid-cols-3 gap-6 ">
           <Suspense
             fallback={
-              <div>
+              <div className="mt-10 grid grid-cols-3 gap-6">
                 <Skeleton className="h-24 w-24 rounded-full" />
                 <Skeleton className="h-24 w-24 rounded-full" />
                 <Skeleton className="h-24 w-24 rounded-full" />
