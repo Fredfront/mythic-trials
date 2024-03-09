@@ -1,6 +1,6 @@
 export async function getToken() {
-  const client_id = 'd34a81ec46a047b9a1811057551b5ce5'
-  const client_secret = 'DzpHAsctVQQ1MmHPJ3osYOIX8BZa7B59'
+  const client_id = process.env.BLIZZARD_CLIENT_ID
+  const client_secret = process.env.BLIZZARD_CLIENT_SECRET
 
   const url = 'https://eu.battle.net/oauth/token'
 
@@ -12,6 +12,7 @@ export async function getToken() {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${encodedCredentials}`,
+      'cache-control': 'max-age=3600',
     },
     body: 'grant_type=client_credentials',
   }

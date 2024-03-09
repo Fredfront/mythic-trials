@@ -23,8 +23,8 @@ function ExistingTeam() {
   }, [])
 
   useEffect(() => {
-    if ((!auth?.user && status !== 'loading') || status === 'unauthenticated') {
-      router.push('/signup')
+    if (status === 'unauthenticated') {
+      router.push('/signup/signin')
     }
   }, [auth?.user, router, status])
 

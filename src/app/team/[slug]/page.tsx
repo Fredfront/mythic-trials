@@ -53,7 +53,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="max-w-full flex justify-center">
-      <div className="mt-32">
+      <div className="mt-24">
         <div className="flex  items-center lg:flex-row md:flex-row flex-col">
           <Suspense fallback={<Skeleton className="h-36 w-36 rounded-full" />}>
             <Image
@@ -72,7 +72,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </Suspense>
         </div>
 
-        <div className="mt-20 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4 ">
+        <div className="mt-12 grid grid-cols-3 gap-6 ">
           <Suspense
             fallback={
               <div>
@@ -90,7 +90,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             })}
           </Suspense>
         </div>
-        <div className="mt-20 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4 ">
+        <div className="mt-10 grid grid-cols-3 gap-6 ">
           <Suspense
             fallback={
               <div>
@@ -108,7 +108,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
               })}
           </Suspense>
         </div>
-        <div className="ml-4 mt-20">
+        <div>
           {hasDungTimes && <h3 className="mb-4 font-extrabold text-white">Dungeon times</h3>}
 
           <Suspense
