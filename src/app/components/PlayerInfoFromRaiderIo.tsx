@@ -74,9 +74,9 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, p
               />
             ) : null}
 
-            <div>{data?.name}</div>
+            <div className="text-white">{data?.name}</div>
             {player && player.altOf && player.altOf.length > 0 ? (
-              <div className=" text-xs">Alt av {player.altOf}</div>
+              <div className=" text-xs text-white">Alt av {player.altOf}</div>
             ) : null}
             <div className="text-sm" style={{ color: classColor }}>
               {data?.class}

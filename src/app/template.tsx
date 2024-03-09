@@ -27,27 +27,27 @@ const Footer = async () => {
           <ul className="flex gap-4 mt-4 mb-4">
             <li>
               <a href="https://discord.gg/wownl">
-                <DiscordLogoIcon className=" h-5  w-5 " />
+                <DiscordLogoIcon className="text-white  h-5  w-5 " />
               </a>
             </li>
             <li>
               <a href="https://www.twitch.tv/nerdelandslaget_wow">
-                <TwitchIcon className="   h-5 w-5" />
+                <TwitchIcon className="text-white h-5 w-5" />
               </a>
             </li>
             <li>
               <a href="https://www.youtube.com/@nerdelandslagetwow">
-                <Youtube className=" h-5 w-5" />
+                <Youtube className=" text-white h-5 w-5" />
               </a>
             </li>
             <li>
               <a href="https://www.instagram.com/nerdelandslaget.wow/">
-                <InstagramLogoIcon className="h-5 w-5" />{' '}
+                <InstagramLogoIcon className="text-white h-5 w-5" />{' '}
               </a>
             </li>
             <li>
               <a href="https://twitter.com/NL_Draenor/">
-                <TwitterLogoIcon className="h-5 w-5" />
+                <TwitterLogoIcon className="text-white h-5 w-5" />
               </a>
             </li>
           </ul>

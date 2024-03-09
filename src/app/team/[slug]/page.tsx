@@ -65,7 +65,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
               className="rounded-full h-44 w-44 "
             />
             <Suspense fallback={<Skeleton className="h-4 w-[250px]" />}>
-              <div className=" font-LifeCraft text-xl md:text-2xl ml-4 mt-4">{data?.teamName?.toUpperCase()}</div>
+              <div className=" text-white font-DMSans font-bold text-xl md:text-2xl ml-4 mt-4">
+                {data?.teamName?.toUpperCase()}
+              </div>
             </Suspense>
           </Suspense>
         </div>
@@ -107,7 +109,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </Suspense>
         </div>
         <div className="ml-4 mt-20">
-          {hasDungTimes && <h3 className="mb-4 font-extrabold">Dungeon times</h3>}
+          {hasDungTimes && <h3 className="mb-4 font-extrabold text-white">Dungeon times</h3>}
 
           <Suspense
             fallback={

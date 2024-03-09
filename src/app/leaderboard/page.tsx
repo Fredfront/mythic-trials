@@ -14,7 +14,7 @@ async function page() {
 
   return (
     <div>
-      <h1 className={`${LifeCraft.className} text-center text-4xl mt-10 `}>Resultater</h1>
+      <h1 className={`${LifeCraft.className} text-center text-white text-4xl mt-10 `}>Resultater</h1>
       <LeaderboardComponent />
     </div>
   )
