@@ -8,6 +8,13 @@ body {
   color: white;
 }
 
+@layer utilities {
+  .border-gradient {
+    border-image-source: linear-gradient(90deg, #054178 0%, #1375ce 48.5%, #043f75 100%);
+    border-image-slice: 1;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

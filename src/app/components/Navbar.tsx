@@ -13,7 +13,7 @@ const NavBar = () => {
   }
 
   return (
-    <nav className="bg-[#011624] p-4">
+    <nav className="bg-[#011624] p-4 border-b-4 border-gradient">
       <div className="flex items-center justify-between">
         <div className="flex items-center flex-shrink-0 text-white mr-auto">
           <Link href="/">
@@ -33,6 +33,9 @@ const NavBar = () => {
           </Link>
           <Link href="/leaderboard" className="text-gray-200 hover:text-white mx-4 font-bold">
             Resultater
+          </Link>
+          <Link href="#" className="text-gray-200 hover:text-white mx-4 font-bold">
+            Kontakt
           </Link>
         </div>
         <div className="flex items-center">
@@ -57,7 +60,7 @@ const NavBar = () => {
       </div>
       {/* Navigation links for small screens */}
       <div
-        className={`lg:hidden mt-4 ${isMenuOpen ? 'flex' : 'hidden'} transition-all duration-500 ease-in-out text-center min-h-screen items-center justify-center text-2xl  `}
+        className={`lg:hidden mt-4 ${isMenuOpen ? 'flex' : 'hidden'} -mt-8 transition-all duration-500 ease-in-out text-center min-h-screen items-center justify-center text-2xl  `}
       >
         <div className="flex flex-col gap-8 text-left ">
           <Link href="/" className="text-gray-200 hover:text-white mb-2 font-bold">
@@ -74,6 +77,9 @@ const NavBar = () => {
           </Link>
           <Link href="/signup" className="text-gray-200 hover:text-white mb-2 font-bold">
             5. Påmelding
+          </Link>
+          <Link href="/contact" className="text-gray-200 hover:text-white mb-2 font-bold">
+            6. Kontakt
           </Link>
         </div>
       </div>

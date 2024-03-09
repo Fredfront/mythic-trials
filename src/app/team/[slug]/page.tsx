@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   const hasAltCharacters = data?.players.some((player) => player.alts && player.alts.length > 0)
 
-  const { dungeons, timeForTeam } = getDungeonInfo(leaderboard, idForRef)
+  const { timeForTeam } = getDungeonInfo(leaderboard, idForRef)
 
   const dungtimes = Object.keys(timeForTeam).map((e) => {
     return {
