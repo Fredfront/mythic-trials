@@ -32,7 +32,7 @@ const Home = async () => {
           </p>
           <div className="flex gap-4 mt-10 ">
             <Link href="/rules">
-              <button className="bg-white rounded-xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 hover:scale-105  min-w-52 min-h-10 ">
+              <button className="bg-white rounded-xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 hover:scale-105 min-w-44 md:min-w-52 min-h-10 ">
                 Hvem kan være med?
               </button>
             </Link>
