@@ -60,7 +60,7 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, p
   const ratingColor = `rgb(${mythicPlusInfo?.color?.r}, ${mythicPlusInfo?.color.g}, ${mythicPlusInfo?.color.b})`
   return (
     <Dialog>
-      <DialogTrigger asChild className="hover: cursor-pointer zoom-in-50 ">
+      <DialogTrigger asChild className=" cursor-pointer transition translate duration-500 hover:scale-105">
         <div className="mb-3">
           <div className="flex flex-col items-center">
             {data?.thumbnail_url ? (

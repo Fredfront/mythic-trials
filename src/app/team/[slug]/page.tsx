@@ -132,7 +132,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
               return (
                 <div key={dungeon.dungeon} className="mb-4">
-                  <div className="font-thin flex gap-2 items-center">
+                  <div className="font-thin flex gap-2 items-center text-white">
                     <Image className="rounded-full" src={imgSrc ?? ''} alt="" width={50} height={50} priority />
                     {dungeon.dungeon} <br />
                     {dungeon.time?.minutes}:{dungeon.time?.seconds}

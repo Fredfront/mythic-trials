@@ -27,55 +27,67 @@ const Footer = async () => {
           <ul className="flex gap-4 mt-4 mb-4">
             <li>
               <a href="https://discord.gg/wownl">
-                <DiscordLogoIcon className="text-white  h-5  w-5 " />
+                <DiscordLogoIcon className="text-white  h-5  w-5 transition transform hover:scale-105 duration-500  " />
               </a>
             </li>
             <li>
               <a href="https://www.twitch.tv/nerdelandslaget_wow">
-                <TwitchIcon className="text-white h-5 w-5" />
+                <TwitchIcon className="text-white h-5 w-5 transition transform hover:scale-105 duration-500 " />
               </a>
             </li>
             <li>
               <a href="https://www.youtube.com/@nerdelandslagetwow">
-                <Youtube className=" text-white h-5 w-5" />
+                <Youtube className=" text-white h-5 w-5 transition transform hover:scale-105 duration-500 " />
               </a>
             </li>
             <li>
               <a href="https://www.instagram.com/nerdelandslaget.wow/">
-                <InstagramLogoIcon className="text-white h-5 w-5" />{' '}
+                <InstagramLogoIcon className="text-white h-5 w-5 transition transform hover:scale-105 duration-500 " />{' '}
               </a>
             </li>
             <li>
               <a href="https://twitter.com/NL_Draenor/">
-                <TwitterLogoIcon className="text-white h-5 w-5" />
+                <TwitterLogoIcon className="text-white h-5 w-5 transition transform hover:scale-105 duration-500 " />
               </a>
             </li>
           </ul>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
-            <li>
-              <Link className="hover:underline mr-4 md:mr-6" href="/">
-                Forside
+            <li className="transition transform hover:scale-105 duration-500 ">
+              <Link className="hover:underline mr-4 md:mr-6 " href="/">
+                Hovedside
               </Link>
             </li>
-            <li>
-              <Link href="/rules" className="hover:underline mr-4 md:mr-6">
+            <li className="transition transform hover:scale-105 duration-500 ">
+              <Link
+                href="/rules"
+                className="hover:underline mr-4 md:mr-6 transition transform hover:scale-105 duration-500 "
+              >
                 Regler
               </Link>
             </li>
-            <li>
-              <Link href="/signup" className="hover:underline mr-4 md:mr-6">
+            <li className="transition transform hover:scale-105 duration-500 ">
+              <Link
+                href="/signup"
+                className="hover:underline mr-4 md:mr-6 transition transform hover:scale-105 duration-500 "
+              >
                 Påmelding
               </Link>
             </li>
-            <li>
-              <Link href="/#teams" className="hover:underline mr-4 md:mr-6">
-                Lag
+            <li className="transition transform hover:scale-105 duration-500 ">
+              <Link
+                href="/#teams"
+                className="hover:underline mr-4 md:mr-6 transition transform hover:scale-105 duration-500 "
+              >
+                Lagene
               </Link>
             </li>
-            <li>
+            <li className="transition transform hover:scale-105 duration-500 ">
               {showLeaderboard === true ? (
-                <Link href="/leaderboard" className="hover:underline me-4 md:me-6">
-                  Leaderboard
+                <Link
+                  href="/leaderboard"
+                  className="hover:underline me-4 md:me-6 transition transform hover:scale-105 duration-500 "
+                >
+                  Resultater
                 </Link>
               ) : null}
             </li>

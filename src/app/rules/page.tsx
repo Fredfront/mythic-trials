@@ -8,9 +8,9 @@ async function page() {
   return (
     <div className="w-full min-h-56 flex flex-col justify-between pt-10">
       <div className="flex justify-center">
-        <h1 className="text-2xl lg:text-4xl font-extrabold">{rulesData.headline}</h1>
+        <h1 className="text-2xl lg:text-4xl font-extrabol text-white">{rulesData.headline}</h1>
       </div>
-      <div className="flex justify-center pb-4">
+      <div className="flex justify-center pb-4 text-white">
         <PortableText value={rulesData?.content} />
       </div>
     </div>

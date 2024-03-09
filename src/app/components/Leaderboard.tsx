@@ -117,7 +117,7 @@ function LeaderboardComponent() {
       </div>
 
       <Table className="max-w-screen-xlg">
-        <TableHeader className=" bg-[#c69e0efd] ">
+        <TableHeader className=" bg-[#eebc09fd] ">
           <TableRow>
             <TableHead className="text-black font-extrabold">Lagnavn</TableHead>
             {hideTyrannical
@@ -140,8 +140,8 @@ function LeaderboardComponent() {
         <TableBody>
           {combinedPoints.map((team, index) => {
             return (
-              <TableRow key={index} className="  bg-[#1d3659] even:bg-[#15212d] border-none">
-                <TableCell className=" min-w-32">{team.teamName}</TableCell>
+              <TableRow key={index} className="  bg-[#1d3659] even:bg-[#355575] border-none text-white">
+                <TableCell className=" min-w-32 text-white font-bold">{team.teamName}</TableCell>
                 {hideTyrannical
                   ? null
                   : tyrannical.map((lead, leadIndex) => {
@@ -151,7 +151,11 @@ function LeaderboardComponent() {
                         lead.teams.find((a) => a.team._ref === team._ref)?.seconds !== undefined
                           ? true
                           : false
-                      return <TableCell key={leadIndex}>{hasTime ? timeString : '-'}</TableCell>
+                      return (
+                        <TableCell className="text-white" key={leadIndex}>
+                          {hasTime ? timeString : '-'}
+                        </TableCell>
+                      )
                     })}
                 {hideFortified
                   ? null
@@ -162,9 +166,13 @@ function LeaderboardComponent() {
                         lead.teams.find((a) => a.team._ref === team._ref)?.seconds !== undefined
                           ? true
                           : false
-                      return <TableCell key={leadIndex}>{hasTime ? timeString : '-'}</TableCell>
+                      return (
+                        <TableCell className="text-white" key={leadIndex}>
+                          {hasTime ? timeString : '-'}
+                        </TableCell>
+                      )
                     })}
-                <TableCell>
+                <TableCell className="font-bold">
                   {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
                 </TableCell>
               </TableRow>

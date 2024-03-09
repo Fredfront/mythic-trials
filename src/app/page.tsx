@@ -32,12 +32,12 @@ const Home = async () => {
           </p>
           <div className="flex gap-4 mt-10 ">
             <Link href="/rules">
-              <button className="bg-white rounded-xl text-black border-2 border-[#FDB202] px-3 py-3  ">
+              <button className="bg-white rounded-xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 hover:scale-105 ">
                 Hvem kan være med?
               </button>
             </Link>
             <Link href="/signup" prefetch>
-              <button className="px-4 py-3.5 rounded-xl   bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
+              <button className="px-4 py-3.5 rounded-xl   bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105">
                 Påmelding
               </button>
             </Link>
@@ -57,7 +57,12 @@ const Home = async () => {
                   return a.teamSlug.localeCompare(b.teamSlug)
                 })
                 .map((team) => (
-                  <Link className="rounded-lg" prefetch={true} href={`/team/${team.teamSlug}`} key={team._id}>
+                  <Link
+                    className=" rounded-md transition translate duration-500 hover:scale-105"
+                    prefetch={true}
+                    href={`/team/${team.teamSlug}`}
+                    key={team._id}
+                  >
                     <TeamCard key={team._id} team={team} />
                   </Link>
                 ))}
@@ -65,7 +70,7 @@ const Home = async () => {
         </div>
         <div className="flex flex-col lg:flex-row p-2 max-w-7xl lg:mt-32 mt-2 gap-10 ">
           <div className="lg:w-1/2 w-full ">
-            <h3 className="text-4xl mb-6 font-bold">Nyhet 1</h3>
+            <h3 className="text-4xl mb-6 font-bold text-white">Nyhet 1</h3>
             <p className="font-medium text-white">
               Nyheten cras sagittis sem arcu, et faucibus ipsum porttitor ac. Quisque sodales sem eu accumsan maximus.
               Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce elementum
