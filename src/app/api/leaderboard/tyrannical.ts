@@ -30,6 +30,8 @@ type LeaderboardEntry = {
   dungeon: string
   baseTimer: string
   teams: TeamEntry[]
+  isTyrannical?: boolean
+  isFortified?: boolean
 }
 
 export type LeaderboardData = LeaderboardEntry[]
