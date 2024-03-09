@@ -15,14 +15,14 @@ export function getDungeonInfo(leaderboard: LeaderboardData, idForRef: string | 
   const throne_of_the_tides = leaderboard.find((dungeon) => dungeon.dungeon.toLowerCase() === 'throne of the tides')
 
   //times
-  const time_darkheart = darkheart_thicket?.teams.find((e) => e.team._ref === idForRef)
-  const time_galakrond = galakronds_fall?.teams.find((e) => e.team._ref === idForRef)
-  const time_murozond = murozonds_rise?.teams.find((e) => e.team._ref === idForRef)
-  const time_waycrest = waycrest_manor?.teams.find((e) => e.team._ref === idForRef)
-  const time_atal = atal_dazar?.teams.find((e) => e.team._ref === idForRef)
-  const time_black_rook = black_rook_hold?.teams.find((e) => e.team._ref === idForRef)
-  const time_everbloom = everbloom?.teams.find((e) => e.team._ref === idForRef)
-  const time_throne = throne_of_the_tides?.teams.find((e) => e.team._ref === idForRef)
+  const time_darkheart = darkheart_thicket?.teams?.find((e) => e.team._ref === idForRef)
+  const time_galakrond = galakronds_fall?.teams?.find((e) => e.team._ref === idForRef)
+  const time_murozond = murozonds_rise?.teams?.find((e) => e.team._ref === idForRef)
+  const time_waycrest = waycrest_manor?.teams?.find((e) => e.team._ref === idForRef)
+  const time_atal = atal_dazar?.teams?.find((e) => e.team._ref === idForRef)
+  const time_black_rook = black_rook_hold?.teams?.find((e) => e.team._ref === idForRef)
+  const time_everbloom = everbloom?.teams?.find((e) => e.team._ref === idForRef)
+  const time_throne = throne_of_the_tides?.teams?.find((e) => e.team._ref === idForRef)
 
   const dungeons = {
     darkheart_thicket,

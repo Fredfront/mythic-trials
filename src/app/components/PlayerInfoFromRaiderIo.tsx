@@ -84,7 +84,7 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, p
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-black">
+      <DialogContent className="sm:max-w-[425px] bg-[#011624]">
         <DialogHeader>
           <DialogTitle>{data?.name}</DialogTitle>
           <DialogDescription>Guild: {blizzCharacterData?.guild?.name}</DialogDescription>
