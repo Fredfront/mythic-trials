@@ -87,21 +87,46 @@ function LeaderboardComponent() {
 
   const [hideTyrannical, setHideTyrannical] = React.useState(false)
   const [hideFortified, setHideFortified] = React.useState(false)
+  const [showOnlyPoints, setShowOnlyPoints] = React.useState(false)
+
+  useEffect(() => {
+    if (showOnlyPoints) {
+      setHideFortified(true)
+      setHideTyrannical(true)
+    }
+  }, [showOnlyPoints])
 
   if (searchTeam && searchTeam.length > 0) {
     combinedPoints = combinedPoints.filter((team) => team.teamName.toLowerCase().includes(searchTeam.toLowerCase()))
   }
 
   return (
-    <div className=" p-4 mt-4 overflow-scroll ">
+    <div className=" p-4 mt-4">
       <div className="flex gap-4 pb-2 justify-end w-full flex-col lg:flex-row md:flex-row">
+        {showOnlyPoints ? null : (
+          <div>
+            <Checkbox checked={hideTyrannical} onClick={() => setHideTyrannical(!hideTyrannical)} />
+            <label className="text-white ml-2">Skjul Tyrannical</label>
+          </div>
+        )}
+
+        {showOnlyPoints ? null : (
+          <div>
+            <Checkbox checked={hideFortified} onClick={() => setHideFortified(!hideFortified)} />
+            <label className="text-white ml-2">Skjul Fortified</label>
+          </div>
+        )}
+
         <div>
-          <Checkbox checked={hideTyrannical} onClick={() => setHideTyrannical(!hideTyrannical)} />
-          <label className="text-white ml-2">Skjul Tyrannical</label>
-        </div>
-        <div>
-          <Checkbox checked={hideFortified} onClick={() => setHideFortified(!hideFortified)} />
-          <label className="text-white ml-2">Skjul Fortified</label>
+          <Checkbox
+            checked={showOnlyPoints}
+            onClick={() => {
+              setShowOnlyPoints(!showOnlyPoints)
+              setHideFortified(false)
+              setHideTyrannical(false)
+            }}
+          />
+          <label className="text-white ml-2">Vis kun poeng</label>
         </div>
 
         <div>
@@ -110,7 +135,7 @@ function LeaderboardComponent() {
             placeholder="Søk etter lag"
             name="filterTeam"
             id="filterTeam"
-            className="rounded-lg pl-1 mr-2"
+            className="rounded-lg p-1 pl-2 mr-2"
             onChange={(e) => setSearchTeam(e.target.value)}
           />{' '}
         </div>
