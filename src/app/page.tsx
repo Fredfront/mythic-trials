@@ -26,8 +26,8 @@ const Home = async () => {
           className={`flex flex-col items-center justify-center h-screen w-full bg-cover bg-center bg-no-repeat  `}
         >
           <Image src={logo} alt="Nerdelandslaget" width={250} height={250} className=" -mb-7 -mt-16" />
-          <h2 className={`${LifeCraft.className} text-8xl `}>sesong 2</h2>
-          <p className="text-center  font-medium">
+          <h2 className={`${LifeCraft.className} text-8xl text-white `}>sesong 2</h2>
+          <p className="text-center  font-medium text-white">
             Vi er tilbake for sesong 2 av Mythic Trials arrangert av Nerdelandslaget WoW.{' '}
           </p>
           <div className="flex gap-4 mt-10 ">
@@ -66,7 +66,7 @@ const Home = async () => {
         <div className="flex flex-col lg:flex-row p-2 max-w-7xl lg:mt-32 mt-2 gap-10 ">
           <div className="lg:w-1/2 w-full ">
             <h3 className="text-4xl mb-6 font-bold">Nyhet 1</h3>
-            <p className=" font-medium">
+            <p className="font-medium text-white">
               Nyheten cras sagittis sem arcu, et faucibus ipsum porttitor ac. Quisque sodales sem eu accumsan maximus.
               Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce elementum
               odio quis odio interdum mattis. Fusce accumsan leo ut lacinia blandit. Donec iaculis tincidunt magna, sed

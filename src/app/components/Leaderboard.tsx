@@ -117,7 +117,7 @@ function LeaderboardComponent() {
       </div>
 
       <Table className="max-w-screen-xlg">
-        <TableHeader className=" bg-[#fcd20a] ">
+        <TableHeader className=" bg-[#c69e0efd] ">
           <TableRow>
             <TableHead className="text-black font-extrabold">Lagnavn</TableHead>
             {hideTyrannical
@@ -140,7 +140,7 @@ function LeaderboardComponent() {
         <TableBody>
           {combinedPoints.map((team, index) => {
             return (
-              <TableRow key={index} className="  bg-[#0b3f86] even:bg-[#106abc] border-none">
+              <TableRow key={index} className="  bg-[#1d3659] even:bg-[#15212d] border-none">
                 <TableCell className=" min-w-32">{team.teamName}</TableCell>
                 {hideTyrannical
                   ? null

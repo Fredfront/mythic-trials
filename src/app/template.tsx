@@ -21,7 +21,7 @@ const Footer = async () => {
   const showLeaderboard = (await get('showLeaderboard')) as any
 
   return (
-    <footer className=" mt-10  shadow dark:bg-[#272727]">
+    <footer className=" mt-10  shadow bg-[#272727]">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <ul className="flex gap-4 mt-4 mb-4">

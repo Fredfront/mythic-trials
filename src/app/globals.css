@@ -4,36 +4,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 @layer base {
-  :root {
-    --primary-1000: #011624;
-    --primary-900: #021f33;
-    --primary-800: #052d49;
-    --primary-700: #093759;
-    --primary-600: #0b436c;
-    --black: #000014;
-    --white: #ffffff;
-    --orange-900: #a14e00;
-    --orange-800: #e87601;
-    --orange-700: #f18805;
-    --orange-600: #f6a10a;
-    --orange-400: #fdb202;
-    --yellow-300: #fcd20a;
-    --yellow-200: #ffe000;
-    --blue-900: #0b3f86;
-    --blue-800: #106abc;
-    --blue-700: #028afd;
-    --blue-500: #10f9ee;
-    --background: var(--primary-1000);
-    --foreground: var(--primary-700);
-  }
-
-  .dark {
-    --background: var(--black);
-    --foreground: var(--white);
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
