@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { RxHamburgerMenu } from 'react-icons/rx'
+import { AiOutlineClose } from 'react-icons/ai'
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false)
@@ -44,16 +46,17 @@ const NavBar = () => {
               Påmelding
             </Button>
           </Link>
-          <div className="block lg:hidden ">
+          <div className="block lg:hidden">
             {/* Hamburger icon for mobile */}
             <button
-              className="flex items-center px-3 py-2 border rounded text-gray-200 border-gray-400 hover:text-white hover:border-white"
+              className="flex items-center px-3 py-2 text-gray-200 border-gray-400 hover:text-white hover:border-white transition-all duration-300"
               onClick={toggleMenu}
             >
-              <svg className="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <title>Menu</title>
-                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-              </svg>
+              {isMenuOpen ? (
+                <AiOutlineClose className="text-4xl transform rotate-0 duration-200" />
+              ) : (
+                <RxHamburgerMenu className="text-4xl transform rotate-0 duration-200" />
+              )}
             </button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { LeaderboardData, getTyrannicalLeaderboardData } from '../api/leaderboard/tyrannical'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { MythicPlusTeam, getAllTeams } from '../api/getAllTeams'

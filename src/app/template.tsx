@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import NavBar from './components/Navbar'
-import Image from 'next/image'
 import { DiscordLogoIcon, InstagramLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 import { TwitchIcon, Youtube } from 'lucide-react'
 import { get } from '@vercel/edge-config'
