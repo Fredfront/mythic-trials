@@ -11,7 +11,6 @@ import Image from 'next/image'
 import { PlayerInfoImage } from '../components/PlayerInfoImage'
 import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
-import { mutateClient } from '../client'
 import { wowRealmsMapped } from '../utils/wowRealms'
 import { LogOut } from 'lucide-react'
 
@@ -133,7 +132,7 @@ function CreateTeam() {
 
   function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files && e.target.files[0]
-    if (file) {
+    if (file && file.type.startsWith('image')) {
       setTeamImage(file)
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -147,25 +146,29 @@ function CreateTeam() {
   async function addImage() {
     setLoadingCreateTeam(true)
     try {
-      const imageAsset = await new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          if (reader.result === null) return
-          resolve(new Blob([reader.result], { type: teamImage.type }))
-        }
-        reader.onerror = reject
-        reader.readAsArrayBuffer(teamImage)
+      const formData = new FormData()
+      formData.append('image', teamImage)
+
+      console.log(formData)
+
+      const response = await fetch('mythic-trials-sanity-image-upload-api.vercel.app/uploadImage', {
+        method: 'POST',
+        body: formData,
       })
 
-      const uploadedImage = await mutateClient.assets.upload('image', imageAsset as any, {
-        filename: teamImage.name,
-        contentType: teamImage.type,
-      })
+      const data = await response.json()
 
-      setUploadedImage(uploadedImage)
-      setImageUploaded(true)
+      if (response.ok) {
+        // Handle success, you may set state or perform further actions
+        console.log('Image uploaded successfully:', data)
+      } else {
+        // Handle error
+        console.error('Failed to upload image:', data.error)
+      }
     } catch (error) {
-      console.error('Failed to upload image:', error)
+      console.error('Error uploading image:', error)
+    } finally {
+      setLoadingCreateTeam(false)
     }
   }
 
@@ -293,6 +296,15 @@ function CreateTeam() {
     }
   }, [allTeams, data?.user?.email])
 
+  const hideCreateTeamButton =
+    players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
+    loadingCreateTeam ||
+    teamNameAlreadyExists ||
+    teamNameError ||
+    (players && players.length <= 4) ||
+    teamName === '' ||
+    teamImage === null
+
   if (status === 'loading' || status === 'unauthenticated') return <Loading />
 
   return (
@@ -343,9 +355,26 @@ function CreateTeam() {
             {teamNameError && <p className="text-red-500 mb-4">Fyll inn et lagnavn.</p>}
 
             <label htmlFor="teamImage" className="mb-2 font-bold text-lg">
-              Team Image:
+              Lagbilde (.png eller .jpeg, .webp, .svg) <br /> <span className=" text-xs">Maks 2MB</span>
             </label>
-            <input type="file" id="teamImage" onChange={handleFileUpload} accept="image/*" className="mb-4" />
+            <input
+              type="file"
+              id="teamImage"
+              onChange={(e) => {
+                if (e.target.files?.[0].type.includes('image') === false) {
+                  alert('Du kan kun laste opp bilder. Prøv igjen.')
+                  return
+                }
+                if (e.target.files && e.target.files?.[0]?.size > 2000000) {
+                  alert('Bildet er for stort. Maks 2MB')
+                  return
+                }
+
+                handleFileUpload(e)
+              }}
+              accept="image/*"
+              className="mb-4"
+            />
             {missingImageError && teamImage === null && (
               <p className="text-red-500 mb-4">Last opp et bilde for laget.</p>
             )}
@@ -494,32 +523,15 @@ function CreateTeam() {
             {players && players.length > 4 && teamImage === null ? (
               <p className="text-red-500 mb-4">* Last opp et bilde for laget.</p>
             ) : null}
-
-            <Button
-              disabled={
-                players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
-                loadingCreateTeam ||
-                teamNameAlreadyExists ||
-                teamNameError ||
-                (players && players.length <= 4) ||
-                teamName === '' ||
-                teamImage === null
-              }
-              className="mt-10"
-              type="submit"
-            >
-              {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
-              teamNameAlreadyExists ||
-              teamNameError ||
-              teamImage === null ||
-              playerErrors.some((e) => e === true) ||
-              (players && players.length <= 4)
-                ? 'Mangler info for å opprette lag'
-                : loadingCreateTeam
-                  ? 'Opretter lag'
-                  : 'Opprett lag'}
-              {loadingCreateTeam ? <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" /> : null}
-            </Button>
+            {!hideCreateTeamButton ? null : (
+              <button
+                className="mt-10 bg-white text-black hover:bg-white hover:scale-105  rounded-xl p-2 w-full "
+                type="submit"
+              >
+                {loadingCreateTeam ? 'Oppretter lag...' : 'Opprett lag'}
+                {loadingCreateTeam ? <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" /> : null}
+              </button>
+            )}
           </form>
         </div>
       </>
