@@ -149,7 +149,7 @@ function CreateTeam() {
       const formData = new FormData()
       formData.append('image', teamImage)
 
-      const response = await fetch('http://mythic-trials-sanity-image-upload-api.vercel.app/uploadImage', {
+      const response = await fetch('https://mythic-trials-sanity-image-upload-api.vercel.app/uploadImage', {
         method: 'POST',
         body: formData,
       })
