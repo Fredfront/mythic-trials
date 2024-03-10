@@ -149,15 +149,13 @@ function CreateTeam() {
       const formData = new FormData()
       formData.append('image', teamImage)
 
-      console.log(formData)
-
-      const response = await fetch('https://mythic-trials-sanity-image-upload-api.vercel.app/uploadImage', {
+      const response = await fetch('http://mythic-trials-sanity-image-upload-api.vercel.app/uploadImage', {
         method: 'POST',
         body: formData,
       })
 
       const data = await response.json()
-
+      console.log(data, '@@@@@@IMAGE@@@@@')
       if (response.ok) {
         // Handle success, you may set state or perform further actions
         setUploadedImage(data)
@@ -527,7 +525,7 @@ function CreateTeam() {
             {players && players.length > 4 && teamImage === null ? (
               <p className="text-red-500 mb-4">* Last opp et bilde for laget.</p>
             ) : null}
-            {hideCreateTeamButton ? null : (
+            {!hideCreateTeamButton ? null : (
               <button
                 className="mt-10 bg-white text-black hover:bg-white hover:scale-105  rounded-xl p-2 w-full "
                 type="submit"
