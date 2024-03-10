@@ -160,6 +160,8 @@ function CreateTeam() {
 
       if (response.ok) {
         // Handle success, you may set state or perform further actions
+        setUploadedImage(data)
+        setImageUploaded(true)
         console.log('Image uploaded successfully:', data)
       } else {
         // Handle error
@@ -167,6 +169,7 @@ function CreateTeam() {
       }
     } catch (error) {
       console.error('Error uploading image:', error)
+      setLoadingCreateTeam(false)
     } finally {
       setLoadingCreateTeam(false)
     }
@@ -203,6 +206,7 @@ function CreateTeam() {
       await addImage()
     } catch (error) {
       console.error('Error in form submission:', error)
+      setLoadingCreateTeam(false)
     }
   }
 
