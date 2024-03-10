@@ -226,7 +226,7 @@ function CreateTeam() {
               _type: 'image',
               asset: {
                 _type: 'reference',
-                _ref: uploadedImage?._id,
+                _ref: uploadedImage?.data?.document?._id,
               },
             },
             players: players.map((player) => ({
@@ -270,7 +270,7 @@ function CreateTeam() {
 
       // Handle error
     }
-  }, [players, router, teamName, teamSlug, uploadedImage?._id, userEmail])
+  }, [players, router, teamName, teamSlug, uploadedImage?.data?.document?._id, userEmail])
 
   useEffect(() => {
     if (imageUploaded) {
@@ -363,7 +363,7 @@ function CreateTeam() {
               type="file"
               id="teamImage"
               onChange={(e) => {
-                if (e.target.files?.[0].type.includes('image') === false) {
+                if (e.target.files?.[0]?.type?.includes('image') === false) {
                   alert('Du kan kun laste opp bilder. Prøv igjen.')
                   return
                 }
