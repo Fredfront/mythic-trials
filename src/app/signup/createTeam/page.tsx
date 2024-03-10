@@ -14,7 +14,6 @@ import Loading from '../components/Loading'
 import { mutateClient } from '../client'
 import { wowRealmsMapped } from '../utils/wowRealms'
 import { LogOut } from 'lucide-react'
-import { revalidatePath } from 'next/cache'
 
 function CreateTeam() {
   const { data, status } = useSession()
@@ -28,7 +27,6 @@ function CreateTeam() {
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
   const [previewImage, setPreviewImage] = useState<any>(null)
 
-  const hasTeam = allTeams?.find((e) => e.contactPerson === data?.user?.email)
   const teamSlug = useMemo(
     () => allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamSlug,
     [allTeams, data?.user?.email],
@@ -310,7 +308,8 @@ function CreateTeam() {
           <h1 className="text-4xl font-bold  mb-10">Opprett lag</h1>
           <p className="mb-4 pl-4">
             Fyll ut skjemaet under for å opprette laget ditt. Det må være minimum 5 spillere per lag. NB: Husk også å
-            legge til eventuelle alts som skal være med i laget.
+            legge til eventuelle alts som skal være med i laget. <br /> Det er mulig å oppdatere mains/alts etter
+            opprettelse.
           </p>
           <form className="flex flex-col w-full p-4 lg:w-2/4" onSubmit={handleSubmit}>
             <label htmlFor="contactPerson" className="mb-2 text-lg font-bold">
@@ -492,6 +491,10 @@ function CreateTeam() {
               <p className="text-red-500 mb-4">* Fyll inn et lagnavn.</p>
             )}
 
+            {players && players.length > 4 && teamImage === null ? (
+              <p className="text-red-500 mb-4">* Last opp et bilde for laget.</p>
+            ) : null}
+
             <Button
               disabled={
                 players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
@@ -499,7 +502,8 @@ function CreateTeam() {
                 teamNameAlreadyExists ||
                 teamNameError ||
                 (players && players.length <= 4) ||
-                teamName === ''
+                teamName === '' ||
+                teamImage === null
               }
               className="mt-10"
               type="submit"
@@ -507,6 +511,7 @@ function CreateTeam() {
               {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
               teamNameAlreadyExists ||
               teamNameError ||
+              teamImage === null ||
               playerErrors.some((e) => e === true) ||
               (players && players.length <= 4)
                 ? 'Mangler info for å opprette lag'

@@ -7,10 +7,8 @@ import { get } from '@vercel/edge-config'
 import logo from '../../public/MT_logo_white.webp'
 import Image from 'next/image'
 import localFont from 'next/font/local'
-import LeaderboardComponent from './components/Leaderboard'
 import { LeaderboardDrawer } from './components/DrawerComponent'
 const LifeCraft = localFont({ src: '../../public/fonts/LifeCraft_Font.woff2' })
-
 const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
