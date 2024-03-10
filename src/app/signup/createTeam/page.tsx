@@ -525,7 +525,7 @@ function CreateTeam() {
             {players && players.length > 4 && teamImage === null ? (
               <p className="text-red-500 mb-4">* Last opp et bilde for laget.</p>
             ) : null}
-            {!hideCreateTeamButton ? null : (
+            {hideCreateTeamButton ? null : (
               <button
                 className="mt-10 bg-white text-black hover:bg-white hover:scale-105  rounded-xl p-2 w-full "
                 type="submit"
