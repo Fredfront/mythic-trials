@@ -300,13 +300,13 @@ function CreateTeam() {
 
   const hideCreateTeamButton =
     players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
-    loadingCreateTeam ||
     teamNameAlreadyExists ||
     teamNameError ||
     (players && players.length <= 4) ||
     teamName === '' ||
     teamImage === null
 
+  if (loadingCreateTeam) return <Loading creatingTeam={true} />
   if (status === 'loading' || status === 'unauthenticated') return <Loading />
 
   return (
@@ -494,7 +494,7 @@ function CreateTeam() {
                     Fjern spiller {index + 1}
                   </Button>
                   <Button
-                    className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2 px-2 py-2 rounded-xl bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105"
+                    className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2 px-2 py-2 bg-white text-black border-2 border-[#FDB202]   transition translate duration-500 hover:scale-105 min-w-44 md:min-w-52 min-h-10 "
                     type="button"
                     onClick={() => handleAddAltPlayer(index)} // Call handleAddAltPlayer function with the index of the main player
                   >

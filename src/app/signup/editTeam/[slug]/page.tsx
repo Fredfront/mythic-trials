@@ -13,6 +13,7 @@ import Loading from '../../components/Loading'
 import { useRouter } from 'next/navigation'
 import { wowRealmsMapped } from '../../utils/wowRealms'
 import { LogOut } from 'lucide-react'
+import { set } from 'lodash'
 
 function EditTeam() {
   const { data, status } = useSession()
@@ -135,6 +136,7 @@ function EditTeam() {
         } else {
           // Handle error response
           console.error('Failed to create Mythic Plus team:', response.statusText)
+          setLoadingCreateTeam(false)
         }
       } catch (error) {
         console.error('Failed to create Mythic Plus team:', error)
@@ -218,6 +220,7 @@ function EditTeam() {
     setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== index))
     setHasEditedPlayers(true)
   }
+  if (!loadingCreateTeam) return <Loading creatingTeam={true} />
 
   if (status === 'loading' || status === 'unauthenticated') return <Loading />
 

@@ -50,7 +50,7 @@ const Home = async () => {
           <div>RUNDE 6: 20.05.2024</div>|<div>FINALE 1: 20.05.2024</div>|<div>FINALE 2: 20.05.2024</div>
         </div>
         <div id="teams" className=" mt-12 ">
-          <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-4 mt-10  max-w-7xl mb-10 p-4 ">
+          <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-6 mt-10 max-w-7xl mb-10 ">
             {allTeams &&
               allTeams
                 .slice()
@@ -59,7 +59,7 @@ const Home = async () => {
                 })
                 .map((team) => (
                   <Link
-                    className=" rounded-md transition translate duration-500 hover:scale-105"
+                    className=" rounded-md transition translate duration-500 "
                     prefetch={true}
                     href={`/team/${team.teamSlug}`}
                     key={team._id}
@@ -90,9 +90,13 @@ const Home = async () => {
                     className="rounded-xl"
                   />
                 </div>
+                {index !== frontpageNews.length - 1 && (
+                  <div className="w-full border-t border-gray-300 mt-6 lg:hidden"></div>
+                )}
               </div>
             )
           })}
+
         <div className="mt-10 md:mt-24 lg:mt-24">
           <LeaderboardDrawer />
         </div>
