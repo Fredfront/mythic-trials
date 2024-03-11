@@ -8,11 +8,16 @@ import logo from '../../public/MT_logo_white.webp'
 import Image from 'next/image'
 import localFont from 'next/font/local'
 import { LeaderboardDrawer } from './components/DrawerComponent'
+import { getFrontpageNews } from './api/frongpageNews/getFrontpageNewsData'
+import { PortableText } from '@portabletext/react'
 const LifeCraft = localFont({ src: '../../public/fonts/LifeCraft_Font.woff2' })
 const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboard = await get('showLeaderboard')
+  const frontpageNews = await getFrontpageNews()
+
+  console.log(frontpageNews.mainImage.asset._ref, 'frontpageNews')
 
   return (
     <main>
@@ -68,19 +73,12 @@ const Home = async () => {
         </div>
         <div className="flex flex-col lg:flex-row max-w-7xl lg:mt-32 mt-2 gap-10 p-4 ">
           <div className="lg:w-1/2 w-full ">
-            <h3 className="text-4xl mb-6 font-bold text-white">Nyhet 1</h3>
-            <p className="font-medium text-white">
-              Nyheten cras sagittis sem arcu, et faucibus ipsum porttitor ac. Quisque sodales sem eu accumsan maximus.
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce elementum
-              odio quis odio interdum mattis. Fusce accumsan leo ut lacinia blandit. Donec iaculis tincidunt magna, sed
-              tempus mauris fermentum ut. Pellentesque tincidunt sit amet risus sit amet tempus. Donec vulputate aliquam
-              urna ut porttitor. Aliquam iaculis tristique dui, sit amet efficitur sem dapibus ac. Nullam luctus tellus
-              eget eros vehicula, quis viverra mauris pulvinar.
-            </p>
+            <h3 className="text-4xl mb-6 font-bold text-white">{frontpageNews.headline}</h3>
+            <PortableText value={frontpageNews.content} />
           </div>
           <div className="lg:w-1/2 w-full">
             <Image
-              src={urlForImage(frontpageData.mainImage.asset._ref)}
+              src={urlForImage(frontpageNews.mainImage.asset._ref)}
               alt=""
               width={600}
               height={600}

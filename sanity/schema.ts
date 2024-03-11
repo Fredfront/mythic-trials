@@ -6,7 +6,17 @@ import { FortifiedLeaderboard } from './schemas/leaderboard/fortified'
 import { FrontPage } from './schemas/frontpage/schema'
 import { SignupPage } from './schemas/signup/schema'
 import { RulesPage } from './schemas/rules/schema'
+import { FrontpageNews } from './schemas/frontpageNews/schema'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [MythicPlusTeam, Player, TyrannicalLeaderboard, FortifiedLeaderboard, FrontPage, SignupPage, RulesPage],
+  types: [
+    MythicPlusTeam,
+    Player,
+    TyrannicalLeaderboard,
+    FortifiedLeaderboard,
+    FrontPage,
+    SignupPage,
+    RulesPage,
+    FrontpageNews,
+  ],
 }
