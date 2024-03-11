@@ -10,7 +10,7 @@ export async function getFrontpageNews() {
     },
   })) as RulesPage[]
 
-  return data[0] as RulesPage
+  return data as RulesPage[]
 }
 
 export type RulesPage = {

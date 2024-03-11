@@ -17,8 +17,6 @@ const Home = async () => {
   const showLeaderboard = await get('showLeaderboard')
   const frontpageNews = await getFrontpageNews()
 
-  console.log(frontpageNews.mainImage.asset._ref, 'frontpageNews')
-
   return (
     <main>
       <div className="flex flex-col items-center ">
@@ -71,21 +69,30 @@ const Home = async () => {
                 ))}
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row max-w-7xl lg:mt-32 mt-2 gap-10 p-4 ">
-          <div className="lg:w-1/2 w-full ">
-            <h3 className="text-4xl mb-6 font-bold text-white">{frontpageNews.headline}</h3>
-            <PortableText value={frontpageNews.content} />
-          </div>
-          <div className="lg:w-1/2 w-full">
-            <Image
-              src={urlForImage(frontpageNews.mainImage.asset._ref)}
-              alt=""
-              width={600}
-              height={600}
-              className="rounded-xl"
-            />
-          </div>
-        </div>
+        {frontpageNews &&
+          frontpageNews.map((news, index) => {
+            const isEvenIndex = index % 2 === 0
+            return (
+              <div
+                key={news._id}
+                className={`flex flex-col lg:flex-row max-w-7xl lg:mt-32 mt-2 gap-10 p-4 ${!isEvenIndex ? 'lg:flex-row-reverse' : ''}`}
+              >
+                <div className="lg:w-1/2 w-full">
+                  <h3 className="text-4xl mb-6 font-bold text-white">{news.headline}</h3>
+                  <PortableText value={news.content} />
+                </div>
+                <div className="lg:w-1/2 w-full">
+                  <Image
+                    src={urlForImage(news.mainImage.asset._ref)}
+                    alt=""
+                    width={600}
+                    height={600}
+                    className="rounded-xl"
+                  />
+                </div>
+              </div>
+            )
+          })}
         <div className="mt-10 md:mt-24 lg:mt-24">
           <LeaderboardDrawer />
         </div>
