@@ -13,6 +13,17 @@ body {
     border-image-source: linear-gradient(90deg, #054178 0%, #1375ce 48.5%, #043f75 100%);
     border-image-slice: 1;
   }
+
+  .portableText {
+    padding: 2rem;
+    h2 {
+      @apply text-3xl font-bold;
+      margin-top: 2rem;
+    }
+    > p {
+      margin-top: 1rem;
+    }
+  }
 }
 
 @layer base {

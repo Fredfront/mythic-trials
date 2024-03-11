@@ -12,7 +12,7 @@ import { PlayerInfoImage } from '../components/PlayerInfoImage'
 import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 import { wowRealmsMapped } from '../utils/wowRealms'
-import { LogOut } from 'lucide-react'
+import { LogOut, PlusCircle } from 'lucide-react'
 
 function CreateTeam() {
   const { data, status } = useSession()
@@ -472,7 +472,7 @@ function CreateTeam() {
                       }}
                     />
                     <Button
-                      className="bg-red-500 mt-2 hover:bg-red-500 hover:scale-105"
+                      className="bg-red-500 mt-2 hover:bg-red-500 hover:scale-105 text-white"
                       type="button"
                       onClick={() => handleRemoveAltPlayer(index, altIndex)}
                     >
@@ -486,7 +486,7 @@ function CreateTeam() {
 
                 <div className="flex">
                   <Button
-                    className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 hover:bg-red-500 hover:scale-105 rounded-xl"
+                    className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 hover:bg-red-500 hover:scale-105  text-white"
                     type="button"
                     onClick={() => handleRemovePlayer(index)}
                     aria-label={`Remove player ${index + 1}`}
@@ -494,7 +494,7 @@ function CreateTeam() {
                     Fjern spiller {index + 1}
                   </Button>
                   <Button
-                    className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2 bg-white text-black  hover:bg-white  hover:scale-105  rounded-xl"
+                    className="w-2/3 lg:w-44 md:w-44 ml-2 mt-2 px-2 py-2 rounded-xl bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105"
                     type="button"
                     onClick={() => handleAddAltPlayer(index)} // Call handleAddAltPlayer function with the index of the main player
                   >
@@ -509,13 +509,14 @@ function CreateTeam() {
             {players && players.length >= 7 ? (
               <p className="text-white mb-4">Du har nådd maks antall spillere (7)</p>
             ) : (
-              <Button
-                className="mb-4 max-w-52 bg-white text-black hover:bg-white hover:scale-105  rounded-xl"
+              <button
+                className="px-2 py-2 rounded-xl bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105"
                 type="button"
                 onClick={handleAddPlayer}
               >
                 Legg til ny spiller
-              </Button>
+                <PlusCircle className="ml-2 h-6 w-6 inline-block" />
+              </button>
             )}
             {missingPlayersError && <p className="text-red-500 mb-4">Legg til minst 5 spillere.</p>}
             {teamName === '' && players && players.length > 4 && (
@@ -527,7 +528,7 @@ function CreateTeam() {
             ) : null}
             {hideCreateTeamButton ? null : (
               <button
-                className="mt-10 bg-white text-black hover:bg-white hover:scale-105  rounded-xl p-2 w-full "
+                className="mt-10   min-h-10 px-4 py-3.5 rounded-xl   bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105 "
                 type="submit"
               >
                 {loadingCreateTeam ? 'Oppretter lag...' : 'Opprett lag'}

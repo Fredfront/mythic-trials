@@ -6,9 +6,12 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { AiOutlineClose } from 'react-icons/ai'
+import { usePathname } from 'next/navigation'
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false)
+
+  const pathname = usePathname()
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
@@ -24,19 +27,54 @@ const NavBar = () => {
         </div>
         <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1 ">
           {/* Navigation links for large screens */}
-          <Link href="/" className="text-gray-200 hover:text-white mx-4 font-bold">
+          <Link
+            href="/"
+            className={
+              pathname === '/'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             Hovedside
           </Link>
-          <Link href="/#teams" className="text-gray-200 hover:text-white mx-4 font-bold">
+          <Link
+            href="/#teams"
+            className={
+              pathname === '/#teams'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             Lagene
           </Link>
-          <Link href="/rules" className="text-gray-200 hover:text-white mx-4 font-bold">
+          <Link
+            href="/rules"
+            className={
+              pathname === '/rules'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             Regler
           </Link>
-          <Link href="/leaderboard" className="text-gray-200 hover:text-white mx-4 font-bold">
+          <Link
+            href="/leaderboard"
+            className={
+              pathname === '/leaderboard'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             Resultater
           </Link>
-          <Link href="#" className="text-gray-200 hover:text-white mx-4 font-bold">
+          <Link
+            href="#"
+            className={
+              pathname === '/contact'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             Kontakt
           </Link>
         </div>
@@ -66,22 +104,64 @@ const NavBar = () => {
         className={`lg:hidden mt-4 ${isMenuOpen ? 'flex translate transition-all duration-500 ease-in-out' : 'hidden'} text-center min-h-screen justify-center text-2xl  `}
       >
         <div className="flex flex-col gap-8 text-left mt-10 ">
-          <Link href="/" className="text-gray-200 hover:text-white mb-2 font-bold">
+          <Link
+            href="/"
+            className={
+              pathname === '/'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             1. Hovedside
           </Link>
-          <Link href="/#teams" className="text-gray-200 hover:text-white mb-2 font-bold">
+          <Link
+            href="/#teams"
+            className={
+              pathname === '/#teams'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             2. Lagene
           </Link>
-          <Link href="/rules" className="text-gray-200 hover:text-white mb-2 font-bold">
+          <Link
+            href="/rules"
+            className={
+              pathname === '/rules'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             3. Regler
           </Link>
-          <Link href="/leaderboard" className="text-gray-200 hover:text-white mb-2 font-bold">
+          <Link
+            href="/leaderboard"
+            className={
+              pathname === '/leaderboard'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             4. Resultater
           </Link>
-          <Link href="/signup" className="text-gray-200 hover:text-white mb-2 font-bold">
+          <Link
+            href="/signup"
+            className={
+              pathname.includes('/signup')
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             5. Påmelding
           </Link>
-          <Link href="/contact" className="text-gray-200 hover:text-white mb-2 font-bold">
+          <Link
+            href="/contact"
+            className={
+              pathname === '/contact'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                : 'text-gray-200 hover:text-white mx-4 font-bold'
+            }
+          >
             6. Kontakt
           </Link>
         </div>

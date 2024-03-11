@@ -184,30 +184,30 @@ function LeaderboardComponent() {
         <div>
           {' '}
           <input
-            placeholder="Søk etter lag"
+            placeholder="Søk..."
             name="filterTeam"
             id="filterTeam"
-            className="rounded-lg p-1 pl-2 mr-2"
+            className="rounded-lg p-1 pl-2 mr-2 bg-[#011624] border-2 border-[#028AFD] focus:outline-none focus:border-[#028AFD] text-white"
             onChange={(e) => setSearchTeam(e.target.value)}
           />{' '}
         </div>
       </div>
 
-      <Table className="max-w-screen-xlg">
+      <Table className="max-w-screen-xlg  ">
         <TableHeader className=" bg-[#028AFD] ">
-          <TableRow className="border-[1px] border-black">
+          <TableRow className="border-[1px] border-black ">
             <TableHead className="text-white font-extrabold min-w-48">Lag</TableHead>
+            <TableHead className="text-white font-extrabold text-center">Poeng</TableHead>
+
             {combinedTyranAndFort.map((leader, index) => {
               if (hideTyrannical && leader.isTyrannical === true) return null
               if (hideFortified && leader.isFortified) return null
               return (
-                <TableHead className="text-white font-bold min-w-24" key={index}>
+                <TableHead className="text-white font-bold min-w-24 text-center" key={index}>
                   {shortenDungeonName(leader.dungeon)} {leader.isTyrannical ? '(Tyr)' : '(For)'}
                 </TableHead>
               )
             })}
-
-            <TableHead className="text-white font-extrabold">Poeng</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -215,7 +215,7 @@ function LeaderboardComponent() {
             const teamImage = allTeams.find((e) => e._id === team._ref)?.teamImage?.asset._ref
             return (
               <TableRow key={index} className="  bg-[#052D49] even:bg-[#0B436C] border-none text-white">
-                <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px] border-black">
+                <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px] border-b-[1px] border-black">
                   <Image
                     src={urlForImage(teamImage ?? '')}
                     alt={`${team.teamName} logo`}
@@ -224,6 +224,9 @@ function LeaderboardComponent() {
                     className="mr-3 w-8 h-8 rounded-full"
                   />
                   <span className=" text-sm font-bold">{team.teamName}</span>
+                </TableCell>
+                <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-b-[1px] border-black">
+                  {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
                 </TableCell>
                 {combinedTyranAndFort?.map((lead, leadIndex) => {
                   if (hideTyrannical && lead.isTyrannical === true) return null
@@ -235,7 +238,7 @@ function LeaderboardComponent() {
                       ? true
                       : false
                   return (
-                    <TableCell className="text-white" key={leadIndex}>
+                    <TableCell className="text-white text-center  border-b-[1px] border-black" key={leadIndex}>
                       {hasTime ? (
                         <span className="border 2px border-[#028AFD] pr-4 pl-4 pt-1 pb-1 rounded-sm  ">
                           {timeString}
@@ -246,10 +249,6 @@ function LeaderboardComponent() {
                     </TableCell>
                   )
                 })}
-
-                <TableCell className="font-bold text-white">
-                  {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
-                </TableCell>
               </TableRow>
             )
           })}
