@@ -19,7 +19,6 @@ import { notFound } from 'next/navigation'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const token = await getToken()
-  console.log(params.slug)
   const leaderboard = await getTyrannicalLeaderboardData()
   const allTeams = await getAllTeams()
   const data = allTeams.find((e) => e.teamSlug === params.slug)
@@ -63,8 +62,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
               alt=""
               style={{ border: '10px solid #2e2c37' }}
               src={urlForImage(data?.teamImage?.asset._ref as string) as string}
-              width={200}
-              height={200}
+              width={100}
+              height={100}
               className="rounded-full h-44 w-44 "
             />
             <Suspense fallback={<Skeleton className="h-4 w-[250px]" />}>
