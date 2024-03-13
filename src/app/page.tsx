@@ -45,7 +45,7 @@ const Home = async () => {
             </Link>
           </div>
         </div>
-        <div className="gap-8 p-4 flex flex-wrap mt-10 ">
+        <div className="gap-8 p-4 flex flex-wrap ">
           {rounds.map((round, index) => {
             return (
               <div
@@ -66,7 +66,7 @@ const Home = async () => {
 
         <div
           id="teams"
-          className=" bg-[#000F1A] p-20 mt-16 flex flex-col antialiased items-center justify-center relative overflow-hidden w-full"
+          className=" bg-[#000F1A] p-20 mt-8 flex flex-col antialiased items-center justify-center relative overflow-hidden w-full"
         >
           <h3 className={`${LifeCraft.className} text-5xl text-white mb-4 `}>Lagene</h3>
           <InfiniteMovingCards teams={allTeams} direction="right" speed="normal" />
