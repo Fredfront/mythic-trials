@@ -220,7 +220,7 @@ function EditTeam() {
     setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== index))
     setHasEditedPlayers(true)
   }
-  if (!loadingCreateTeam) return <Loading creatingTeam={true} />
+  if (loadingCreateTeam) return <Loading creatingTeam={true} />
 
   if (status === 'loading' || status === 'unauthenticated') return <Loading />
 
