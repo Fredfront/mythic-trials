@@ -74,7 +74,7 @@ const Footer = async () => {
             </li>
             <li className="transition transform hover:scale-105 duration-500 ">
               <Link
-                href="/#teams"
+                href="/teams"
                 className="hover:underline mr-4 md:mr-6 transition transform hover:scale-105 duration-500 "
               >
                 Lagene

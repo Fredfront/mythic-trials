@@ -38,9 +38,9 @@ const NavBar = () => {
             Hovedside
           </Link>
           <Link
-            href="/#teams"
+            href="/teams"
             className={
-              pathname === '/#teams'
+              pathname === '/teams'
                 ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
                 : 'text-gray-200 hover:text-white mx-4 font-bold'
             }
@@ -115,9 +115,9 @@ const NavBar = () => {
             1. Hovedside
           </Link>
           <Link
-            href="/#teams"
+            href="/teams"
             className={
-              pathname === '/#teams'
+              pathname === '/teams'
                 ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
                 : 'text-gray-200 hover:text-white mx-4 font-bold'
             }

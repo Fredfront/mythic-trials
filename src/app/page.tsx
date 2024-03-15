@@ -45,31 +45,61 @@ const Home = async () => {
             </Link>
           </div>
         </div>
-        <div className="gap-8 p-4 flex flex-wrap ">
+        <div className="gap-4 p-2 flex flex-wrap justify-center text-center ">
           {rounds.map((round, index) => {
+            if (round.round === 'Semi-finaler' || round.round === 'Finale') {
+              return (
+                <div
+                  key={index}
+                  className="flex flex-row items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6 p-2 lg:p-6 w-40 lg:w-52  "
+                >
+                  <div className="text-center flex border-r-2 border-white flex-col mr-4">
+                    <div className="flex flex-col mr-4 ml-3 ">
+                      <span className="font-bold text-2xl"> {round.day}</span>
+                      <span className=" text-[#FDB202] font-bold text-xl lg:text-2xl">{round.month}</span>
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold">{round.round}</div>
+                </div>
+              )
+            }
             return (
               <div
                 key={index}
-                className="flex items-center bg-[#021F33] rounded-lg mt-6 p-6 pr-6 pb-6 pl-6 lg:w-52 w-full"
+                className="flex lg:flex-row flex-col items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6  p-2 lg:p-6 lg:w-56 w-24 "
               >
-                <div className="text-center flex border-r-2 border-white flex-col mr-4">
-                  <div className="flex flex-col mr-4">
+                <div className="text-center flex lg:border-r-2 border-white flex-col mr-4">
+                  <div className="flex flex-col lg:mr-4 ml-4 ">
                     <span className="font-bold text-2xl"> {round.day}</span>
-                    <span className=" text-[#FDB202] font-bold text-2xl">{round.month}</span>
+                    <span className=" text-[#FDB202] font-bold text-xl lg:text-2xl">{round.month}</span>
                   </div>
                 </div>
-                <div className=" text-lg font-bold">{round.round}</div>
+                <div className="text-lg font-bold border-t-2 lg:border-t-0">{round.round}</div>
               </div>
             )
           })}
         </div>
 
-        <div
-          id="teams"
-          className=" bg-[#000F1A] p-20 mt-8 flex flex-col antialiased items-center justify-center relative overflow-hidden w-full"
-        >
-          <h3 className={`${LifeCraft.className} text-5xl text-white mb-4 `}>Lagene</h3>
-          <InfiniteMovingCards teams={allTeams} direction="right" speed="normal" />
+        <div id="teams" className=" mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4 ">
+          <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
+          <div className="flex flex-wrap ">
+            {allTeams &&
+              allTeams
+                .slice()
+                .sort((a, b) => {
+                  return a.teamSlug.localeCompare(b.teamSlug)
+                })
+                .map((team) => (
+                  <Link
+                    className=" rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full lg:w-1/4 md:max-w-72 md:mr-4 "
+                    prefetch={true}
+                    href={`/team/${team.teamSlug}`}
+                    key={team._id}
+                  >
+                    <TeamCard key={team._id} team={team} />
+                  </Link>
+                ))}
+          </div>
         </div>
         {frontpageNews &&
           frontpageNews.map((news, index) => {
@@ -104,11 +134,11 @@ const Home = async () => {
           <LeaderboardDrawer />
         </div>
       </div>
-      <div className="flex items-center w-7xl justify-center gap-4 mt-10 p-20">
+      {/* <div className="flex items-center w-7xl justify-center gap-4 mt-10 p-20">
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 1 (Ims)</div>
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 2 (Ims)</div>
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 3 (Ims)</div>
-      </div>
+      </div> */}
     </main>
   )
 }
@@ -154,7 +184,7 @@ const rounds = [
   {
     day: '21',
     month: 'MAI',
-    round: 'FINALE',
+    round: 'Finale',
   },
 ]
 

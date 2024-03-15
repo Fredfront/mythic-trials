@@ -111,7 +111,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </Suspense>
         </div>
         <div>
-          {hasDungTimes && <h3 className="mb-4 font-extrabold text-white">Dungeon times</h3>}
+          {hasDungTimes && <h3 className=" mt-10 mb-4 font-extrabold text-white">Dungeon times</h3>}
 
           <Suspense
             fallback={
