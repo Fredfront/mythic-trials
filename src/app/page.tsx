@@ -86,15 +86,13 @@ const Home = async () => {
             <div className="hidden md:grid lg:grid-cols-5 md:grid-cols-3 gap-2 md:place-items-center ">
               {allTeams &&
                 allTeams
-                  .slice()
-                  .sort((a, b) => {
-                    return a.teamSlug.localeCompare(b.teamSlug)
-                  })
+                  .slice() // Create a shallow copy of the array to avoid mutating the original array
+                  .sort(() => Math.random() - 0.5) // Shuffle the array randomly
                   .map((team, index) => (
                     <React.Fragment key={team._id}>
                       {index < 5 ? (
                         <Link
-                          className="rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full md:max-w-80  "
+                          className="rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full md:max-w-80"
                           prefetch={true}
                           href={`/team/${team.teamSlug}`}
                         >
@@ -108,10 +106,8 @@ const Home = async () => {
             <div className="flex flex-wrap md:hidden  ">
               {allTeams &&
                 allTeams
-                  .slice()
-                  .sort((a, b) => {
-                    return a.teamSlug.localeCompare(b.teamSlug)
-                  })
+                  .slice() // Create a shallow copy of the array to avoid mutating the original array
+                  .sort(() => Math.random() - 0.5) // Shuffle the array randomly
                   .map((team, index) => (
                     <React.Fragment key={team._id}>
                       {index < 3 && ( // Show only the first 3 teams on small screens
