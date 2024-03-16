@@ -152,10 +152,13 @@ function CreateTeam() {
       const response = await fetch('https://mythic-trials-sanity-image-upload-api.vercel.app/uploadImage', {
         method: 'POST',
         body: formData,
+
+        headers: {
+          Origin: 'https://trials.nl-wow.no', // Include the correct origin header
+        },
       })
 
       const data = await response.json()
-      console.log(data, '@@@@@@IMAGE@@@@@')
       if (response.ok) {
         // Handle success, you may set state or perform further actions
         setUploadedImage(data)
@@ -246,6 +249,7 @@ function CreateTeam() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Origin: 'https://trials.nl-wow.no', // Include the correct origin header
         },
         body: JSON.stringify({ mutations }),
       })

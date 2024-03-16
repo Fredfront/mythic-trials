@@ -119,6 +119,7 @@ function EditTeam() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Origin: 'https://trials.nl-wow.no', // Include the correct origin header
           },
           body: JSON.stringify({ mutations }),
         })
