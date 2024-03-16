@@ -29,4 +29,6 @@ export type RulesPage = {
 
   _id: string
   _updatedAt: string
+
+  showOnFrontpage: boolean
 }

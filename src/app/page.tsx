@@ -1,3 +1,4 @@
+import React from 'react'
 import TeamCard from './components/TeamCard'
 import { getAllTeams } from './api/getAllTeams'
 import Link from 'next/link'
@@ -10,7 +11,6 @@ import localFont from 'next/font/local'
 import { LeaderboardDrawer } from './components/DrawerComponent'
 import { getFrontpageNews } from './api/frongpageNews/getFrontpageNewsData'
 import { PortableText } from '@portabletext/react'
-import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards'
 const LifeCraft = localFont({ src: '../../public/fonts/LifeCraft_Font.woff2' })
 const Home = async () => {
   const allTeams = await getAllTeams()
@@ -80,37 +80,68 @@ const Home = async () => {
           })}
         </div>
 
-        <div id="teams" className=" mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4 ">
-          <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
-          <div className="flex flex-wrap ">
-            {allTeams &&
-              allTeams
-                .slice()
-                .sort((a, b) => {
-                  return a.teamSlug.localeCompare(b.teamSlug)
-                })
-                .map((team) => (
-                  <Link
-                    className=" rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full lg:w-1/4 md:max-w-72 md:mr-4 "
-                    prefetch={true}
-                    href={`/team/${team.teamSlug}`}
-                    key={team._id}
-                  >
-                    <TeamCard key={team._id} team={team} />
-                  </Link>
-                ))}
+        {allTeams && allTeams.some((e) => e.teamName) ? (
+          <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4 ">
+            <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
+            <div className="hidden md:flex flex-wrap  ">
+              {allTeams &&
+                allTeams
+                  .slice()
+                  .sort((a, b) => {
+                    return a.teamSlug.localeCompare(b.teamSlug)
+                  })
+                  .map((team) => (
+                    <Link
+                      className=" rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full lg:w-1/4 md:max-w-80 md:mr-4 "
+                      prefetch={true}
+                      href={`/team/${team.teamSlug}`}
+                      key={team._id}
+                    >
+                      <TeamCard key={team._id} team={team} />
+                    </Link>
+                  ))}
+            </div>
+            <div className="flex flex-wrap md:hidden  ">
+              {allTeams &&
+                allTeams
+                  .slice()
+                  .sort((a, b) => {
+                    return a.teamSlug.localeCompare(b.teamSlug)
+                  })
+                  .map((team, index) => (
+                    <React.Fragment key={team._id}>
+                      {index < 3 && ( // Show only the first 3 teams on small screens
+                        <Link
+                          className="rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full lg:w-1/4 md:max-w-72 md:mr-4"
+                          prefetch={true}
+                          href={`/team/${team.teamSlug}`}
+                        >
+                          <TeamCard key={team._id} team={team} />
+                        </Link>
+                      )}
+                    </React.Fragment>
+                  ))}
+              <div className="flex  w-full justify-center p-2">
+                <Link href="/teams">
+                  <button className="bg-[#FFFFFF] border-2 border-[#028AFD] rounded-lg text-black w-32 h-8 mt-4">
+                    Se all lagene
+                  </button>
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
+        ) : null}
         {frontpageNews &&
           frontpageNews.map((news, index) => {
             const isEvenIndex = index % 2 === 0
+            if (news.showOnFrontpage === false) return null
             return (
               <div
                 key={news._id}
-                className={`flex flex-col lg:flex-row max-w-7xl lg:mt-32 mt-2 gap-10 p-4 ${!isEvenIndex ? 'lg:flex-row-reverse' : ''}`}
+                className={`flex flex-col lg:flex-row max-w-7xl lg:mt-32 mt-6 gap-10 p-4 ${!isEvenIndex ? 'lg:flex-row-reverse' : ''}`}
               >
                 <div className="lg:w-1/2 w-full">
-                  <h3 className="text-4xl mb-6 font-bold text-white">{news.headline}</h3>
+                  <h3 className="lg:text-4xl text-3xl mb-6 font-bold text-white">{news.headline}</h3>
                   <PortableText value={news.content} />
                 </div>
                 <div className="lg:w-1/2 w-full">
@@ -128,11 +159,12 @@ const Home = async () => {
               </div>
             )
           })}
-
-        <div className="mt-10 md:mt-24 lg:mt-24 m-auto flex justify-center flex-col items-center bg-[#000F1A] w-full p-20">
-          <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 `}>Turneringen er i gang</h3>
-          <LeaderboardDrawer />
-        </div>
+        {showLeaderboard ? (
+          <div className="mt-10 md:mt-24 lg:mt-24 m-auto flex justify-center flex-col items-center bg-[#000F1A] w-full p-20">
+            <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 `}>Turneringen er i gang</h3>
+            <LeaderboardDrawer />
+          </div>
+        ) : null}
       </div>
       {/* <div className="flex items-center w-7xl justify-center gap-4 mt-10 p-20">
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 1 (Ims)</div>

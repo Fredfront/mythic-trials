@@ -8,7 +8,7 @@ import { RxHamburgerMenu } from 'react-icons/rx'
 import { AiOutlineClose } from 'react-icons/ai'
 import { usePathname } from 'next/navigation'
 
-const NavBar = () => {
+const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
   const [isMenuOpen, setMenuOpen] = useState(false)
 
   const pathname = usePathname()
@@ -57,17 +57,20 @@ const NavBar = () => {
           >
             Regler
           </Link>
-          <Link
-            href="/leaderboard"
-            className={
-              pathname === '/leaderboard'
-                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                : 'text-gray-200 hover:text-white mx-4 font-bold'
-            }
-          >
-            Resultater
-          </Link>
-          <Link
+          {showLeaderboard ? (
+            <Link
+              href="/leaderboard"
+              className={
+                pathname === '/leaderboard'
+                  ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                  : 'text-gray-200 hover:text-white mx-4 font-bold'
+              }
+            >
+              Resultater
+            </Link>
+          ) : null}
+
+          {/* <Link
             href="#"
             className={
               pathname === '/contact'
@@ -76,11 +79,11 @@ const NavBar = () => {
             }
           >
             Kontakt
-          </Link>
+          </Link> */}
         </div>
-        <div className="flex items-center">
+        <div className="flex  items-center">
           <Link href="/signup" prefetch>
-            <Button className="inline-block mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
+            <Button className="hidden lg:inline-block mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
               Påmelding
             </Button>
           </Link>
@@ -112,7 +115,7 @@ const NavBar = () => {
                 : 'text-gray-200 hover:text-white mx-4 font-bold'
             }
           >
-            1. Hovedside
+            Hovedside
           </Link>
           <Link
             href="/teams"
@@ -122,7 +125,7 @@ const NavBar = () => {
                 : 'text-gray-200 hover:text-white mx-4 font-bold'
             }
           >
-            2. Lagene
+            Lagene
           </Link>
           <Link
             href="/rules"
@@ -132,29 +135,27 @@ const NavBar = () => {
                 : 'text-gray-200 hover:text-white mx-4 font-bold'
             }
           >
-            3. Regler
+            Regler
           </Link>
-          <Link
-            href="/leaderboard"
-            className={
-              pathname === '/leaderboard'
-                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                : 'text-gray-200 hover:text-white mx-4 font-bold'
-            }
-          >
-            4. Resultater
+          {showLeaderboard ? (
+            <Link
+              href="/leaderboard"
+              className={
+                pathname === '/leaderboard'
+                  ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
+                  : 'text-gray-200 hover:text-white mx-4 font-bold'
+              }
+            >
+              Resultater
+            </Link>
+          ) : null}
+
+          <Link href="/signup" prefetch>
+            <Button className="inline-block ml-4 mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
+              Påmelding
+            </Button>
           </Link>
-          <Link
-            href="/signup"
-            className={
-              pathname.includes('/signup')
-                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                : 'text-gray-200 hover:text-white mx-4 font-bold'
-            }
-          >
-            5. Påmelding
-          </Link>
-          <Link
+          {/* <Link
             href="/contact"
             className={
               pathname === '/contact'
@@ -163,7 +164,7 @@ const NavBar = () => {
             }
           >
             6. Kontakt
-          </Link>
+          </Link> */}
         </div>
       </div>
     </nav>

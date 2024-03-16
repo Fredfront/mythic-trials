@@ -9,7 +9,7 @@ export default async function Template({ children }: { children: React.ReactNode
 
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBar />
+      <NavBar showLeaderboard={showLeaderboard} />
       <div className="flex-grow">{children}</div>
       <Footer />
     </div>

@@ -1,6 +1,6 @@
 import { groq } from 'next-sanity'
 import client from '../../../../sanity/lib/client'
-import { PortableTextProps } from '@portabletext/react'
+import { RulesPage } from '../frongpageNews/getFrontpageNewsData'
 
 export async function getRulesData() {
   const data = (await client.fetch({
@@ -11,22 +11,4 @@ export async function getRulesData() {
   })) as RulesPage[]
 
   return data[0] as RulesPage
-}
-
-export type RulesPage = {
-  headline: string
-  mainImage: {
-    _type: 'image'
-    asset: {
-      _ref: string
-      _type: 'reference'
-    }
-  }
-  _createdAt: string
-  _rev: string
-  _type: 'frontPage'
-  content: PortableTextProps['value']
-
-  _id: string
-  _updatedAt: string
 }
