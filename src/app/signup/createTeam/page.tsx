@@ -26,10 +26,7 @@ function CreateTeam() {
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
   const [previewImage, setPreviewImage] = useState<any>(null)
 
-  const teamSlug = useMemo(
-    () => allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamSlug,
-    [allTeams, data?.user?.email],
-  )
+  const teamSlug = teamName?.toLowerCase().replace(/\s+/g, '-').slice(0, 200)
 
   const userEmail = useMemo(() => data?.user?.email, [data?.user?.email])
 
