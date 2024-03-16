@@ -7,12 +7,12 @@ import { urlForImage } from '../../../sanity/lib/image'
 async function Teams() {
   const allTeams = await getAllTeams()
   return (
-    <div className="flex gap-4 md:gap-10 mt-20  max-w-9xl p-4 flex-wrap ">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 p-10 ">
       {allTeams.map((team) => (
-        <Link prefetch={true} href={`/team/${team.teamSlug}`} key={team._id} className="w-full md:w-72">
+        <Link prefetch={true} href={`/team/${team.teamSlug}`} key={team._id} className="w-full">
           <div
             key={team._key}
-            className="p-4 flex rounded-md bg-[#021F33] text-white  hover:bg-slate-500 cursor-pointer items-center "
+            className="p-4 flex rounded-md bg-[#021F33] text-white  hover:bg-slate-500 cursor-pointer items-center min-w-80 "
           >
             <Image
               src={urlForImage(team.teamImage.asset._ref as any)}

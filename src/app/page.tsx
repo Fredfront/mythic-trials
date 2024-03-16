@@ -29,7 +29,7 @@ const Home = async () => {
         >
           <Image src={logo} alt="Nerdelandslaget" width={250} height={250} priority className=" -mb-7 -mt-16" />
           <h2 className={`${LifeCraft.className} text-8xl text-white `}>sesong 2</h2>
-          <p className="text-center  font-medium text-white">
+          <p className="text-center  font-medium text-white font-DMSans">
             Vi er tilbake for sesong 2 av Mythic Trials arrangert av Nerdelandslaget WoW.{' '}
           </p>
           <div className="flex gap-4 mt-10 ">
@@ -83,24 +83,28 @@ const Home = async () => {
         {allTeams && allTeams.some((e) => e.teamName) ? (
           <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4 ">
             <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
-            <div className="hidden md:flex flex-wrap  ">
+            <div className="hidden md:grid lg:grid-cols-5 md:grid-cols-3 gap-2 md:place-items-center ">
               {allTeams &&
                 allTeams
                   .slice()
                   .sort((a, b) => {
                     return a.teamSlug.localeCompare(b.teamSlug)
                   })
-                  .map((team) => (
-                    <Link
-                      className=" rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full lg:w-1/4 md:max-w-80 md:mr-4 "
-                      prefetch={true}
-                      href={`/team/${team.teamSlug}`}
-                      key={team._id}
-                    >
-                      <TeamCard key={team._id} team={team} />
-                    </Link>
+                  .map((team, index) => (
+                    <React.Fragment key={team._id}>
+                      {index < 5 ? (
+                        <Link
+                          className="rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full md:max-w-80  "
+                          prefetch={true}
+                          href={`/team/${team.teamSlug}`}
+                        >
+                          <TeamCard key={team._id} team={team} />
+                        </Link>
+                      ) : null}
+                    </React.Fragment>
                   ))}
             </div>
+
             <div className="flex flex-wrap md:hidden  ">
               {allTeams &&
                 allTeams
@@ -121,13 +125,13 @@ const Home = async () => {
                       )}
                     </React.Fragment>
                   ))}
-              <div className="flex  w-full justify-center p-2">
-                <Link href="/teams">
-                  <button className="bg-[#FFFFFF] border-2 border-[#028AFD] rounded-lg text-black w-32 h-8 mt-4">
-                    Se all lagene
-                  </button>
-                </Link>
-              </div>
+            </div>
+            <div className="flex  w-full justify-center p-2   mt-12">
+              <Link href="/teams">
+                <button className="bg-[#FFFFFF] border-2 border-[#028AFD] rounded-full text-black w-32 h-8 min-w-48 font-bold min-h-10 ">
+                  Se all lagene
+                </button>
+              </Link>
             </div>
           </div>
         ) : null}

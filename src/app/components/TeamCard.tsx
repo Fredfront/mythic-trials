@@ -14,7 +14,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }: TeamCardProps) => {
       <Image
         src={urlForImage(team.teamImage.asset._ref as any)}
         alt={team.teamName}
-        className="rounded-full mr-4  h-24 w-24 aspect-auto "
+        className="rounded-full mr-4 h-24 w-24 aspect-auto "
         width={100}
         height={100}
       />

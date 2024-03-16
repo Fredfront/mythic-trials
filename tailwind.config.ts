@@ -1,6 +1,5 @@
-// import type { Config } from 'tailwindcss'; // If you're using TypeScript, you can uncomment this line
+import type { Config } from 'tailwindcss' // If you're using TypeScript, you can uncomment this line
 const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
 const { default: flattenColorPalette } = require('tailwindcss/lib/util/flattenColorPalette')
 
 const config = {
@@ -17,8 +16,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        DMSans: ['DM Sans', 'sans-serif'],
-        LifeCraft: ['LifeCraft', 'sans-serif'],
+        DMSans: ['DM Sans', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         border: 'hsl(var(--border))',
