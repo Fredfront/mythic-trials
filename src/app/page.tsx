@@ -85,7 +85,7 @@ const Home = async () => {
         {allTeams && allTeams.some((e) => e.teamName) ? (
           <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4 ">
             <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
-            <div className="hidden md:grid lg:grid-cols-5 md:grid-cols-3 gap-2 md:place-items-center ">
+            <div className="hidden md:grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-2 ">
               {allTeams &&
                 allTeams
                   .slice() // Create a shallow copy of the array to avoid mutating the original array
@@ -94,7 +94,7 @@ const Home = async () => {
                     <React.Fragment key={team._id}>
                       {index < 5 ? (
                         <Link
-                          className="rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full md:max-w-80"
+                          className="rounded-md mt-4 transition translate duration-500 hover:scale-105 max-w-80 "
                           prefetch={true}
                           href={`/team/${team.teamSlug}`}
                         >
