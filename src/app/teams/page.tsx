@@ -6,6 +6,14 @@ import { urlForImage } from '../../../sanity/lib/image'
 
 async function Teams() {
   const allTeams = await getAllTeams()
+
+  if (allTeams && allTeams.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1 className="text-4xl font-bold text-white">Fant ingen lag</h1>
+      </div>
+    )
+  }
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 p-4 md:p-10 ">
       {allTeams.map((team) => (

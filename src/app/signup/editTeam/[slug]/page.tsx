@@ -13,6 +13,7 @@ import Loading from '../../components/Loading'
 import { useRouter } from 'next/navigation'
 import { wowRealmsMapped } from '../../utils/wowRealms'
 import { CrownIcon, LogOut } from 'lucide-react'
+import Link from 'next/link'
 
 function EditTeam() {
   const { data, status } = useSession()
@@ -279,7 +280,9 @@ function EditTeam() {
             />
             <div className="mb-8 -mt-2">
               Ønsker du å endre navn på laget ditt i etterkant må du kontakte en{' '}
-              <span className="text-[#FDB202] underline">admin.</span>
+              <Link href="/contact" target="_blank">
+                <span className="text-[#FDB202] underline">admin.</span>
+              </Link>
             </div>
             <label className="mb-4 mt-10 font-bold text-2xl">Spillerene på laget</label>
             <div className="flex flex-col">
