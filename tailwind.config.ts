@@ -1,4 +1,3 @@
-import type { Config } from 'tailwindcss' // If you're using TypeScript, you can uncomment this line
 const defaultTheme = require('tailwindcss/defaultTheme')
 const { default: flattenColorPalette } = require('tailwindcss/lib/util/flattenColorPalette')
 
@@ -15,9 +14,6 @@ const config = {
       },
     },
     extend: {
-      fontFamily: {
-        DMSans: ['DM Sans', ...defaultTheme.fontFamily.sans],
-      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

@@ -12,7 +12,7 @@ import { PlayerInfoImage } from '../components/PlayerInfoImage'
 import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 import { wowRealmsMapped } from '../utils/wowRealms'
-import { LogOut } from 'lucide-react'
+import { CrownIcon, LogOut } from 'lucide-react'
 
 function CreateTeam() {
   const { data, status } = useSession()
@@ -174,6 +174,12 @@ function CreateTeam() {
       setLoadingCreateTeam(false)
     }
   }
+
+  useEffect(() => {
+    if (allTeams?.find((e) => e.teamName === teamName)) {
+      setTeamNameAlreadyExists(true)
+    }
+  }, [allTeams, teamName])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -367,12 +373,12 @@ function CreateTeam() {
             </div>
 
             {teamNameAlreadyExists && (
-              <p className="text-red-500 mb-4">Lagnavnet eksisterer allerede. Vennligst velg et annet navn.</p>
+              <p className="text-red-500 mb-4 mt-4">Lagnavnet eksisterer allerede. Vennligst velg et annet navn.</p>
             )}
             {teamNameError && <p className="text-red-500 mb-4">Fyll inn et lagnavn.</p>}
 
             <label htmlFor="teamImage" className="mb-2 font-bold text-lg">
-              Lagbilde (.png eller .jpeg, .webp, .svg) <br /> <span className=" text-xs">Maks 2MB</span>
+              Lagbilde <br /> <span className=" text-xs">Maks 2MB (png, jpg, jpeg, webp, svg)</span> <br />{' '}
             </label>
             <input
               type="file"
@@ -407,8 +413,16 @@ function CreateTeam() {
             <label className="mb-4 mt-10 font-bold text-2xl">Spillerene på laget</label>
             <div className="flex flex-col">
               {players.map((player, index) => (
-                <div key={index} className="mb-4 bg-[#000F1A]   p-8 ">
-                  <span className="font-bold ">Spiller {index + 1}:</span>
+                <div key={index} className="mb-4 bg-[#000F1A] p-8 ">
+                  {index === 0 ? (
+                    <span className="font-bold ">
+                      Lagets kaptein <CrownIcon className="inline" fill="#FDB202" color="#FDB202" height={20} />
+                    </span>
+                  ) : (
+                    <span className="font-bold ">Spiller {index + 1}:</span>
+                  )}
+                  <div className="mb-2" />
+
                   <div className="flex">
                     <input
                       type="text"
@@ -416,7 +430,7 @@ function CreateTeam() {
                       onChange={(e) => handlePlayerChange(index, e)}
                       name={'characterName'} // Set a unique name for character names
                       placeholder="Karakter navn"
-                      className=" rounded-l-lg mt-1 p-2 mb-2 w-full bg-gray-800 text-white"
+                      className="rounded-l-lg p-2 mb-2 w-full bg-gray-800 "
                     />
                     {player.characterName &&
                     player.realmName &&
@@ -427,6 +441,7 @@ function CreateTeam() {
                   <Select
                     styles={colourStyles}
                     options={wowRealmsMapped}
+                    className="mb-2"
                     value={wowRealmsMapped.find((e) => e.name === player.realmName)}
                     isClearable
                     isSearchable
@@ -488,6 +503,7 @@ function CreateTeam() {
                           handleAltPlayerChange(index, altIndex, event as React.ChangeEvent<HTMLInputElement>)
                         }}
                       />
+
                       <Button
                         className="bg-red-500 mt-2 hover:bg-red-500 hover:scale-105 text-white"
                         type="button"
@@ -511,14 +527,16 @@ function CreateTeam() {
                         ? player.characterName
                         : 'spiller ' + (index + 1)}
                     </Button>
-                    <Button
-                      className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 hover:bg-red-500 hover:scale-105  text-white rounded-full"
-                      type="button"
-                      onClick={() => handleRemovePlayer(index)}
-                      aria-label={`Remove player ${index + 1}`}
-                    >
-                      Fjern spiller {index + 1}
-                    </Button>
+                    {index === 0 ? null : (
+                      <Button
+                        className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 hover:bg-red-500 hover:scale-105  text-white rounded-full"
+                        type="button"
+                        onClick={() => handleRemovePlayer(index)}
+                        aria-label={`Remove player ${index + 1}`}
+                      >
+                        Fjern spiller {index + 1}
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -533,6 +551,9 @@ function CreateTeam() {
               >
                 Legg til ny spiller
               </button>
+            )}
+            {teamNameAlreadyExists && (
+              <p className="text-red-500 mb-4">Lagnavnet eksisterer allerede. Vennligst velg et annet navn.</p>
             )}
             {missingPlayersError && <p className="text-red-500 mb-4">Legg til minst 5 spillere.</p>}
             {teamName === '' && players && players.length > 4 && (

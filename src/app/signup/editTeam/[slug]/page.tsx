@@ -12,7 +12,7 @@ import { PlayerInfoImage } from '../../components/PlayerInfoImage'
 import Loading from '../../components/Loading'
 import { useRouter } from 'next/navigation'
 import { wowRealmsMapped } from '../../utils/wowRealms'
-import { LogOut } from 'lucide-react'
+import { CrownIcon, LogOut } from 'lucide-react'
 
 function EditTeam() {
   const { data, status } = useSession()
@@ -32,6 +32,8 @@ function EditTeam() {
   )
   const [errorUpdatingTeam, setErrorUpdatingTeam] = useState(false)
 
+  console.log(hasTeam)
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.prefetch('/signup/signin')
@@ -42,6 +44,10 @@ function EditTeam() {
   useEffect(() => {
     if (allTeams?.find((e) => e.contactPerson === data?.user?.email)) {
       router.push(`/signup/editTeam/${teamSlug}`)
+    }
+
+    if (allTeams && !allTeams.find((e) => e.contactPerson === data?.user?.email)) {
+      router.push(`/signup`)
     }
   }, [allTeams, data?.user?.email, router, teamSlug])
 
@@ -280,9 +286,15 @@ function EditTeam() {
             <label className="mb-4 mt-10 font-bold text-2xl">Spillerene på laget</label>
             <div className="flex flex-col">
               {players.map((player, index) => (
-                <div key={index} className="mb-4 bg-[#000F1A]   p-8 ">
-                  <span className="font-bold ">Spiller {index + 1}:</span>
-
+                <div key={index} className="mb-4 bg-[#000F1A] p-8 ">
+                  {index === 0 ? (
+                    <span className="font-bold ">
+                      Lagets kaptein <CrownIcon className="inline" fill="#FDB202" color="#FDB202" height={20} />
+                    </span>
+                  ) : (
+                    <span className="font-bold ">Spiller {index + 1}:</span>
+                  )}
+                  <div className="mb-2" />
                   <div className="flex">
                     <input
                       type="text"
@@ -290,7 +302,7 @@ function EditTeam() {
                       onChange={(e) => handlePlayerChange(index, e)}
                       name={'characterName'} // Set a unique name for character names
                       placeholder="Karakter navn"
-                      className=" mt-2 rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
+                      className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
                     />
                     {player.characterName &&
                     player.realmName &&
@@ -383,14 +395,17 @@ function EditTeam() {
                     >
                       Legg til alt av {player.characterName}
                     </Button>
-                    <Button
-                      className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 text-white  rounded-full"
-                      type="button"
-                      onClick={() => handleRemovePlayer(index)}
-                      aria-label={`Remove player ${index + 1}`}
-                    >
-                      Fjern {player.characterName ?? index + 1}
-                    </Button>
+
+                    {index === 0 ? null : (
+                      <Button
+                        className="w-1/3 lg:w-44 md:w-44 bg-red-500 mt-2 text-white  rounded-full"
+                        type="button"
+                        onClick={() => handleRemovePlayer(index)}
+                        aria-label={`Remove player ${index + 1}`}
+                      >
+                        Fjern {player.characterName ?? index + 1}
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}

@@ -11,7 +11,9 @@ import localFont from 'next/font/local'
 import { LeaderboardDrawer } from './components/DrawerComponent'
 import { getFrontpageNews } from './api/frongpageNews/getFrontpageNewsData'
 import { PortableText } from '@portabletext/react'
+import SimplifiedLeaderboard from './components/SimplifiedLeaderboard'
 const LifeCraft = localFont({ src: '../../public/fonts/LifeCraft_Font.woff2' })
+
 const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
@@ -25,14 +27,14 @@ const Home = async () => {
           style={{
             backgroundImage: `url(${urlForImage(frontpageData.mainImage.asset._ref as string) as string})`,
           }}
-          className={`flex flex-col items-center justify-center h-svh lg:h-[calc(100svh-290px)]  w-full bg-cover bg-center bg-no-repeat  `}
+          className={`flex flex-col items-center justify-center h-svh lg:h-[calc(100svh-270px)]  w-full bg-cover bg-center bg-no-repeat  `}
         >
-          <Image src={logo} alt="Nerdelandslaget" width={250} height={250} priority className=" -mb-7 -mt-16" />
+          <Image src={logo} alt="Nerdelandslaget" width={250} height={250} priority />
           <h2 className={`${LifeCraft.className} text-8xl text-white `}>sesong 2</h2>
-          <p className="text-center  font-medium text-white font-DMSans">
+          <p className="text-center  font-medium text-white ">
             Vi er tilbake for sesong 2 av Mythic Trials arrangert av Nerdelandslaget WoW.{' '}
           </p>
-          <div className="flex gap-4 mt-10 ">
+          <div className="flex gap-4 mt-10 pb-10 ">
             <Link href="/rules">
               <button className="bg-white rounded-xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 hover:scale-105 min-w-44 md:min-w-52 min-h-10 ">
                 Hvem kan være med?
@@ -161,8 +163,20 @@ const Home = async () => {
           })}
         {showLeaderboard ? (
           <div className="mt-10 md:mt-24 lg:mt-24 m-auto flex justify-center flex-col items-center bg-[#000F1A] w-full p-20">
-            <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 `}>Turneringen er i gang</h3>
-            <LeaderboardDrawer />
+            <h3 className={`font-bold text-5xl text-white  `}>Turneringen er i gang</h3>
+            <SimplifiedLeaderboard />
+            <Link href="/leaderboard" prefetch>
+              <button
+                className="font-extrabold w-40 transition transform hover:scale-105 duration-500 min-h-12  rounded-full mt-4 text-white hover:bg-white "
+                style={{
+                  background: 'linear-gradient(181.7deg, #028AFD 28.95%, #106ABC 98.56%)',
+                  padding: '8px 20px',
+                  boxShadow: '0px 2px 4px 0px #00000040',
+                }}
+              >
+                Se resultater
+              </button>
+            </Link>
           </div>
         ) : null}
       </div>

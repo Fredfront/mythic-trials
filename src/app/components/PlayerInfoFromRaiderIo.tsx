@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Player } from '../api/getAllTeams'
+import { Crown } from 'lucide-react'
 
 type PlayerInfoProps = {
   player: Player
@@ -55,6 +56,7 @@ type HoverStuffProps = {
   blizzCharacterData: CharacterData | null
   mythicPlusInfo: any
   player: any
+  isCaptain?: boolean
 }
 const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, player }: HoverStuffProps) => {
   const ratingColor = `rgb(${mythicPlusInfo?.color?.r}, ${mythicPlusInfo?.color.g}, ${mythicPlusInfo?.color.b})`
@@ -74,10 +76,16 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, p
               />
             ) : null}
 
-            <div className="text-white">{data?.name}</div>
+            <div className="text-white flex item-center justify-between">
+              <span>{data?.name} </span>
+              <span>
+                <Crown className="inline" fill="#FDB202" color="#FDB202" height={10} />
+              </span>
+            </div>
             {player && player.altOf && player.altOf.length > 0 ? (
               <div className=" text-xs text-white">Alt av {player.altOf}</div>
             ) : null}
+
             <div className="text-sm" style={{ color: classColor }}>
               {data?.class}
             </div>

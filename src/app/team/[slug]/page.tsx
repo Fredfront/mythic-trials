@@ -62,14 +62,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
               alt=""
               style={{ border: '10px solid #2e2c37' }}
               src={urlForImage(data?.teamImage?.asset._ref as string) as string}
-              width={100}
-              height={100}
+              width={200}
+              height={200}
               className="rounded-full h-44 w-44 "
             />
             <Suspense fallback={<Skeleton className="h-4 w-[250px]" />}>
-              <div className=" text-white font-DMSans font-bold text-xl md:text-2xl ml-4 mt-4">
-                {data?.teamName?.toUpperCase()}
-              </div>
+              <div className=" text-white font-bold text-xl md:text-2xl ml-4 mt-4">{data?.teamName?.toUpperCase()}</div>
             </Suspense>
           </Suspense>
         </div>
@@ -134,7 +132,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
               return (
                 <div key={dungeon.dungeon} className="mb-4">
-                  <div className="font-thin flex gap-2 items-center text-white">
+                  <div className="flex gap-2 items-center text-white">
                     <Image className="rounded-full" src={imgSrc ?? ''} alt="" width={50} height={50} priority />
                     {dungeon.dungeon} <br />
                     {dungeon.time?.minutes}:{dungeon.time?.seconds}
