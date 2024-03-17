@@ -32,8 +32,6 @@ function EditTeam() {
   )
   const [errorUpdatingTeam, setErrorUpdatingTeam] = useState(false)
 
-  console.log(hasTeam)
-
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.prefetch('/signup/signin')

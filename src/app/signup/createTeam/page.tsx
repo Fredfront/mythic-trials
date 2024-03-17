@@ -162,7 +162,6 @@ function CreateTeam() {
         // Handle success, you may set state or perform further actions
         setUploadedImage(data)
         setImageUploaded(true)
-        console.log('Image uploaded successfully:', data)
       } else {
         // Handle error
         console.error('Failed to upload image:', data.error)
@@ -212,7 +211,6 @@ function CreateTeam() {
     try {
       await addImage()
     } catch (error) {
-      console.error('Error in form submission:', error)
       setLoadingCreateTeam(false)
     }
   }
@@ -274,7 +272,6 @@ function CreateTeam() {
         console.error('Failed to create Mythic Plus team:', response.statusText)
       }
     } catch (error) {
-      console.error('Failed to create Mythic Plus team:', error)
       setLoadingCreateTeam(false)
       setCreateTeamError(true)
 
@@ -340,7 +337,6 @@ function CreateTeam() {
         </div>
         <div className="flex flex-col max-w-7xl justify-start items-center  text-white py-8">
           <h1 className="lg:w-2/4 text-5xl font-bold mb-10">Påmelding</h1>
-
           <p className="mb-10 lg:w-2/4 ">Her kan du melde på laget ditt. Frist 25. mars.</p>
           <form className="flex flex-col w-full p-4 md:p-0 md:w-2/4" onSubmit={handleSubmit}>
             <label htmlFor="contactPerson" className="mb-2 text-lg font-bold">

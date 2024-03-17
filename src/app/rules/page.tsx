@@ -46,7 +46,7 @@ const RuleIconBox = () => {
           <Hourglass size="32" color="white" />
         </div>
         <div className="text-lg md:text-xl  font-bold md:border-l-2 border-t-2 md:border-t-0 pt-2 md:pt-0">
-          <div className="md:pl-4 pl-0">8 </div>
+          <div className="md:pl-4 pl-0">4</div>
           <div className="md:pl-4 pl-0 -mt-1">Uker</div>
         </div>
       </div>
