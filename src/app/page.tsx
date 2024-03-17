@@ -4,7 +4,6 @@ import { getAllTeams } from './api/getAllTeams'
 import Link from 'next/link'
 import { getFrontpageData } from './api/frontpage/frontpage'
 import { urlForImage } from '../../sanity/lib/image'
-import { get } from '@vercel/edge-config'
 import logo from '../../public/MT_logo_white.webp'
 import Image from 'next/image'
 import localFont from 'next/font/local'
@@ -145,7 +144,9 @@ const Home = async () => {
               >
                 <div className="lg:w-1/2 w-full">
                   <h3 className="lg:text-4xl text-3xl mb-6 font-bold text-white">{news.headline}</h3>
-                  <PortableText value={news.content} />
+                  <div className="portableText-frontpage">
+                    <PortableText value={news.content} />
+                  </div>
                 </div>
                 <div className="lg:w-1/2 w-full">
                   <Image

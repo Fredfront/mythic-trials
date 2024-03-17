@@ -49,6 +49,46 @@
       margin-left: 1rem;
     }
   }
+
+  .portableText-frontpage {
+    h2,
+    h3 {
+      @apply text-2xl font-bold;
+      margin-top: 1rem;
+    }
+    > p {
+      margin-top: 1rem;
+    }
+
+    a {
+      color: #fdb202;
+      text-decoration: underline;
+    }
+
+    h5 {
+      color: #fdb202;
+      margin-top: 1rem;
+      font-size: 1.3rem;
+    }
+
+    ol {
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    ol > li {
+      list-style: lower-alpha;
+      margin-bottom: 0.5rem;
+    }
+    ul {
+      margin-top: 1rem;
+    }
+    ul > li {
+      list-style: disc;
+      margin-left: 1rem;
+    }
+  }
 }
 
 @layer base {
