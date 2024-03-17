@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import { Player } from '../api/getAllTeams'
 import { Crown } from 'lucide-react'
+import FallbackImage from '../../../public/image-avatar-avatar-fallback.svg'
 
 type PlayerInfoProps = {
   player: Player
@@ -69,24 +70,23 @@ const CharacterInfo = ({
   isCaptain,
 }: HoverStuffProps) => {
   const ratingColor = `rgb(${mythicPlusInfo?.color?.r}, ${mythicPlusInfo?.color.g}, ${mythicPlusInfo?.color.b})`
+
   return (
     <Dialog>
       <DialogTrigger asChild className=" cursor-pointer transition translate duration-500 hover:scale-105">
         <div className="mb-3">
           <div className="flex flex-col items-center">
-            {data?.thumbnail_url ? (
-              <Image
-                style={{ border: '6px solid #2e2c37' }}
-                className="w-20 h-20 rounded-full"
-                src={data?.thumbnail_url || ''}
-                alt=""
-                width={80}
-                height={80}
-              />
-            ) : null}
+            <Image
+              style={{ border: '6px solid #2e2c37' }}
+              className="w-20 h-20 rounded-full"
+              src={data?.thumbnail_url || FallbackImage}
+              alt=""
+              width={80}
+              height={80}
+            />
 
             <div className="text-white flex item-center justify-between">
-              <span>{data?.name} </span>
+              <span>{data?.name || player.characterName} </span>
               {isCaptain === true ? (
                 <span>
                   <Crown className="inline" fill="#FDB202" color="#FDB202" height={10} />

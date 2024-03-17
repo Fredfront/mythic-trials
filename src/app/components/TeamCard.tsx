@@ -18,7 +18,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }: TeamCardProps) => {
         width={100}
         height={100}
       />
-      <div className=" md:text-base text-xl font-extrabold text-white">{team.teamName}</div>
+      <div className=" md:text-base text-xl font-extrabold text-white break-words">{team.teamName}</div>
     </div>
   )
 }

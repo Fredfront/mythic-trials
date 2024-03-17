@@ -72,7 +72,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </Suspense>
         </div>
 
-        <div className="mt-12 grid grid-cols-3 gap-6 ">
+        <div className="mt-12 grid grid-cols-3 md:grid-cols-5 gap-4 ">
           <Suspense
             fallback={
               <div>
@@ -131,8 +131,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
               if (dungeon.dungeon?.includes('Waycrest')) imgSrc = waycrestImg
 
               return (
-                <div key={dungeon.dungeon} className="mb-4">
-                  <div className="flex gap-2 items-center text-white">
+                <div key={dungeon.dungeon} className="mb-1">
+                  <div className="flex gap-2 items-center text-white bg-[#052D49] even:bg-[#0B436C]  p-2 rounded-lg ">
                     <Image className="rounded-full" src={imgSrc ?? ''} alt="" width={50} height={50} priority />
                     {dungeon.dungeon} <br />
                     {dungeon.time?.minutes}:{dungeon.time?.seconds}

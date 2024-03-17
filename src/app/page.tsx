@@ -27,7 +27,7 @@ const Home = async () => {
           style={{
             backgroundImage: `url(${urlForImage(frontpageData.mainImage.asset._ref as string) as string})`,
           }}
-          className={`flex flex-col items-center justify-center h-svh lg:h-[calc(100svh-270px)]  w-full bg-cover bg-center bg-no-repeat  `}
+          className={`flex flex-col items-center justify-center h-full  w-full bg-cover bg-center bg-no-repeat  `}
         >
           <Image src={logo} alt="Nerdelandslaget" width={250} height={250} priority />
           <h2 className={`${LifeCraft.className} text-8xl text-white `}>sesong 2</h2>
@@ -83,9 +83,9 @@ const Home = async () => {
         </div>
 
         {allTeams && allTeams.some((e) => e.teamName) ? (
-          <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4 ">
+          <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4  ">
             <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
-            <div className="hidden md:grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-2 ">
+            <div className="hidden md:grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-2 max-w-[1400px] m-auto ">
               {allTeams &&
                 allTeams
                   .slice() // Create a shallow copy of the array to avoid mutating the original array
@@ -198,70 +198,38 @@ const rounds = [
     round: 'Runde 1',
   },
   {
-    day: '09',
+    day: '04',
     month: 'APR',
     round: 'Runde 2',
   },
   {
-    day: '16',
+    day: '09',
     month: 'APR',
     round: 'Runde 3',
   },
   {
-    day: '23',
+    day: '11',
     month: 'APR',
     round: 'Runde 4',
   },
   {
-    day: '30',
+    day: '16',
     month: 'APR',
     round: 'Runde 5',
   },
   {
-    day: '07',
-    month: 'MAI',
+    day: '18',
+    month: 'APR',
     round: 'Runde 6',
   },
   {
-    day: '14',
-    month: 'MAI',
+    day: '22',
+    month: 'APR',
     round: 'Semi-finaler',
   },
   {
-    day: '21',
-    month: 'MAI',
+    day: '23',
+    month: 'APR',
     round: 'Finale',
-  },
-]
-
-const testimonials = [
-  {
-    quote:
-      'It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.',
-    name: 'Charles Dickens',
-    title: 'A Tale of Two Cities',
-  },
-  {
-    quote:
-      "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer The slings and arrows of outrageous fortune, Or to take Arms against a Sea of troubles, And by opposing end them: to die, to sleep.",
-    name: 'William Shakespeare',
-    title: 'Hamlet',
-  },
-  {
-    quote: 'All that we see or seem is but a dream within a dream.',
-    name: 'Edgar Allan Poe',
-    title: 'A Dream Within a Dream',
-  },
-  {
-    quote:
-      'It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.',
-    name: 'Jane Austen',
-    title: 'Pride and Prejudice',
-  },
-  {
-    quote:
-      'Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.',
-    name: 'Herman Melville',
-    title: 'Moby-Dick',
   },
 ]
