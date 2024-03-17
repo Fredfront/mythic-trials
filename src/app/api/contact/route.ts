@@ -11,7 +11,6 @@ export async function POST(request: any) {
   const email = formData.get('email')
   const subject = formData.get('subject')
   const message = formData.get('message')
-  const teamName = formData.get('teamName')
 
   // create transporter object
   const transporter = nodemailer.createTransport({
@@ -54,9 +53,7 @@ export async function POST(request: any) {
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
           }
-          h2 {
-            color: #333;
-          }
+  
           p {
             margin: 10px 0;
           }
@@ -72,7 +69,6 @@ export async function POST(request: any) {
           <h2>Kontaktskjema Mythic Trials 2024</h2>
           <div class="message">
             <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Team Name:</strong> ${teamName}</p>
             <p><strong>Subject:</strong> ${subject}</p>
             <p><strong>Message:</strong> ${message}</p>
           </div>

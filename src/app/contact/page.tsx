@@ -95,14 +95,7 @@ export default function Contact() {
             type="text"
             className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
           />
-          <label htmlFor="form-name"> Lagnavn </label>
-          <input
-            id="form-teamName"
-            required
-            name="teamName"
-            type="text"
-            className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
-          />
+
           <label htmlFor="form-message"> Din melding </label>
           <textarea
             id="form-message"
