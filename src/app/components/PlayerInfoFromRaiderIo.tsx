@@ -18,8 +18,9 @@ import { Crown } from 'lucide-react'
 type PlayerInfoProps = {
   player: Player
   token: string
+  isCaptain?: boolean
 }
-export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps) => {
+export const PlayerInfoFromRaiderIo = async ({ player, token, isCaptain }: PlayerInfoProps) => {
   const raiderIo = await getRaiderIOCharacerData({ characterName: player?.characterName, realmName: player?.realmName })
   const blizzCharacterData = await getWowCharacterFromBlizzard({
     token,
@@ -46,6 +47,7 @@ export const PlayerInfoFromRaiderIo = async ({ player, token }: PlayerInfoProps)
       blizzCharacterData={blizzCharacterData}
       mythicPlusInfo={mythicPlusInfo?.current_mythic_rating}
       player={player}
+      isCaptain={isCaptain}
     />
   )
 }
@@ -58,7 +60,14 @@ type HoverStuffProps = {
   player: any
   isCaptain?: boolean
 }
-const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, player }: HoverStuffProps) => {
+const CharacterInfo = ({
+  data,
+  classColor,
+  blizzCharacterData,
+  mythicPlusInfo,
+  player,
+  isCaptain,
+}: HoverStuffProps) => {
   const ratingColor = `rgb(${mythicPlusInfo?.color?.r}, ${mythicPlusInfo?.color.g}, ${mythicPlusInfo?.color.b})`
   return (
     <Dialog>
@@ -78,9 +87,11 @@ const CharacterInfo = ({ data, classColor, blizzCharacterData, mythicPlusInfo, p
 
             <div className="text-white flex item-center justify-between">
               <span>{data?.name} </span>
-              <span>
-                <Crown className="inline" fill="#FDB202" color="#FDB202" height={10} />
-              </span>
+              {isCaptain === true ? (
+                <span>
+                  <Crown className="inline" fill="#FDB202" color="#FDB202" height={10} />
+                </span>
+              ) : null}
             </div>
             {player && player.altOf && player.altOf.length > 0 ? (
               <div className=" text-xs text-white">Alt av {player.altOf}</div>

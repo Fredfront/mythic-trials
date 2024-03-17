@@ -41,7 +41,7 @@ const Home = async () => {
               </button>
             </Link>
             <Link href="/signup" prefetch>
-              <button className="  min-h-10 px-4 py-3.5 rounded-xl   bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105">
+              <button className="  min-h-10 px-4 py-3.5 rounded-xl dark:bg-[#FDB202]  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105">
                 Påmelding
               </button>
             </Link>

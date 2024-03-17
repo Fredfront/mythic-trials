@@ -86,7 +86,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           >
             {data?.players.map((player, index) => {
               if (data.players === null || data.players === undefined) return
-              return <PlayerInfoFromRaiderIo key={index} player={player} token={token} />
+              return <PlayerInfoFromRaiderIo key={index} player={player} token={token} isCaptain={index === 0} />
             })}
           </Suspense>
         </div>

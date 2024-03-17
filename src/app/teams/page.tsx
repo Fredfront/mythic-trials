@@ -7,7 +7,7 @@ import { urlForImage } from '../../../sanity/lib/image'
 async function Teams() {
   const allTeams = await getAllTeams()
   return (
-    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 p-10 ">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 p-4 md:p-10 ">
       {allTeams.map((team) => (
         <Link prefetch={true} href={`/team/${team.teamSlug}`} key={team._id} className="w-full">
           <div
