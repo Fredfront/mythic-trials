@@ -3,10 +3,11 @@ import NavBar from './components/Navbar'
 import { DiscordLogoIcon, InstagramLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 import { TwitchIcon, Youtube } from 'lucide-react'
 import { get } from '@vercel/edge-config'
+import { getShowLeaderboard } from './api/featureToggle/getShowLeaderboard'
 
 export default async function Template({ children }: { children: React.ReactNode }) {
-  const showLeaderboard = (await get('showLeaderboard')) as any
-
+  const showLeaderboardData = await getShowLeaderboard()
+  const showLeaderboard = showLeaderboardData?.[0].enabled
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar showLeaderboard={showLeaderboard} />
@@ -17,7 +18,8 @@ export default async function Template({ children }: { children: React.ReactNode
 }
 
 const Footer = async () => {
-  const showLeaderboard = (await get('showLeaderboard')) as any
+  const showLeaderboardData = await getShowLeaderboard()
+  const showLeaderboard = showLeaderboardData?.[0].enabled
 
   return (
     <footer className=" mt-10  shadow bg-[#272727]">

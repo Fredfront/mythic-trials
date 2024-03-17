@@ -1,10 +1,11 @@
 import React from 'react'
 import LeaderboardComponent from '../components/Leaderboard'
-import { get } from '@vercel/edge-config'
 import { redirect } from 'next/navigation'
+import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
 
 async function page() {
-  const showLeaderboard = await get('showLeaderboard')
+  const showLeaderboardData = await getShowLeaderboard()
+  const showLeaderboard = showLeaderboardData?.[0].enabled
 
   if (!showLeaderboard) {
     return redirect('/')

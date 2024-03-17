@@ -8,17 +8,19 @@ import { get } from '@vercel/edge-config'
 import logo from '../../public/MT_logo_white.webp'
 import Image from 'next/image'
 import localFont from 'next/font/local'
-import { LeaderboardDrawer } from './components/DrawerComponent'
 import { getFrontpageNews } from './api/frongpageNews/getFrontpageNewsData'
 import { PortableText } from '@portabletext/react'
 import SimplifiedLeaderboard from './components/SimplifiedLeaderboard'
+import { getShowLeaderboard } from './api/featureToggle/getShowLeaderboard'
 const LifeCraft = localFont({ src: '../../public/fonts/LifeCraft_Font.woff2' })
 
 const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
-  const showLeaderboard = await get('showLeaderboard')
+  const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
+
+  const showLeaderboard = showLeaderboardData?.[0].enabled
 
   return (
     <main>
@@ -81,7 +83,6 @@ const Home = async () => {
             )
           })}
         </div>
-
         {allTeams && allTeams.some((e) => e.teamName) ? (
           <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4  ">
             <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
@@ -178,7 +179,7 @@ const Home = async () => {
               </button>
             </Link>
           </div>
-        ) : null}
+        ) : null}{' '}
       </div>
       {/* <div className="flex items-center w-7xl justify-center gap-4 mt-10 p-20">
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 1 (Ims)</div>
