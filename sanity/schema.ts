@@ -7,6 +7,7 @@ import { FrontPage } from './schemas/frontpage/schema'
 import { SignupPage } from './schemas/signup/schema'
 import { RulesPage } from './schemas/rules/schema'
 import { FrontpageNews } from './schemas/frontpageNews/schema'
+import featureToggle from './schemas/featureToggles/schema'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -18,5 +19,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     SignupPage,
     RulesPage,
     FrontpageNews,
+    featureToggle,
   ],
 }

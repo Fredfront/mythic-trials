@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 import { wowRealmsMapped } from '../utils/wowRealms'
 import { CrownIcon, LogOut } from 'lucide-react'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 
 function CreateTeam() {
   const { data, status } = useSession()
@@ -415,8 +416,27 @@ function CreateTeam() {
               {players.map((player, index) => (
                 <div key={index} className="mb-4 bg-[#000F1A] p-8 ">
                   {index === 0 ? (
-                    <span className="font-bold ">
-                      Lagets kaptein <CrownIcon className="inline" fill="#FDB202" color="#FDB202" height={20} />
+                    <span>
+                      <span className="font-bold">Lagets kaptein </span>{' '}
+                      <CrownIcon className="inline" fill="#FDB202" color="#FDB202" height={20} />
+                      <HoverCard>
+                        <HoverCardTrigger>
+                          {' '}
+                          <p className="text-xs mt-1 mb-1 cursor-pointer">Hva er rollen til lagets kaptein?</p>
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                          <h3 className="font-bold text-lg mb-4">Lagets kaptein sin rolle</h3>
+                          <p className="text-sm">
+                            Lagets kaptein har ansvaret for å holde seg oppdatert på informasjon admins gir og
+                            videreformidle informasjon til resten av laget.{' '}
+                          </p>
+                          <p className="text-sm mt-2">
+                            Kapteinen vil være administratorers direkte kontaktpunkt inn mot laget, og laget står selv
+                            ansvarlig for at all informasjon kommunisert gjennom kapteinen blir sendt videre til sine
+                            lagspillere.
+                          </p>
+                        </HoverCardContent>
+                      </HoverCard>
                     </span>
                   ) : (
                     <span className="font-bold ">Spiller {index + 1}:</span>

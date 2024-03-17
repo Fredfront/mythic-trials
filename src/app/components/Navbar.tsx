@@ -70,8 +70,8 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
             </Link>
           ) : null}
 
-          {/* <Link
-            href="#"
+          <Link
+            href="/contact"
             className={
               pathname === '/contact'
                 ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
@@ -79,7 +79,7 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
             }
           >
             Kontakt
-          </Link> */}
+          </Link>
         </div>
         <div className="flex  items-center">
           <Link href="/signup" prefetch>
@@ -149,13 +149,7 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
               Resultater
             </Link>
           ) : null}
-
-          <Link href="/signup" prefetch>
-            <Button className="inline-block ml-4 mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
-              Påmelding
-            </Button>
-          </Link>
-          {/* <Link
+          <Link
             href="/contact"
             className={
               pathname === '/contact'
@@ -163,8 +157,13 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
                 : 'text-gray-200 hover:text-white mx-4 font-bold'
             }
           >
-            6. Kontakt
-          </Link> */}
+            Kontakt
+          </Link>
+          <Link href="/signup" prefetch>
+            <Button className="inline-block ml-4 mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
+              Påmelding
+            </Button>
+          </Link>
         </div>
       </div>
     </nav>
