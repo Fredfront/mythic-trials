@@ -35,9 +35,12 @@ export default function Contact() {
         setLoading(false)
         setSuccess(true)
       }
+      if (responseData.message === 'Error: email was not sent') {
+        setLoading(false)
+        setError(true)
+      }
     } catch (err) {
       setLoading(false)
-
       setError(true)
     }
   }

@@ -25,14 +25,14 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
             <Image width={45} height={45} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
           </Link>
         </div>
-        <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1 ">
+        <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1  ">
           {/* Navigation links for large screens */}
           <Link
             href="/"
             className={
               pathname === '/'
-                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                : 'text-gray-200 hover:text-white mx-4 font-bold'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold cursor-pointer'
+                : 'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer'
             }
           >
             Hovedside
@@ -41,8 +41,8 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
             href="/teams"
             className={
               pathname === '/teams'
-                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                : 'text-gray-200 hover:text-white mx-4 font-bold'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold cursor-pointer'
+                : 'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer'
             }
           >
             Lagene
@@ -51,8 +51,8 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
             href="/rules"
             className={
               pathname === '/rules'
-                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                : 'text-gray-200 hover:text-white mx-4 font-bold'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold cursor-pointer'
+                : 'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer'
             }
           >
             Regler
@@ -62,8 +62,8 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
               href="/leaderboard"
               className={
                 pathname === '/leaderboard'
-                  ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                  : 'text-gray-200 hover:text-white mx-4 font-bold'
+                  ? 'text-[#FDB202] hover:text-white mx-4 font-bold cursor-pointer'
+                  : 'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer'
               }
             >
               Resultater
@@ -74,8 +74,8 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
             href="/contact"
             className={
               pathname === '/contact'
-                ? 'text-[#FDB202] hover:text-white mx-4 font-bold'
-                : 'text-gray-200 hover:text-white mx-4 font-bold'
+                ? 'text-[#FDB202] hover:text-white mx-4 font-bold cursor-pointer'
+                : 'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer'
             }
           >
             Kontakt
