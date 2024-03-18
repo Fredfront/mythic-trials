@@ -127,7 +127,7 @@ const Home = async () => {
             <div className="flex  w-full justify-center p-2   mt-12">
               <Link href="/teams">
                 <button className="bg-[#FFFFFF] border-2 border-[#028AFD] rounded-full text-black w-32 h-8 min-w-48 font-bold min-h-10 ">
-                  Se all lagene
+                  Se alle lagene
                 </button>
               </Link>
             </div>

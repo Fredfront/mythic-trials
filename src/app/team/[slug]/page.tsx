@@ -90,7 +90,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             })}
           </Suspense>
         </div>
-        <div className="mt-10 grid grid-cols-3 gap-6 ">
+        <div className="mt-10 grid grid-cols-3 md:grid-cols-5 gap-4 ">
           <Suspense
             fallback={
               <div className="mt-10 grid grid-cols-3 gap-6">

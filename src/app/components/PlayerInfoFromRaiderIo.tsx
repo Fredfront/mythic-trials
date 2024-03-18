@@ -70,7 +70,6 @@ const CharacterInfo = ({
   isCaptain,
 }: HoverStuffProps) => {
   const ratingColor = `rgb(${mythicPlusInfo?.color?.r}, ${mythicPlusInfo?.color.g}, ${mythicPlusInfo?.color.b})`
-
   return (
     <Dialog>
       <DialogTrigger asChild className=" cursor-pointer transition translate duration-500 hover:scale-105">
