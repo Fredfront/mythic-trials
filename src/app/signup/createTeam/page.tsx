@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 import { wowRealmsMapped } from '../utils/wowRealms'
 import { CrownIcon, LogOut } from 'lucide-react'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import {
   Dialog,
   DialogContent,
@@ -28,9 +27,9 @@ function CreateTeam() {
   const { data, status } = useSession()
   const [teamName, setTeamName] = useState('')
   const [teamImage, setTeamImage] = useState<any>(null)
-  const [players, setPlayers] = useState<{ characterName: string; realmName: string; alts?: AltPlayer[] }[]>([
-    { characterName: '', realmName: '', alts: [] },
-  ])
+  const [players, setPlayers] = useState<
+    { characterName: string; realmName: string; discordName: string; alts?: AltPlayer[] }[]
+  >([{ characterName: '', realmName: '', discordName: '', alts: [] }])
   const router = useRouter()
 
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
@@ -78,7 +77,7 @@ function CreateTeam() {
     setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [name]: value } : player)))
   }
   const handleAddPlayer = () => {
-    setPlayers([...players, { characterName: '', realmName: '' }])
+    setPlayers([...players, { characterName: '', discordName: '', realmName: '' }])
   }
 
   const handleAddAltPlayer = (index: number) => {
@@ -210,7 +209,9 @@ function CreateTeam() {
       setTeamNameError(false)
     }
     // Validate players
-    const playerValidation = players.map((player) => !player.characterName.trim() || !player.realmName.trim())
+    const playerValidation = players.map(
+      (player) => !player.characterName.trim() || !player.realmName.trim() || !player.discordName.trim(),
+    )
     if (playerValidation.some((error) => error)) {
       setPlayerErrors(playerValidation)
     } else {
@@ -249,6 +250,7 @@ function CreateTeam() {
               _key: uuidv4(),
               characterName: player.characterName,
               realmName: player.realmName,
+              discordname: player.discordName,
               alts: player.alts,
             })),
           },
@@ -303,7 +305,12 @@ function CreateTeam() {
         ?.players.map((player, index) => {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
-            { characterName: player.characterName, realmName: player.realmName, alts: player.alts },
+            {
+              characterName: player.characterName,
+              realmName: player.realmName,
+              discordName: player.discordName,
+              alts: player.alts,
+            },
           ])
 
           //remove the first empty player
@@ -362,6 +369,7 @@ function CreateTeam() {
               Lagnavn
             </label>
             <input
+              required
               id="teamName"
               name="teamName"
               type="text"
@@ -461,6 +469,7 @@ function CreateTeam() {
                       name={'characterName'} // Set a unique name for character names
                       placeholder="Karakter navn"
                       className="rounded-l-lg p-2 mb-2 w-full bg-gray-800 "
+                      required
                     />
                     {player.characterName &&
                     player.realmName &&
@@ -468,7 +477,17 @@ function CreateTeam() {
                       <PlayerInfoImage player={player as Player} />
                     ) : null}
                   </div>
+                  <input
+                    type="text"
+                    value={player.discordName}
+                    onChange={(e) => handlePlayerChange(index, e)}
+                    name={'discordName'}
+                    placeholder="Discord brukernavn"
+                    className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
+                    required
+                  />
                   <Select
+                    required
                     styles={colourStyles}
                     options={wowRealmsMapped}
                     className="mb-2"

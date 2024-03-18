@@ -69,6 +69,13 @@ export const Player = {
       validation: (Rule: { required: () => any }) => Rule.required(),
     },
     {
+      type: 'string',
+      name: 'discordName',
+      title: 'Discord Name',
+      description: 'The Discord name of the player',
+      validation: (Rule: { required: () => any }) => Rule.required(),
+    },
+    {
       type: 'array',
       name: 'alts',
       title: 'Alts',

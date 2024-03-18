@@ -36,6 +36,7 @@ type ImageAsset = {
 export type Player = {
   realmName: string
   characterName: string
+  discordName: string
   alts: AltPlayer[]
 }
 

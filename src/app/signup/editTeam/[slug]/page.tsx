@@ -20,9 +20,9 @@ function EditTeam() {
 
   const router = useRouter()
 
-  const [players, setPlayers] = useState<{ characterName: string; realmName: string; alts?: AltPlayer[] }[]>([
-    { characterName: '', realmName: '', alts: [] },
-  ])
+  const [players, setPlayers] = useState<
+    { characterName: string; realmName: string; discordName: string; alts?: AltPlayer[] }[]
+  >([{ characterName: '', realmName: '', discordName: '', alts: [] }])
 
   const [hasEditedPlayers, setHasEditedPlayers] = useState(false)
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
@@ -68,7 +68,12 @@ function EditTeam() {
         ?.players.map((player, index) => {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
-            { characterName: player.characterName, realmName: player.realmName, alts: player.alts },
+            {
+              characterName: player.characterName,
+              realmName: player.realmName,
+              discordName: player.discordName,
+              alts: player.alts,
+            },
           ])
 
           //remove the first empty player
@@ -109,6 +114,7 @@ function EditTeam() {
                 _key: uuidv4(),
                 characterName: player.characterName,
                 realmName: player.realmName,
+                discordName: player.discordName,
                 alts: player.alts?.map((alt) => ({
                   _key: uuidv4(),
                   altCharacterName: alt.altCharacterName,
@@ -163,7 +169,7 @@ function EditTeam() {
     setHasEditedPlayers(true)
   }
   const handleAddPlayer = () => {
-    setPlayers([...players, { characterName: '', realmName: '' }])
+    setPlayers([...players, { characterName: '', discordName: '', realmName: '' }])
   }
 
   const handleAddAltPlayer = (index: number) => {
@@ -298,6 +304,7 @@ function EditTeam() {
                   <div className="mb-2" />
                   <div className="flex">
                     <input
+                      required
                       type="text"
                       value={player.characterName?.trim()}
                       onChange={(e) => handlePlayerChange(index, e)}
@@ -312,7 +319,18 @@ function EditTeam() {
                     ) : null}
                   </div>
 
+                  <input
+                    required
+                    type="text"
+                    value={player.discordName}
+                    onChange={(e) => handlePlayerChange(index, e)}
+                    name={'discordName'}
+                    placeholder="Discord brukernavn"
+                    className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
+                  />
+
                   <Select
+                    required
                     styles={colourStyles}
                     options={wowRealmsMapped}
                     value={wowRealmsMapped.find((e) => e.name === player.realmName)}
