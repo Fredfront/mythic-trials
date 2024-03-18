@@ -105,12 +105,16 @@ const CharacterInfo = ({
       <DialogContent className="sm:max-w-[425px] bg-[#011624]">
         <DialogHeader>
           <DialogTitle>{data?.name}</DialogTitle>
-          <DialogDescription>Guild: {blizzCharacterData?.guild?.name}</DialogDescription>
-          <DialogDescription style={{ color: ratingColor }}>
-            {' '}
-            M+ {(mythicPlusInfo?.rating ? Math.floor(parseInt(mythicPlusInfo?.rating)) : 'N/A') || 'N/A'}
-          </DialogDescription>
-          <DialogDescription>Ilvl {blizzCharacterData?.equipped_item_level}</DialogDescription>
+          {blizzCharacterData ? <DialogDescription>Guild: {blizzCharacterData?.guild?.name}</DialogDescription> : null}
+          {blizzCharacterData ? (
+            <DialogDescription style={{ color: ratingColor }}>
+              {' '}
+              M+ {(mythicPlusInfo?.rating ? Math.floor(parseInt(mythicPlusInfo?.rating)) : 'N/A') || 'N/A'}
+            </DialogDescription>
+          ) : null}
+          {blizzCharacterData ? (
+            <DialogDescription>Ilvl {blizzCharacterData?.equipped_item_level}</DialogDescription>
+          ) : null}
         </DialogHeader>
         <a href={data?.profile_url} target="_blank">
           <DialogFooter>Gå til raider.io</DialogFooter>{' '}
