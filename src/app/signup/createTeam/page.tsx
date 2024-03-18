@@ -250,7 +250,7 @@ function CreateTeam() {
               _key: uuidv4(),
               characterName: player.characterName,
               realmName: player.realmName,
-              discordname: player.discordName,
+              discordName: player.discordName,
               alts: player.alts,
             })),
           },
