@@ -28,6 +28,7 @@ export const PlayerInfoFromRaiderIo = async ({ player, token, isCaptain }: Playe
     realm: player?.realmName?.toLowerCase(),
     character: player?.characterName?.toLowerCase(),
   })
+  console.log(token)
 
   const mythicPlusInfo = await getMythicPlusInfo({ token, endpoint: blizzCharacterData?.mythic_keystone_profile?.href })
 

@@ -9,11 +9,14 @@ export async function getWowCharacterFromBlizzard({
 }) {
   if (!token || !realm || !character) return null
 
+  //if realm name has a space, replace it with a hyphen
+  realm = realm.replace(' ', '-')
+
   const res = await fetch(
     `https://eu.api.blizzard.com/profile/wow/character/${realm}/${character}?namespace=profile-eu&locale=en_US&access_token=${token}`,
     {
       next: {
-        revalidate: 3600,
+        revalidate: 1,
       },
     },
   )
