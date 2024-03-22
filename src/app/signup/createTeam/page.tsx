@@ -251,7 +251,13 @@ function CreateTeam() {
               characterName: player.characterName,
               realmName: player.realmName,
               discordName: player.discordName,
-              alts: player.alts,
+              alts: player.alts?.map((alt) => {
+                return {
+                  _key: uuidv4(),
+                  altCharacterName: alt.altCharacterName,
+                  altRealmName: alt.altRealmName,
+                }
+              }),
             })),
           },
         },
