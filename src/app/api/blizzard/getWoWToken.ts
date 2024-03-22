@@ -12,7 +12,6 @@ export async function getToken() {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${encodedCredentials}`,
-      'cache-control': 'max-age=60',
     },
     body: 'grant_type=client_credentials',
   }

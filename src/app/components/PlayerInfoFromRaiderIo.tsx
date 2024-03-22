@@ -29,7 +29,6 @@ export const PlayerInfoFromRaiderIo = async ({ player, token, isCaptain }: Playe
     character: player?.characterName?.toLowerCase(),
   })
   console.log(token)
-
   const mythicPlusInfo = await getMythicPlusInfo({ token, endpoint: blizzCharacterData?.mythic_keystone_profile?.href })
 
   let wowClass = raiderIo?.class

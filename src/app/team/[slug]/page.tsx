@@ -71,8 +71,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </Suspense>
           </Suspense>
         </div>
-
-        <div className="mt-12 grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-5 gap-4 ">
+        <div className="mt-10 text-lg p-4">Spillerne på laget vil bli synlig når turneringen har startet.</div>
+        {/* <div className="mt-12 grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-5 gap-4 ">
           <Suspense
             fallback={
               <div>
@@ -104,10 +104,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
           >
             {hasAltCharacters &&
               alts?.map((alt, index) => {
-                return <PlayerInfoFromRaiderIo key={index} player={alt?.[0] as unknown as Player} token={token} />
+                return alt?.map((e) => {
+                  return <PlayerInfoFromRaiderIo key={index} player={e as unknown as Player} token={token} />
+                })
               })}
           </Suspense>
-        </div>
+        </div> */}
         <div>
           {hasDungTimes && <h3 className=" mt-10 mb-4 font-extrabold text-white">Dungeon times</h3>}
 
