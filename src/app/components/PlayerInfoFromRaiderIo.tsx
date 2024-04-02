@@ -15,6 +15,7 @@ import {
 import { Player } from '../api/getAllTeams'
 import { Crown } from 'lucide-react'
 import FallbackImage from '../../../public/image-avatar-avatar-fallback.svg'
+import { getToken } from '../api/blizzard/getWoWToken'
 
 type PlayerInfoProps = {
   player: Player
@@ -22,13 +23,17 @@ type PlayerInfoProps = {
   isCaptain?: boolean
 }
 export const PlayerInfoFromRaiderIo = async ({ player, token, isCaptain }: PlayerInfoProps) => {
+  const new_token = await getToken()
   const raiderIo = await getRaiderIOCharacerData({ characterName: player?.characterName, realmName: player?.realmName })
   const blizzCharacterData = await getWowCharacterFromBlizzard({
-    token,
+    token: new_token,
     realm: player?.realmName?.toLowerCase(),
     character: player?.characterName?.toLowerCase(),
   })
-  const mythicPlusInfo = await getMythicPlusInfo({ token, endpoint: blizzCharacterData?.mythic_keystone_profile?.href })
+  const mythicPlusInfo = await getMythicPlusInfo({
+    token: new_token,
+    endpoint: blizzCharacterData?.mythic_keystone_profile?.href,
+  })
 
   let wowClass = raiderIo?.class
   if (wowClass === 'Death Knight') {
