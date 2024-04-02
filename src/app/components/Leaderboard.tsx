@@ -231,7 +231,13 @@ function LeaderboardComponent() {
                 {combinedTyranAndFort?.map((lead, leadIndex) => {
                   if (hideTyrannical && lead.isTyrannical === true) return null
                   if (hideFortified && lead.isFortified) return null
-                  const timeString = `${lead?.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${lead?.teams?.find((a) => a.team._ref === team._ref)?.seconds}`
+                  let seconds = lead.teams?.find((a) => a.team._ref === team._ref)?.seconds as string | number
+
+                  if (seconds && (seconds as number) < 10) {
+                    seconds = `0${seconds}`
+                  }
+
+                  const timeString = `${lead?.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${seconds}`
                   const hasTime =
                     lead.teams?.find((a) => a.team._ref === team._ref)?.minutes !== undefined &&
                     lead.teams?.find((a) => a.team._ref === team._ref)?.seconds !== undefined

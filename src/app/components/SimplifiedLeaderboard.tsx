@@ -48,11 +48,11 @@ function SimplifiedLeaderboard() {
               const teamImage = allTeams.find((e) => e._id === team._ref)?.teamImage?.asset._ref
               return (
                 <TableRow key={index} className="  bg-[#052D49] even:bg-[#0B436C] border-none text-white ">
-                  <TableCell className="font-bold text-white text-lg text-center border-r-[1px]  border-b-[1px]   border-black">
+                  <TableCell className="font-bold text-white text-lg text-center border-r-[1px]     border-black">
                     {index + 1}.
                   </TableCell>
 
-                  <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px] border-b-[1px]  border-black">
+                  <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px]  border-black">
                     <Image
                       src={urlForImage(teamImage ?? '')}
                       alt={`${team.teamName} logo`}
@@ -62,7 +62,7 @@ function SimplifiedLeaderboard() {
                     />
                     <span className=" text-sm font-bold">{team.teamName}</span>
                   </TableCell>
-                  <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-b-[1px] border-black  ">
+                  <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px]  border-black  ">
                     {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
                   </TableCell>
                 </TableRow>
