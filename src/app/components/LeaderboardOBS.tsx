@@ -1,17 +1,15 @@
 'use client'
-import React, { Suspense, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { LeaderboardData, getTyrannicalLeaderboardData } from '../api/leaderboard/tyrannical'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { MythicPlusTeam, getAllTeams } from '../api/getAllTeams'
 import { getFortifiedLeaderboardData } from '../api/leaderboard/fortified'
 import { calculatePoints, combineScore, shortenDungeonName } from './leaderboard/helpers'
-import { Checkbox } from '@/components/ui/checkbox'
 import { projectId, dataset, apiVersion, useCdn, token } from '../../../sanity/env'
 import { createClient } from '@sanity/client'
 import Image from 'next/image'
 import { urlForImage } from '../../../sanity/lib/image'
 import { useSearchParams } from 'next/navigation'
-import { set } from 'lodash'
 function LeaderboardComponentOBS() {
   const [tyrannical, setTyrannicalData] = React.useState<LeaderboardData>([])
   const [fortified, setFortifiedData] = React.useState<LeaderboardData>([])
@@ -195,7 +193,7 @@ function LeaderboardComponentOBS() {
             const teamImage = allTeams.find((e) => e._id === team._ref)?.teamImage?.asset._ref
             return (
               <TableRow key={index} className="  bg-[#052D49] even:bg-[#0B436C] border-none text-white">
-                <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px] border-b-[1px] border-black">
+                <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px] border-black ">
                   <Image
                     src={urlForImage(teamImage ?? '')}
                     alt={`${team.teamName} logo`}
@@ -205,20 +203,25 @@ function LeaderboardComponentOBS() {
                   />
                   <span className=" text-sm font-bold">{team.teamName}</span>
                 </TableCell>
-                <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-b-[1px] border-black">
+                <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px]  border-black ">
                   {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
                 </TableCell>
                 {combinedTyranAndFort?.map((lead, leadIndex) => {
                   if (hideTyrannical && lead.isTyrannical === true) return null
                   if (hideFortified && lead.isFortified) return null
-                  const timeString = `${lead?.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${lead?.teams?.find((a) => a.team._ref === team._ref)?.seconds}`
+                  let seconds = lead.teams?.find((a) => a.team._ref === team._ref)?.seconds as string | number
+
+                  if (seconds && (seconds as number) < 10) {
+                    seconds = `0${seconds}`
+                  }
+                  const timeString = `${lead?.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${seconds}`
                   const hasTime =
                     lead.teams?.find((a) => a.team._ref === team._ref)?.minutes !== undefined &&
                     lead.teams?.find((a) => a.team._ref === team._ref)?.seconds !== undefined
                       ? true
                       : false
                   return (
-                    <TableCell className="text-white text-center  border-b-[1px] border-black" key={leadIndex}>
+                    <TableCell className="text-white text-center border-black" key={leadIndex}>
                       {hasTime ? (
                         <span className="border 2px border-[#028AFD] pr-4 pl-4 pt-1 pb-1 rounded-sm  ">
                           {timeString}
