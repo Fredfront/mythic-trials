@@ -1,8 +1,8 @@
 import React from 'react'
-import { getAllTeams } from '../api/getAllTeams'
+import { getAllTeams } from '../../api/getAllTeams'
 import Link from 'next/link'
 import Image from 'next/image'
-import { urlForImage } from '../../../sanity/lib/image'
+import { urlForImage } from '../../../../sanity/lib/image'
 
 async function Teams() {
   const allTeams = await getAllTeams()

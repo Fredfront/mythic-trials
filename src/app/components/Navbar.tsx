@@ -82,11 +82,11 @@ const NavBar = ({ showLeaderboard }: { showLeaderboard: boolean }) => {
           </Link>
         </div>
         <div className="flex  items-center">
-          <Link href="/signup" prefetch>
+          {/* <Link href="/signup" prefetch>
             <Button className="hidden lg:inline-block mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
               Påmelding
             </Button>
-          </Link>
+          </Link> */}
           <div className="block lg:hidden">
             {/* Hamburger icon for mobile */}
             <button

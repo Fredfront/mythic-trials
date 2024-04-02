@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import React, { useEffect, useState } from 'react'
-import { urlForImage } from '../../../../sanity/lib/image'
+import { urlForImage } from '../../../../../sanity/lib/image'
 import { SignupPage, getSignupData } from '@/app/api/signup/getSignupInfo'
 import { signIn, useSession } from 'next-auth/react'
 import { MythicPlusTeam, getAllTeams } from '@/app/api/getAllTeams'

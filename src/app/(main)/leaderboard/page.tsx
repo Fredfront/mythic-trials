@@ -1,7 +1,7 @@
 import React from 'react'
-import LeaderboardComponent from '../components/Leaderboard'
+import LeaderboardComponent from '../../components/Leaderboard'
 import { redirect } from 'next/navigation'
-import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
+import { getShowLeaderboard } from '../../api/featureToggle/getShowLeaderboard'
 
 async function page() {
   const showLeaderboardData = await getShowLeaderboard()

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import './globals.css'
+import '../globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { cn } from '@/lib/utils'
 import { DM_Sans } from 'next/font/google'
-import { ThemeProvider } from './components/theme-provider'
+import { ThemeProvider } from '../components/theme-provider'
 
 export const metadata: Metadata = {
   title: 'Nerdelandslaget - Mythic Trials',

@@ -1,17 +1,17 @@
 import React from 'react'
-import TeamCard from './components/TeamCard'
-import { getAllTeams } from './api/getAllTeams'
+import TeamCard from '../components/TeamCard'
+import { getAllTeams } from '../api/getAllTeams'
 import Link from 'next/link'
-import { getFrontpageData } from './api/frontpage/frontpage'
-import { urlForImage } from '../../sanity/lib/image'
-import logo from '../../public/MT_logo_white.webp'
+import { getFrontpageData } from '../api/frontpage/frontpage'
+import { urlForImage } from '../../../sanity/lib/image'
+import logo from '../../../public/MT_logo_white.webp'
 import Image from 'next/image'
 import localFont from 'next/font/local'
-import { getFrontpageNews } from './api/frongpageNews/getFrontpageNewsData'
+import { getFrontpageNews } from '../api/frongpageNews/getFrontpageNewsData'
 import { PortableText } from '@portabletext/react'
-import SimplifiedLeaderboard from './components/SimplifiedLeaderboard'
-import { getShowLeaderboard } from './api/featureToggle/getShowLeaderboard'
-const LifeCraft = localFont({ src: '../../public/fonts/LifeCraft_Font.woff2' })
+import SimplifiedLeaderboard from '../components/SimplifiedLeaderboard'
+import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
+const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
 const Home = async () => {
   const allTeams = await getAllTeams()
@@ -41,11 +41,11 @@ const Home = async () => {
                 Hvem kan være med?
               </button>
             </Link>
-            <Link href="/signup" prefetch>
+            {/* <Link href="/signup" prefetch>
               <button className="  min-h-10 px-4 py-3.5 rounded-xl dark:bg-[#FDB202]  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105">
                 Påmelding
               </button>
-            </Link>
+            </Link> */}
           </div>
         </div>
         <div className="gap-4 p-2 flex flex-wrap justify-center text-center ">

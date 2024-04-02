@@ -1,5 +1,5 @@
 import React from 'react'
-import { getRulesData } from '../api/rules/getRulesData'
+import { getRulesData } from '../../api/rules/getRulesData'
 import { PortableText } from '@portabletext/react'
 import { TracingBeam } from '@/components/ui/tracing-beam'
 import { Hourglass, Smile, Trophy, User } from 'lucide-react'

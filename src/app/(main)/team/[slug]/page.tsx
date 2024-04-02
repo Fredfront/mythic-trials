@@ -1,4 +1,4 @@
-import { urlForImage } from '../../../../sanity/lib/image'
+import { urlForImage } from '../../../../../sanity/lib/image'
 import Image from 'next/image'
 import { PlayerInfoFromRaiderIo } from '@/app/components/PlayerInfoFromRaiderIo'
 import { getToken } from '@/app/api/blizzard/getWoWToken'

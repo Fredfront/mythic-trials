@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import NavBar from './components/Navbar'
+import NavBar from '../components/Navbar'
 import { DiscordLogoIcon, InstagramLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 import { TwitchIcon, Youtube } from 'lucide-react'
-import { get } from '@vercel/edge-config'
-import { getShowLeaderboard } from './api/featureToggle/getShowLeaderboard'
+import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
+import { useRouter } from 'next/dist/client/router'
 
 export default async function Template({ children }: { children: React.ReactNode }) {
   const showLeaderboardData = await getShowLeaderboard()

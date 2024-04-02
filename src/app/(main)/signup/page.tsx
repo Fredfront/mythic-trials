@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { MythicPlusTeam, getAllTeams } from '../api/getAllTeams'
+import { MythicPlusTeam, getAllTeams } from '../../api/getAllTeams'
 import Loading from './components/Loading'
 import { useRouter } from 'next/navigation'
 
