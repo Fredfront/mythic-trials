@@ -169,6 +169,10 @@ function LeaderboardComponentOBS() {
     }
   }, [showFortified, showPoints, showTyrannical])
 
+  const sortCombinedPoints = combinedPoints.sort((a, b) => {
+    return b.totalScore - a.totalScore
+  })
+
   return (
     <div className=" p-4 mt-4">
       <Table className="max-w-screen-xlg  ">
@@ -189,7 +193,7 @@ function LeaderboardComponentOBS() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {combinedPoints.map((team, index) => {
+          {sortCombinedPoints.map((team, index) => {
             const teamImage = allTeams.find((e) => e._id === team._ref)?.teamImage?.asset._ref
             return (
               <TableRow key={index} className="  bg-[#052D49] even:bg-[#0B436C] border-none text-white">

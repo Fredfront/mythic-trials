@@ -152,6 +152,10 @@ function LeaderboardComponent() {
     combinedPoints = combinedPoints.filter((team) => team.teamName.toLowerCase().includes(searchTeam.toLowerCase()))
   }
 
+  const sortCombinedPoints = combinedPoints.sort((a, b) => {
+    return b.totalScore - a.totalScore
+  })
+
   return (
     <div className=" p-4 mt-4">
       <div className="flex gap-4 pb-2 justify-end w-full flex-col lg:flex-row md:flex-row">
@@ -211,7 +215,7 @@ function LeaderboardComponent() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {combinedPoints.map((team, index) => {
+          {sortCombinedPoints.map((team, index) => {
             const teamImage = allTeams.find((e) => e._id === team._ref)?.teamImage?.asset._ref
             return (
               <TableRow key={index} className="  bg-[#052D49] even:bg-[#0B436C] border-none text-white">
