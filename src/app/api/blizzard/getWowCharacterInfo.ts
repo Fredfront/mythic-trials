@@ -1,5 +1,6 @@
+import { getToken } from './getWoWToken'
+
 export async function getWowCharacterFromBlizzard({
-  token,
   realm,
   character,
 }: {
@@ -7,17 +8,17 @@ export async function getWowCharacterFromBlizzard({
   realm?: string
   character?: string
 }) {
-  if (!token || !realm || !character) return null
+  if (!realm || !character) return null
 
   //if realm name has a space, replace it with a hyphen
   realm = realm.replace(' ', '-')
 
+  const token = await getToken()
+
   const res = await fetch(
     `https://eu.api.blizzard.com/profile/wow/character/${realm}/${character}?namespace=profile-eu&locale=en_US&access_token=${token}`,
     {
-      next: {
-        revalidate: 1,
-      },
+      cache: 'no-cache',
     },
   )
 

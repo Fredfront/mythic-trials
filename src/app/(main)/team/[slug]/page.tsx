@@ -133,7 +133,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
               return (
                 <div key={dungeon.dungeon} className="mb-1">
-                  <div className="flex gap-2 items-center text-white bg-[#052D49] even:bg-[#0B436C]  p-2 rounded-lg ">
+                  <div className="flex gap-2 items-center text-white border-[#052D49] border-2 p-2 rounded-lg ">
                     <Image className="rounded-full" src={imgSrc ?? ''} alt="" width={50} height={50} priority />
                     {dungeon.dungeon} <br />
                     {dungeon.time?.minutes}:{dungeon.time?.seconds}

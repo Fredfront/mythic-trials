@@ -54,7 +54,7 @@ const Home = async () => {
               return (
                 <div
                   key={index}
-                  className="flex flex-row items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6 p-2 lg:p-6 w-40 lg:w-52  "
+                  className={`flex flex-row items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6 p-2 lg:p-6 w-40 lg:w-52 ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
                 >
                   <div className="text-center flex border-r-2 border-white flex-col mr-4">
                     <div className="flex flex-col mr-4 ml-3 ">
@@ -69,7 +69,7 @@ const Home = async () => {
             return (
               <div
                 key={index}
-                className="flex lg:flex-row flex-col items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6  p-2 lg:p-6 lg:w-56 w-24 "
+                className={`flex lg:flex-row flex-col items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6  p-2 lg:p-6 lg:w-56 w-24 ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
               >
                 <div className="text-center flex lg:border-r-2 border-white flex-col mr-4">
                   <div className="flex flex-col lg:mr-4 ml-4 ">
@@ -165,7 +165,7 @@ const Home = async () => {
           })}
         {showLeaderboard ? (
           <div className="mt-10 md:mt-24 lg:mt-24 m-auto flex justify-center flex-col items-center bg-[#000F1A] w-full p-20">
-            <h3 className={`font-bold text-5xl text-white  `}>Turneringen er i gang</h3>
+            <h3 className={`font-bold text-2xl md:text-5xl text-white  `}>Turneringen er i gang</h3>
             <SimplifiedLeaderboard />
             <Link href="/leaderboard" prefetch>
               <button
@@ -198,40 +198,48 @@ const rounds = [
     day: '02',
     month: 'APR',
     round: 'Runde 1',
+    date: new Date('2024-04-02').getTime(),
   },
   {
     day: '04',
     month: 'APR',
     round: 'Runde 2',
+    date: new Date('2024-04-04').getTime(),
   },
   {
     day: '09',
     month: 'APR',
     round: 'Runde 3',
+    date: new Date('2024-04-09').getTime(),
   },
   {
     day: '11',
     month: 'APR',
     round: 'Runde 4',
+    date: new Date('2024-04-11').getTime(),
   },
   {
     day: '16',
     month: 'APR',
     round: 'Runde 5',
+    date: new Date('2024-04-16').getTime(),
   },
   {
     day: '18',
     month: 'APR',
     round: 'Runde 6',
+    date: new Date('2024-04-18').getTime(),
   },
   {
     day: '22',
     month: 'APR',
     round: 'Semi-finaler',
+    date: new Date('2024-04-22').getTime(),
   },
   {
     day: '23',
     month: 'APR',
     round: 'Finale',
+    date: new Date('2024-04-23').getTime(),
   },
 ]

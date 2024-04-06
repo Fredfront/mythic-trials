@@ -49,10 +49,13 @@ function SimplifiedLeaderboard() {
           </TableHeader>
           <TableBody>
             {sortCombinedPoints.map((team, index) => {
+              const lastTeamIndex = sortCombinedPoints.length - 1
               const teamImage = allTeams.find((e) => e._id === team._ref)?.teamImage?.asset._ref
               return (
                 <TableRow key={index} className="  bg-[#052D49] even:bg-[#0B436C] border-none text-white ">
-                  <TableCell className="font-bold text-white text-lg text-center border-r-[1px]     border-black">
+                  <TableCell
+                    className={`font-bold text-white text-lg text-center border-r-[1px] ${lastTeamIndex === index ? 'rounded-bl-xl' : ''}     border-black`}
+                  >
                     {index + 1}.
                   </TableCell>
 
@@ -66,7 +69,9 @@ function SimplifiedLeaderboard() {
                     />
                     <span className=" text-sm font-bold">{team.teamName}</span>
                   </TableCell>
-                  <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px]  border-black  ">
+                  <TableCell
+                    className={`font-bold text-[#FCD20A] text-lg text-center border-r-[1px] ${lastTeamIndex === index ? 'rounded-br-xl' : ''} border-black  `}
+                  >
                     {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
                   </TableCell>
                 </TableRow>

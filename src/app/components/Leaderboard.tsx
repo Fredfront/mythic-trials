@@ -156,6 +156,8 @@ function LeaderboardComponent() {
     return b.totalScore - a.totalScore
   })
 
+  console.log(tyrannical)
+
   return (
     <div className=" p-4 mt-4">
       <div className="flex gap-4 pb-2 justify-end w-full flex-col lg:flex-row md:flex-row">
@@ -219,7 +221,7 @@ function LeaderboardComponent() {
             const teamImage = allTeams.find((e) => e._id === team._ref)?.teamImage?.asset._ref
             return (
               <TableRow key={index} className="  bg-[#052D49] even:bg-[#0B436C] border-none text-white">
-                <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px] border-b-[1px] border-black">
+                <TableCell className=" min-w-32 text-white font-bold flex items-center border-r-[1px]  border-black">
                   <Image
                     src={urlForImage(teamImage ?? '')}
                     alt={`${team.teamName} logo`}
@@ -229,7 +231,7 @@ function LeaderboardComponent() {
                   />
                   <span className=" text-sm font-bold">{team.teamName}</span>
                 </TableCell>
-                <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-b-[1px] border-black">
+                <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px]  border-black">
                   {Number((combinedPoints?.find((e) => e._ref === team._ref)?.totalScore || 0).toFixed(1))}
                 </TableCell>
                 {combinedTyranAndFort?.map((lead, leadIndex) => {
@@ -248,7 +250,7 @@ function LeaderboardComponent() {
                       ? true
                       : false
                   return (
-                    <TableCell className="text-white text-center  border-b-[1px] border-black" key={leadIndex}>
+                    <TableCell className="text-white text-center   border-black" key={leadIndex}>
                       {hasTime ? (
                         <span className="border 2px border-[#028AFD] pr-4 pl-4 pt-1 pb-1 rounded-sm  ">
                           {timeString}
