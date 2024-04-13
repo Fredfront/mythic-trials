@@ -218,6 +218,11 @@ function LeaderboardComponentOBS() {
                   if (seconds && (seconds as number) < 10) {
                     seconds = `0${seconds}`
                   }
+
+                  if (seconds === 0) {
+                    seconds = '00'
+                  }
+
                   const timeString = `${lead?.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${seconds}`
                   const hasTime =
                     lead.teams?.find((a) => a.team._ref === team._ref)?.minutes !== undefined &&

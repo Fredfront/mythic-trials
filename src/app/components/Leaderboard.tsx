@@ -156,8 +156,6 @@ function LeaderboardComponent() {
     return b.totalScore - a.totalScore
   })
 
-  console.log(tyrannical)
-
   return (
     <div className=" p-4 mt-4">
       <div className="flex gap-4 pb-2 justify-end w-full flex-col lg:flex-row md:flex-row">
@@ -241,6 +239,10 @@ function LeaderboardComponent() {
 
                   if (seconds && (seconds as number) < 10) {
                     seconds = `0${seconds}`
+                  }
+
+                  if (seconds === 0) {
+                    seconds = '00'
                   }
 
                   const timeString = `${lead?.teams?.find((a) => a.team._ref === team._ref)?.minutes}:${seconds}`
