@@ -16,10 +16,12 @@ import throneImg from '../../../../../public/dungeons/throne.webp'
 import waycrestImg from '../../../../../public/dungeons/waycrest.webp'
 import { Skeleton } from '@/components/ui/skeleton'
 import { notFound } from 'next/navigation'
+import { getFortifiedLeaderboardData } from '@/app/api/leaderboard/fortified'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const token = await getToken()
-  const leaderboard = await getTyrannicalLeaderboardData()
+  const tyrannical = await getTyrannicalLeaderboardData()
+  const fortified = await getFortifiedLeaderboardData()
   const allTeams = await getAllTeams()
   const data = allTeams.find((e) => e.teamSlug === params.slug)
   const idForRef = allTeams.find((e) => e.teamName === data?.teamName)?._id
@@ -40,16 +42,25 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   const hasAltCharacters = data?.players.some((player) => player.alts && player.alts.length > 0)
 
-  const { timeForTeam } = getDungeonInfo(leaderboard, idForRef)
+  const { timeForTeam: timeForTeamTyrannical } = getDungeonInfo(tyrannical, idForRef)
+  const { timeForTeam: timeForTeamFortified } = getDungeonInfo(fortified, idForRef)
 
-  const dungtimes = Object.keys(timeForTeam).map((e) => {
+  const dungtimesTyrannical = Object.keys(timeForTeamTyrannical).map((e) => {
     return {
       dungeon: dungeonConfig.find((a) => a.id === e.toString())?.name,
-      time: timeForTeam[e],
+      time: timeForTeamTyrannical[e],
     }
   })
 
-  const hasDungTimes = Object.entries(dungtimes).some((e) => e[1].time !== undefined)
+  const dungtimesFortified = Object.keys(timeForTeamFortified).map((e) => {
+    return {
+      dungeon: dungeonConfig.find((a) => a.id === e.toString())?.name,
+      time: timeForTeamFortified[e],
+    }
+  })
+
+  const hasDungTimes = Object.entries(dungtimesTyrannical).some((e) => e[1].time !== undefined)
+  const hasDungTimesFortified = Object.entries(dungtimesFortified).some((e) => e[1].time !== undefined)
 
   if (allTeams.find((e) => e.teamSlug === params.slug) === undefined) return notFound()
 
@@ -109,39 +120,87 @@ export default async function Page({ params }: { params: { slug: string } }) {
               })}
           </Suspense>
         </div>
-        <div>
-          {hasDungTimes && <h3 className=" mt-10 mb-4 font-extrabold text-white">Dungeon times</h3>}
 
-          <Suspense
-            fallback={
-              <div className="flex">
-                <Skeleton className="h-12 w-12 rounded-full" /> <Skeleton className="h-4 w-[250px]" />
-              </div>
-            }
-          >
-            {dungtimes.map((dungeon) => {
-              if (dungeon.time === undefined) return null
-              let imgSrc
-              if (dungeon.dungeon?.trim() === 'Black Rook Hold') imgSrc = blackrookholdImg
-              if (dungeon.dungeon === "Atal'Dazar") imgSrc = atalImg
-              if (dungeon.dungeon === 'Darkheart Thicket') imgSrc = darkheartImg
-              if (dungeon.dungeon === 'Everbloom') imgSrc = everbloomImg
-              if (dungeon.dungeon?.includes('Fall')) imgSrc = fallImg
-              if (dungeon.dungeon?.includes('Rise')) imgSrc = riseImg
-              if (dungeon.dungeon?.includes('Throne')) imgSrc = throneImg
-              if (dungeon.dungeon?.includes('Waycrest')) imgSrc = waycrestImg
-
-              return (
-                <div key={dungeon.dungeon} className="mb-1">
-                  <div className="flex gap-2 items-center text-white border-[#052D49] border-2 p-2 rounded-lg ">
-                    <Image className="rounded-full" src={imgSrc ?? ''} alt="" width={50} height={50} priority />
-                    {dungeon.dungeon} <br />
-                    {dungeon.time?.minutes}:{dungeon.time?.seconds}
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-2">
+          <div>
+            {hasDungTimes && <h3 className=" mt-10 mb-4 font-extrabold text-white">Dungeon times (Tyrannical)</h3>}
+            <Suspense
+              fallback={
+                <div className="flex">
+                  <Skeleton className="h-12 w-12 rounded-full" /> <Skeleton className="h-4 w-[250px]" />
                 </div>
-              )
-            })}
-          </Suspense>
+              }
+            >
+              {dungtimesTyrannical.map((dungeon) => {
+                if (dungeon.time === undefined) return null
+                let imgSrc
+                if (dungeon.dungeon?.trim() === 'Black Rook Hold') imgSrc = blackrookholdImg
+                if (dungeon.dungeon === "Atal'Dazar") imgSrc = atalImg
+                if (dungeon.dungeon === 'Darkheart Thicket') imgSrc = darkheartImg
+                if (dungeon.dungeon === 'Everbloom') imgSrc = everbloomImg
+                if (dungeon.dungeon?.includes('Fall')) imgSrc = fallImg
+                if (dungeon.dungeon?.includes('Rise')) imgSrc = riseImg
+                if (dungeon.dungeon?.includes('Throne')) imgSrc = throneImg
+                if (dungeon.dungeon?.includes('Waycrest')) imgSrc = waycrestImg
+
+                let seconds = dungeon.time.seconds as string | number
+                if ((seconds as number) < 10) {
+                  seconds = `0${seconds}`
+                }
+
+                return (
+                  <div key={dungeon.dungeon} className="mb-1">
+                    <div className="flex gap-2 items-center text-white border-[#052D49] border-2 p-2 rounded-lg ">
+                      <Image className="rounded-full" src={imgSrc ?? ''} alt="" width={50} height={50} priority />
+                      {dungeon.dungeon} <br />
+                      {dungeon.time?.minutes}:{seconds}
+                    </div>
+                  </div>
+                )
+              })}
+            </Suspense>
+          </div>
+
+          <div>
+            {hasDungTimesFortified && (
+              <h3 className=" mt-10 mb-4 font-extrabold text-white">Dungeon times (fortified)</h3>
+            )}
+
+            <Suspense
+              fallback={
+                <div className="flex">
+                  <Skeleton className="h-12 w-12 rounded-full" /> <Skeleton className="h-4 w-[250px]" />
+                </div>
+              }
+            >
+              {dungtimesFortified.map((dungeon) => {
+                if (dungeon.time === undefined) return null
+                let imgSrc
+                if (dungeon.dungeon?.trim() === 'Black Rook Hold') imgSrc = blackrookholdImg
+                if (dungeon.dungeon === "Atal'Dazar") imgSrc = atalImg
+                if (dungeon.dungeon === 'Darkheart Thicket') imgSrc = darkheartImg
+                if (dungeon.dungeon === 'Everbloom') imgSrc = everbloomImg
+                if (dungeon.dungeon?.includes('Fall')) imgSrc = fallImg
+                if (dungeon.dungeon?.includes('Rise')) imgSrc = riseImg
+                if (dungeon.dungeon?.includes('Throne')) imgSrc = throneImg
+                if (dungeon.dungeon?.includes('Waycrest')) imgSrc = waycrestImg
+
+                let seconds = dungeon.time.seconds as string | number
+                if ((seconds as number) < 10) {
+                  seconds = `0${seconds}`
+                }
+                return (
+                  <div key={dungeon.dungeon} className="mb-1">
+                    <div className="flex gap-2 items-center text-white border-[#052D49] border-2 p-2 rounded-lg ">
+                      <Image className="rounded-full" src={imgSrc ?? ''} alt="" width={50} height={50} priority />
+                      {dungeon.dungeon} <br />
+                      {dungeon.time?.minutes}:{seconds}
+                    </div>
+                  </div>
+                )
+              })}
+            </Suspense>
+          </div>
         </div>
       </div>
     </div>
