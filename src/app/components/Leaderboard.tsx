@@ -86,7 +86,7 @@ function LeaderboardComponent() {
   }, [fortified, tyrannical])
 
   useEffect(() => {
-    if (USE_LISTENERS === false) return
+    // if (USE_LISTENERS === false) return
 
     const tyrannicalQuery = `*[_type == "tyrannicalLeaderboard"] {
       dungeon,
