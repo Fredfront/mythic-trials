@@ -37,18 +37,7 @@ const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sa
             </Link>
           </div>
 
-          {!loading && !user?.data.user?.email ? (
-            <div
-              onClick={() =>
-              {
-                supabase.auth.signInWithOAuth({
-                  provider: 'discord',
-                })
-              }}
-            >
-              Logg inn
-            </div>
-          ) : null}
+
           <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1  ">
             {/* Navigation links for large screens */}
             <Link
@@ -72,6 +61,20 @@ const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sa
             >
               Turnering
             </Link>
+
+            {!loading && !user?.data.user?.email ? <div
+              onClick={() =>
+              {
+                supabase.auth.signInWithOAuth({
+                  provider: 'discord',
+                })
+              }}
+              className={
+                'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer flex items-center gap-2'
+              }
+            >
+              <User /> Logg inn
+            </div> : null}
 
             <Link
               href="/contact"
@@ -174,7 +177,7 @@ const LoggedInNavBar = ({ user, teamSlug }: { user: UserResponse; teamSlug: stri
         <Link
           href={`/signup/existingTeam/${teamSlug}`}
           className={
-            pathname === '/my-matches'
+            pathname.includes(`/signup/existingTeam/${teamSlug}`)
               ? 'text-[#FDB202] hover:text-white mx-4 font-bold cursor-pointer'
               : 'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer'
           }
