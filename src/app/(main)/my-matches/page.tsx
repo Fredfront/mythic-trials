@@ -20,6 +20,7 @@ export default async function Page()
         teams={teams}
         matchResultsTable={matchResultsTable}
         pickAndBansTable={pickAndBansTable}
+        sanityTeamData={sanityTeamData}
       />
     </div>
   )

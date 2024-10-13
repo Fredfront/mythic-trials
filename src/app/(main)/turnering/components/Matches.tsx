@@ -29,13 +29,13 @@ export default function Matches({
   teams: TTeam[]
   matchResults: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
-}) {
+})
+{
   const { user } = useGetUserData()
   const myTeam = teams.find((team) => team.contact_person === user?.data.user?.email)
 
   const { detailedSchedule } = useGenerateRoundRobin(teams, '')
 
-  console.log(detailedSchedule)
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-10 w-full m-auto max-w-7xl p-4">
@@ -45,15 +45,16 @@ export default function Matches({
 
             <div className="bg-gray-800 p-4 rounded-lg">
               <div className="grid grid-cols-1 gap-4 mt-4">
-                {round.map((match: Match[], matchIndex: number) => {
+                {round.map((match: Match[], matchIndex: number) =>
+                {
                   console.log(round)
 
-                  if (match[0].team_slug !== myTeam?.team_slug && match[1].team_slug !== myTeam?.team_slug) return null
+                  if (match[ 0 ].team_slug !== myTeam?.team_slug && match[ 1 ].team_slug !== myTeam?.team_slug) return null
 
-                  const homeTeam = match[0].team_slug
-                  const awayTeam = match[1].team_slug
-                  const homeTeamName = match[0].name
-                  const awayTeamName = match[1].name
+                  const homeTeam = match[ 0 ].team_slug
+                  const awayTeam = match[ 1 ].team_slug
+                  const homeTeamName = match[ 0 ].name
+                  const awayTeamName = match[ 1 ].name
                   const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage.asset._ref
                   const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage.asset._ref
 
@@ -77,9 +78,9 @@ export default function Matches({
 
                   const confirmedResult =
                     homeTeamMatchResults?.confirm &&
-                    awayTeamMatchResults?.confirm &&
-                    homeTeamMatchResults.round === index + 1 &&
-                    awayTeamMatchResults.round === index + 1
+                      awayTeamMatchResults?.confirm &&
+                      homeTeamMatchResults.round === index + 1 &&
+                      awayTeamMatchResults.round === index + 1
                       ? true
                       : false
 
@@ -109,7 +110,7 @@ export default function Matches({
                             </div>
                           </div>
                           <div className=" w-1/5 md:w-[15%] ">
-                            <div className=" text-xs">{match[0].roundDate}</div>
+                            <div className=" text-xs">{match[ 0 ].roundDate}</div>
                             {confirmedResult ? (
                               <div>
                                 {totalHomeTeamScore} - {totalAwayTeamScore}

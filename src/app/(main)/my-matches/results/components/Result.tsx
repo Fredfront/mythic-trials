@@ -51,14 +51,14 @@ export default function Result({
   const away_team_name = useMemo(() => teams.find((e) => e.team_slug === away_team)?.name, [ away_team, teams ])
 
   //state for my maps
-  const [ myMap1, setMyMap1Result ] = React.useState<number | null>(myMatchResults?.match_1 ?? null)
-  const [ myMap2, setMyMap2Result ] = React.useState<number | null>(myMatchResults?.match_2 ?? null)
-  const [ myMap3, setMyMap3Result ] = React.useState<number | null>(myMatchResults?.match_3 ?? null)
+  const [ myMap1, setMyMap1Result ] = React.useState<number | undefined>(myMatchResults?.match_1 ? myMatchResults?.match_1 : opponentMatchResults?.match_1 === 1 ? 0 : 1)
+  const [ myMap2, setMyMap2Result ] = React.useState<number | undefined>(myMatchResults?.match_2 ? myMatchResults?.match_2 : opponentMatchResults?.match_2 === 1 ? 0 : 1)
+  const [ myMap3, setMyMap3Result ] = React.useState<number | undefined>(myMatchResults?.match_3 ? myMatchResults?.match_3 : opponentMatchResults?.match_3 === 1 ? 0 : 1)
 
   //state for opponent maps - should listen to Websocket
-  const [ opponentMap1, setOpponentMap1Result ] = React.useState<number | null>(opponentMatchResults?.match_1 ?? null)
-  const [ opponentMap2, setOpponentMap2Result ] = React.useState<number | null>(opponentMatchResults?.match_2 ?? null)
-  const [ opponentMap3, setOpponentMap3Result ] = React.useState<number | null>(opponentMatchResults?.match_3 ?? null)
+  const [ opponentMap1, setOpponentMap1Result ] = React.useState<number | undefined>(opponentMatchResults?.match_1 ?? undefined)
+  const [ opponentMap2, setOpponentMap2Result ] = React.useState<number | undefined>(opponentMatchResults?.match_2 ?? undefined)
+  const [ opponentMap3, setOpponentMap3Result ] = React.useState<number | undefined>(opponentMatchResults?.match_3 ?? undefined)
 
   //Both teams need to confirm results
   const [ confirm, setConfirm ] = React.useState<boolean>(myMatchResults?.confirm ?? false)
@@ -131,16 +131,16 @@ export default function Result({
           const newPayload = payload.new as TMatchResults
 
           if (newPayload.contact_person === contact_person && newPayload.round === round) {
-            setMyMap1Result(newPayload.match_1)
-            setMyMap2Result(newPayload.match_2)
-            setMyMap3Result(newPayload.match_3)
+            setMyMap1Result(newPayload.match_1 ?? undefined)
+            setMyMap2Result(newPayload.match_2 ?? undefined)
+            setMyMap3Result(newPayload.match_3 ?? undefined)
             setConfirm(newPayload.confirm)
           }
 
           if (newPayload.contact_person === opponent_contact_person && newPayload.round === round) {
-            setOpponentMap1Result(newPayload.match_1)
-            setOpponentMap2Result(newPayload.match_2)
-            setOpponentMap3Result(newPayload.match_3)
+            setOpponentMap1Result(newPayload.match_1 ?? undefined)
+            setOpponentMap2Result(newPayload.match_2 ?? undefined)
+            setOpponentMap3Result(newPayload.match_3 ?? undefined)
             setConfirmOpponent(newPayload.confirm)
           }
         },

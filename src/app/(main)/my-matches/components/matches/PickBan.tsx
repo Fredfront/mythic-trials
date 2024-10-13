@@ -7,17 +7,22 @@ import { TMatchData } from '../../../turnering/components/Matches'
 import { PickAndBansType } from '../Matches'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import { MythicPlusTeam } from '@/app/api/getAllTeams'
 
 function PickBan({
   matchData,
   pickAndBansTable,
   contact_person,
+  sanityTeamData
 }: {
   matchData: TMatchData[]
   pickAndBansTable: PickAndBansType[]
   contact_person: string
+  sanityTeamData: MythicPlusTeam[]
 })
 {
+
+
   const searchParams = useSearchParams()
   const homeTeam = searchParams.get('home')
   const awayTeam = searchParams.get('away')
@@ -40,21 +45,6 @@ function PickBan({
   const isMyTurn = myTeamData?.my_turn === true ? true : false
 
 
-
-  useEffect(() =>
-  {
-    async function fetchData()
-    {
-      await supabase.from('pick_ban')
-        .update({ my_turn: true })
-        .eq('contact_person', contact_person)
-        .eq('round', round)
-    }
-    if (opponentData?.my_turn === false && myTeamData?.my_turn === false) {
-      fetchData()
-    }
-
-  }, [ contact_person, myTeamData?.my_turn, opponentData?.my_turn, round ])
 
   useEffect(() =>
   {
@@ -150,8 +140,8 @@ function PickBan({
 
   const bannedDungeons = [ ...mappedBans, ...mappedOpponentBans ]
 
-  const map1 = myTeamData?.home ? myTeamData.pick : opponentData?.pick
-  const map2 = myTeamData?.home ? opponentData?.pick : myTeamData?.pick
+  const map2 = myTeamData?.home ? myTeamData.pick : opponentData?.pick
+  const map1 = myTeamData?.home ? opponentData?.pick : myTeamData?.pick
   const map3 =
     map1 && map2
       ? dungeonConfig.find(
@@ -161,6 +151,60 @@ function PickBan({
 
   const map1Name = dungeonConfig.find((dungeon) => dungeon.id === map1)?.name
   const map2Name = dungeonConfig.find((dungeon) => dungeon.id === map2)?.name
+
+  //Step order of ban and pick
+  //1. AWAY team BAN
+  //2. HOME team BAN
+  //3. AWAY team PICK
+  //4. HOME team PICK
+  //5. AWAY team BAN
+  //6. HOME team BAN
+  //7 Remaining map is the tiebreaker
+  const stepOrderPickAndBan = [
+    {
+      team: awayTeam,
+      action: 'ban',
+      step: 1,
+
+    },
+    {
+      team: homeTeam,
+      action: 'ban',
+      step: 2,
+    },
+    {
+      team: awayTeam,
+      action: 'pick',
+      step: 3,
+    },
+    {
+      team: homeTeam,
+      action: 'pick',
+      step: 4,
+    },
+    {
+      team: awayTeam,
+      action: 'ban',
+      step: 5,
+    },
+    {
+      team: homeTeam,
+      action: 'ban',
+      step: 6,
+    },
+    {
+      team: homeTeam,
+      action: 'ban',
+      step: 7,
+    }
+
+  ]
+  const updateTurn = useCallback(async () =>
+  {
+    if (!opponentData?.step) return
+    await supabase.from('pick_ban').update({ my_turn: true, step: opponentData?.step + 1 }).eq('contact_person', contact_person).eq('round', round)
+
+  }, [ contact_person, opponentData?.step, round ])
 
   useEffect(() =>
   {
@@ -189,7 +233,12 @@ function PickBan({
 
           if (payload.new.team_slug === opponentTeam && payload.new.ready === true) {
             setOpponentReady(true)
+            if (myTeamData?.my_turn === false && payload.new.my_turn === false) {
+              updateTurn()
+            }
           }
+
+
         },
       )
       .subscribe()
@@ -198,19 +247,21 @@ function PickBan({
     {
       supabase.removeChannel(channel)
     }
-  }, [ contact_person, opponentTeam, round ])
+  }, [ contact_person, myTeamData?.my_turn, opponentTeam, round, updateTurn ])
+
+
 
   const myPicked = myTeamData?.pick
-  const opponentPicked = opponentData?.pick
 
-  const banning = myPicked !== null && opponentPicked !== null
 
   const completed = useMemo(
     () => (pickedDungeons.length === 2 && bannedDungeons.length === 5) || myTeamData?.completed === true,
     [ bannedDungeons.length, myTeamData?.completed, pickedDungeons.length ],
   )
 
-  const pickOrBan = myPicked === null ? 'velge første map du vil spille mot motstander' : 'banne'
+  const pickOrBan = stepOrderPickAndBan.find((e) => e.step === myTeamData?.step)?.action === 'ban' ? 'banne' : 'velge første map du vil spille mot motstander'
+
+  const isBanning = stepOrderPickAndBan.find((e) => e.step === myTeamData?.step)?.action === 'ban'
 
   useEffect(() =>
   {
@@ -298,13 +349,13 @@ function PickBan({
         ) : (
           <h2 className="text-4xl font-bold]">Venter på motstander</h2>
         )}
-        <div className='mb-[50px] mt-[25px]'>
+        {/* <div className='mb-[50px] mt-[25px]'>
           <p>Map 1: {map1Name ?? 'Venter på valg'}</p>
           <p>Map 2: {map2Name ?? 'Venter på valg'}</p>
           <p>Map 3: {bannedDungeons && bannedDungeons.length > 5 ? map3 : 'Venter på valg'}</p>
-        </div>
+        </div> */}
       </div>
-      <div className="grid grid-cols-4 gap-10 ">
+      <div className="grid grid-cols-6 gap-10 ">
         {dungeonConfig.map((dungeon) =>
         {
           const backgroundColorPick = 'bg-green-500'
@@ -328,9 +379,8 @@ function PickBan({
             <div
               onClick={() =>
               {
-                if (!isMyTurn || isPickedDungeon || isBannedDungeon) {
-                  return
-                } else setMySelectedDungeon(dungeon.id)
+                if (!isMyTurn || isPickedDungeon || isBannedDungeon) return
+                setMySelectedDungeon(dungeon.id)
               }}
               className={`${isMyTurn && mySelectedDungeon === dungeon.id && !isBannedDungeon && !isPickedDungeon ? 'bg-yellow-600' : backgroundColor} relative p-4 text-center :hover:bg-green-600 cursor-pointer rounded-lg`}
               key={dungeon.id}
@@ -350,15 +400,12 @@ function PickBan({
             className=" m-auto min-w-44"
             onClick={async () =>
             {
-              if (myTeamData?.pick === null && mySelectedDungeon) {
-                setPickedDungeon(mySelectedDungeon)
-              } else {
-                mySelectedDungeon ? setBannedDungeons(mySelectedDungeon) : null
-              }
+              isBanning ? setBannedDungeons(mySelectedDungeon) : setPickedDungeon(mySelectedDungeon)
+
             }}
           >
             Bekreft{' '}
-            {banning
+            {isBanning
               ? `ban av ${dungeonConfig.find((e) => e.id === mySelectedDungeon)?.name}`
               : `${dungeonConfig.find((e) => e.id === mySelectedDungeon)?.name} som ditt valg`}
           </Button>
