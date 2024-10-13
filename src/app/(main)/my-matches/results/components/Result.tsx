@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import supabase from '@/utils/supabase/client'
 import { ArrowRight } from 'lucide-react'
-import { route } from 'sanity/router'
 
 export default function Result({
   pickAndBanData,
