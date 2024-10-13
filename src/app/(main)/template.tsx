@@ -3,26 +3,29 @@ import NavBar from '../components/Navbar'
 import { DiscordLogoIcon, InstagramLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 import { TwitchIcon, Youtube } from 'lucide-react'
 import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
-import { useRouter } from 'next/dist/client/router'
+import { getAllTeams } from '../api/getAllTeams'
 
-export default async function Template({ children }: { children: React.ReactNode }) {
+export default async function Template({ children }: { children: React.ReactNode })
+{
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData?.[0].enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
+  const sanityTeams = await getAllTeams()
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBar showLeaderboard={showLeaderboard} />
+      <NavBar showLeaderboard={showLeaderboard} sanityTeams={sanityTeams} />
       <div className="flex-grow">{children}</div>
       <Footer />
     </div>
   )
 }
 
-const Footer = async () => {
+const Footer = async () =>
+{
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData?.[0].enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
 
   return (
-    <footer className=" mt-10  shadow bg-[#272727]">
+    <footer className="  shadow bg-[#272727]">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <ul className="flex gap-4 mt-4 mb-4">

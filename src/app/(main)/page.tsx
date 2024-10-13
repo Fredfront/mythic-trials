@@ -11,15 +11,20 @@ import { getFrontpageNews } from '../api/frongpageNews/getFrontpageNewsData'
 import { PortableText } from '@portabletext/react'
 import SimplifiedLeaderboard from '../components/SimplifiedLeaderboard'
 import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
+import { cookies } from 'next/headers'
+
+export const revalidate = 0
+
 const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
-const Home = async () => {
+const Home = async () =>
+{
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
 
-  const showLeaderboard = showLeaderboardData?.[0].enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
 
   return (
     <main>
@@ -41,15 +46,12 @@ const Home = async () => {
                 Hvem kan være med?
               </button>
             </Link>
-            {/* <Link href="/signup" prefetch>
-              <button className="  min-h-10 px-4 py-3.5 rounded-xl dark:bg-[#FDB202]  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-36 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white transition translate duration-500 hover:scale-105">
-                Påmelding
-              </button>
-            </Link> */}
+
           </div>
         </div>
-        <div className="gap-4 p-2 flex flex-wrap justify-center text-center ">
-          {rounds.map((round, index) => {
+        <div className="gap-4 p-2 flex flex-wrap justify-start text-center overflow-hidden ">
+          {rounds.map((round, index) =>
+          {
             if (round.round === 'Semi-finaler' || round.round === 'Finale') {
               return (
                 <div
@@ -134,7 +136,8 @@ const Home = async () => {
           </div>
         ) : null}
         {frontpageNews &&
-          frontpageNews.map((news, index) => {
+          frontpageNews.map((news, index) =>
+          {
             const isEvenIndex = index % 2 === 0
             if (news.showOnFrontpage === false) return null
             return (
@@ -195,51 +198,65 @@ export default Home
 
 const rounds = [
   {
-    day: '02',
-    month: 'APR',
+    day: '15',
+    month: 'NOV',
     round: 'Runde 1',
-    date: new Date('2024-04-02').getTime(),
+    date: new Date('2024-11-15').getTime(),
   },
-  {
-    day: '04',
-    month: 'APR',
-    round: 'Runde 2',
-    date: new Date('2024-04-04').getTime(),
-  },
-  {
-    day: '09',
-    month: 'APR',
-    round: 'Runde 3',
-    date: new Date('2024-04-09').getTime(),
-  },
-  {
-    day: '11',
-    month: 'APR',
-    round: 'Runde 4',
-    date: new Date('2024-04-11').getTime(),
-  },
-  {
-    day: '16',
-    month: 'APR',
-    round: 'Runde 5',
-    date: new Date('2024-04-16').getTime(),
-  },
-  {
-    day: '18',
-    month: 'APR',
-    round: 'Runde 6',
-    date: new Date('2024-04-18').getTime(),
-  },
+
   {
     day: '22',
-    month: 'APR',
-    round: 'Semi-finaler',
-    date: new Date('2024-04-22').getTime(),
+    month: 'NOV',
+    round: 'Runde 2',
+    date: new Date('2024-11-22').getTime(),
   },
   {
-    day: '23',
-    month: 'APR',
-    round: 'Finale',
-    date: new Date('2024-04-23').getTime(),
+    day: '29',
+    month: 'NOV',
+    round: 'Runde 3',
+    date: new Date('2024-11-29').getTime(),
+  },
+  {
+    day: '6',
+    month: 'DEC',
+    round: 'Runde 4',
+    date: new Date('2024-12-06').getTime(),
+  },
+  {
+    day: '13',
+    month: 'DEC',
+    round: 'Runde 5',
+    date: new Date('2024-12-13').getTime(),
+  },
+
+  {
+    day: '20',
+    month: 'DEC',
+    round: 'Runde 6',
+    date: new Date('2024-12-20').getTime(),
+  },
+  {
+    day: '03',
+    month: 'JAN',
+    round: 'Runde 7',
+    date: new Date('2025-01-03').getTime(),
+  },
+  {
+    day: '10',
+    month: 'JAN',
+    round: 'Runde 8',
+    date: new Date('2025-01-10').getTime(),
+  },
+  {
+    day: '17',
+    month: 'JAN',
+    round: 'Runde 9',
+    date: new Date('2025-01-17').getTime(),
+  },
+  {
+    day: '24',
+    month: 'JAN',
+    round: 'Runde 10',
+    date: new Date('2025-01-24').getTime(),
   },
 ]

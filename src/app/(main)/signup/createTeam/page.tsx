@@ -2,8 +2,7 @@
 import { AltPlayer, MythicPlusTeam, getAllTeams, Player } from '@/app/api/getAllTeams'
 import { Icons } from '@/components/loading'
 import { Button } from '@/components/ui/button'
-import { signOut, useSession } from 'next-auth/react'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { colourStyles } from '../utils/styles'
 import { v4 as uuidv4 } from 'uuid'
 import Select from 'react-select'
@@ -22,9 +21,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import Link from 'next/link'
+import { useGetUserData } from '../../../auth/useGetUserData'
 
 function CreateTeam() {
-  const { data, status } = useSession()
+  const { user } = useGetUserData()
   const [teamName, setTeamName] = useState('')
   const [teamImage, setTeamImage] = useState<any>(null)
   const [players, setPlayers] = useState<
@@ -37,7 +37,7 @@ function CreateTeam() {
 
   const teamSlug = teamName?.toLowerCase().replace(/\s+/g, '-').slice(0, 200)
 
-  const userEmail = useMemo(() => data?.user?.email, [data?.user?.email])
+  const userEmail = user?.data.user?.email
 
   // State for input field errors
   const [teamNameError, setTeamNameError] = useState(false)
@@ -51,12 +51,6 @@ function CreateTeam() {
   const [createTeamError, setCreateTeamError] = useState(false)
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/signup/signin')
-    }
-  }, [router, status])
-
-  useEffect(() => {
     async function fetchAllTeams() {
       const data = await getAllTeams()
       setAllTeams(data)
@@ -65,10 +59,10 @@ function CreateTeam() {
   }, [])
 
   useEffect(() => {
-    if (allTeams?.find((e) => e.contactPerson === data?.user?.email)) {
+    if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push('/signup/existingTeam')
     }
-  }, [allTeams, data?.user?.email, router])
+  }, [allTeams, router, user?.data.user?.email])
   // State for image preview
 
   const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -264,12 +258,10 @@ function CreateTeam() {
       ]
 
       // Send the mutation to create the draft document
-      // Send the mutation to create the draft document
       const response = await fetch(`https://mythic-trials-sanity-api.vercel.app/postToSanity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Origin: 'https://trials.nl-wow.no', // Include the correct origin header
         },
         body: JSON.stringify({ mutations }),
       })
@@ -304,10 +296,10 @@ function CreateTeam() {
   }, [createMythicPlusTeam, imageUploaded])
 
   useEffect(() => {
-    if (allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName) {
-      setTeamName(allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName as string)
+    if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName) {
+      setTeamName(allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName as string)
       allTeams
-        ?.find((e) => e.contactPerson === data?.user?.email)
+        ?.find((e) => e.contactPerson === user?.data.user?.email)
         ?.players.map((player, index) => {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
@@ -325,7 +317,7 @@ function CreateTeam() {
           }
         })
     }
-  }, [allTeams, data?.user?.email])
+  }, [allTeams, user?.data.user?.email])
 
   const hideCreateTeamButton =
     players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
@@ -336,7 +328,6 @@ function CreateTeam() {
     teamImage === null
 
   if (loadingCreateTeam) return <Loading creatingTeam={true} />
-  if (status === 'loading' || status === 'unauthenticated') return <Loading />
   if (createTeamError) {
     return (
       <div className="w-full h-svh items-center flex justify-center font-bold text-2xl text-center flex-col gap-10">
@@ -349,14 +340,8 @@ function CreateTeam() {
   }
 
   return (
-    status === 'authenticated' && (
+    user?.data.user?.email && (
       <>
-        <div className="flex justify-end p-2">
-          <button className="text-white mr-2" onClick={() => signOut()}>
-            Logg ut
-          </button>
-          <LogOut />
-        </div>
         <div className="flex flex-col max-w-7xl justify-start items-center  text-white py-8">
           <h1 className="lg:w-2/4 text-5xl font-bold mb-10">Påmelding</h1>
           <p className="mb-10 lg:w-2/4 ">Her kan du melde på laget ditt. Frist 25. mars.</p>
@@ -368,7 +353,7 @@ function CreateTeam() {
               className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
               name="contactPerson"
               type="email"
-              value={data?.user?.email ?? ''}
+              value={user?.data.user?.email ?? ''}
               readOnly
             />
             <label htmlFor="teamName" className="mb-2 text-lg font-bold">

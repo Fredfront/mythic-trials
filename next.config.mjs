@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
   images: {
     remotePatterns: [
       {
@@ -12,6 +9,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'render.worldofwarcraft.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'eu.battle.net',
       },
     ],
   },

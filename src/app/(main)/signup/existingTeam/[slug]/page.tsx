@@ -2,15 +2,16 @@
 import { MythicPlusTeam, getAllTeams } from '@/app/api/getAllTeams'
 import { Button } from '@/components/ui/button'
 import React, { useEffect, useMemo, useState } from 'react'
-import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Icons } from '@/components/loading'
 import { useRouter } from 'next/navigation'
 import { AnimatedTooltip } from '@/app/components/AnimatedTooltip'
 import { LogOut } from 'lucide-react'
+import { useGetUserData } from '@/app/auth/useGetUserData'
 
 function ExistingTeam() {
-  const { data: auth, status } = useSession()
+  const { user, loading: userLoading } = useGetUserData()
+
   const router = useRouter()
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -23,24 +24,25 @@ function ExistingTeam() {
   }, [])
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (userLoading || loading) return
+    if (user?.data.user?.email === undefined) {
       router.push('/signup/signin')
     }
-  }, [auth?.user, router, status])
+  }, [loading, router, user?.data.user?.email, userLoading])
 
   const teamSlug = useMemo(
-    () => allTeams?.find((e) => e.contactPerson === auth?.user?.email),
-    [allTeams, auth?.user?.email],
+    () => allTeams?.find((e) => e.contactPerson === user?.data.user?.email),
+    [allTeams, user?.data.user?.email],
   )?.teamSlug
 
   useEffect(() => {
-    if (allTeams?.find((e) => e.contactPerson === auth?.user?.email)) {
+    if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push(`/signup/existingTeam/${teamSlug}`)
     }
-  }, [allTeams, auth?.user?.email, router, teamSlug])
+  }, [allTeams, user?.data.user?.email, router, teamSlug])
 
   const mappedTeam = allTeams
-    ?.find((e) => e.contactPerson === auth?.user?.email)
+    ?.find((e) => e.contactPerson === user?.data.user?.email)
     ?.players.map((player) => {
       return {
         id: player.characterName,
@@ -50,7 +52,7 @@ function ExistingTeam() {
     })
 
   const mappedAlts = allTeams
-    ?.find((e) => e.contactPerson === auth?.user?.email)
+    ?.find((e) => e.contactPerson === user?.data.user?.email)
     ?.players.map((player) => {
       return player.alts?.map((alt) => {
         return {
@@ -65,9 +67,9 @@ function ExistingTeam() {
   const hasAltCharacters = useMemo(
     () =>
       allTeams
-        ?.find((e) => e.contactPerson === auth?.user?.email)
+        ?.find((e) => e.contactPerson === user?.data.user?.email)
         ?.players.some((player) => player.alts && player.alts.length > 0),
-    [allTeams, auth?.user?.email],
+    [allTeams, user?.data.user?.email],
   )
 
   if (loading) {
@@ -82,18 +84,12 @@ function ExistingTeam() {
 
   return (
     <>
-      <div className="flex justify-end p-2">
-        <button className="text-white mr-2" onClick={() => signOut()}>
-          Logg ut
-        </button>
-        <LogOut />
-      </div>
       <div className="w-full flex justify-center ">
         <div className="flex flex-col items-center">
           <h1 className="p-6 text-center text-2xl md:text-3xl font-bold  mb-4">Du har allerede opprettet et lag</h1>
           <p className="p-6 text-center mb-10">NB! Det kan ta noen minutter før endringene er synlig på denne siden.</p>
           <h1 className="text-2xl font-bold mb-4">
-            {allTeams?.find((e) => e.contactPerson === auth?.user?.email)?.teamName}
+            {allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName}
           </h1>
           <h2>Main characters</h2>
 

@@ -1,7 +1,6 @@
 'use client'
 
 import { AltPlayer, MythicPlusTeam, Player, getAllTeams } from '@/app/api/getAllTeams'
-import { signOut, useSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import Select from 'react-select'
@@ -14,9 +13,10 @@ import { useRouter } from 'next/navigation'
 import { wowRealmsMapped } from '../../utils/wowRealms'
 import { CrownIcon, LogOut } from 'lucide-react'
 import Link from 'next/link'
+import { useGetUserData } from '@/app/auth/useGetUserData'
 
 function EditTeam() {
-  const { data, status } = useSession()
+  const { user, loading } = useGetUserData()
 
   const router = useRouter()
 
@@ -26,29 +26,29 @@ function EditTeam() {
 
   const [hasEditedPlayers, setHasEditedPlayers] = useState(false)
   const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
-  const hasTeam = allTeams?.find((e) => e.contactPerson === data?.user?.email)
+  const hasTeam = allTeams?.find((e) => e.contactPerson === user?.data.user?.email)
   const teamSlug = useMemo(
-    () => allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamSlug,
-    [allTeams, data?.user?.email],
+    () => allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamSlug,
+    [allTeams, user?.data.user?.email],
   )
   const [errorUpdatingTeam, setErrorUpdatingTeam] = useState(false)
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (!loading && user?.data.user?.email === undefined) {
       router.prefetch('/signup/signin')
       router.push('/signup/signin')
     }
-  }, [router, status, teamSlug])
+  }, [loading, router, teamSlug, user?.data.user?.email])
 
   useEffect(() => {
-    if (allTeams?.find((e) => e.contactPerson === data?.user?.email)) {
+    if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push(`/signup/editTeam/${teamSlug}`)
     }
 
-    if (allTeams && !allTeams.find((e) => e.contactPerson === data?.user?.email)) {
+    if (allTeams && !allTeams.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push(`/signup`)
     }
-  }, [allTeams, data?.user?.email, router, teamSlug])
+  }, [allTeams, user?.data.user?.email, router, teamSlug])
 
   useEffect(() => {
     async function fetchAllTeams() {
@@ -60,11 +60,11 @@ function EditTeam() {
 
   useEffect(() => {
     if (
-      allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName &&
-      allTeams?.find((e) => e.contactPerson === data?.user?.email)?.players
+      allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName &&
+      allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.players
     ) {
       allTeams
-        ?.find((e) => e.contactPerson === data?.user?.email)
+        ?.find((e) => e.contactPerson === user?.data.user?.email)
         ?.players.map((player, index) => {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
@@ -82,7 +82,7 @@ function EditTeam() {
           }
         })
     }
-  }, [allTeams, data?.user?.email])
+  }, [allTeams, user?.data.user?.email])
 
   const [playerErrors, setPlayerErrors] = useState<boolean[]>([])
 
@@ -101,13 +101,13 @@ function EditTeam() {
           {
             createOrReplace: {
               _type: 'MythicPlusTeam',
-              _id: allTeams?.find((e) => e.contactPerson === data?.user?.email)?._id,
-              _key: allTeams?.find((e) => e.contactPerson === data?.user?.email)?._key,
-              teamName: allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName,
-              contactPerson: allTeams?.find((e) => e.contactPerson === data?.user?.email)?.contactPerson,
-              teamSlug: allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamSlug,
+              _id: allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?._id,
+              _key: allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?._key,
+              teamName: allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName,
+              contactPerson: allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.contactPerson,
+              teamSlug: allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamSlug,
               teamImage: {
-                ...allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamImage,
+                ...allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamImage,
               },
               players: players.map((player) => ({
                 _type: 'Player',
@@ -158,7 +158,7 @@ function EditTeam() {
         // Handle error
       }
     },
-    [allTeams, data?.user?.email, players, router, teamSlug],
+    [allTeams, user?.data.user?.email, players, router, teamSlug],
   )
 
   const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -235,7 +235,6 @@ function EditTeam() {
   }
   if (loadingCreateTeam) return <Loading creatingTeam={true} />
 
-  if (status === 'loading' || status === 'unauthenticated') return <Loading />
   if (errorUpdatingTeam) {
     return (
       <div className="w-full h-svh items-center flex justify-center font-bold text-2xl text-center flex-col gap-10">
@@ -250,13 +249,6 @@ function EditTeam() {
   return (
     hasTeam && (
       <>
-        <div className="flex justify-end p-2">
-          <button className="text-white mr-2" onClick={() => signOut()}>
-            Logg ut
-          </button>
-          <LogOut />
-        </div>
-
         <div className="flex justify-center flex-col items-center  text-white py-8">
           <h1 className="text-4xl font-bold mb-10">Oppdater ditt lag</h1>
 
@@ -268,7 +260,7 @@ function EditTeam() {
               className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
               name="contactPerson"
               type="email"
-              value={data?.user?.email ?? ''}
+              value={user?.data.user?.email ?? ''}
               readOnly
             />
             <label htmlFor="teamName" className="mb-2">
@@ -282,7 +274,7 @@ function EditTeam() {
               className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
               readOnly
               disabled
-              value={allTeams?.find((e) => e.contactPerson === data?.user?.email)?.teamName ?? ''}
+              value={allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName ?? ''}
             />
             <div className="mb-8 -mt-2">
               Ønsker du å endre navn på laget ditt i etterkant må du kontakte en{' '}
