@@ -124,7 +124,6 @@ export default function Result({
         },
         (payload) =>
         {
-          console.log('Change received!', payload.new)
           const newPayload = payload.new as TMatchResults
 
           if (newPayload.contact_person === contact_person && newPayload.round === round) {

@@ -37,7 +37,6 @@ export default function Matches({
 
   const { detailedSchedule } = useGenerateRoundRobin(teams, '')
 
-  console.log(detailedSchedule)
 
   return (
     <>

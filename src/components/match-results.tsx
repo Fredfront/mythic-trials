@@ -627,7 +627,6 @@ async function createMatchResultsIfNotExists({
           .then((res) =>
           {
             if (res.data && res.data.length === 0) {
-              console.log('Creating match results for', email, round)
               create_match_results({
                 matchResults: {
                   contact_person: email as string,

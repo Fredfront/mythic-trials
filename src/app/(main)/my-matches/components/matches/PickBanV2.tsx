@@ -181,7 +181,6 @@ function PickBanV2({
         },
         (payload) =>
         {
-          console.log('Change received!', payload)
 
           const updatedData = payload.new as PickAndBansType
 
@@ -426,7 +425,6 @@ export async function createPickBanRowIfNotExist({ email, round, team_slug, oppo
   await supabase.from('pick_ban').select('*').eq('contact_person', email).eq('round', round).then((res) =>
   {
     if (res.data && res.data.length === 0) {
-      console.log('createPickBanRowIfNotExist ')
       createPickBanRow(
         round,
         email,
