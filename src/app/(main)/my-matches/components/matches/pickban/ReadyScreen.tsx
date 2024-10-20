@@ -1,12 +1,11 @@
 'use client'
 
 import React from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, XCircle } from "lucide-react"
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { CheckCircle, XCircle } from 'lucide-react'
 
-interface ReadyScreenProps
-{
+interface ReadyScreenProps {
   round: number
   homeTeam: string
   awayTeam: string
@@ -21,9 +20,8 @@ export default function ReadyScreen({
   awayTeam,
   teamReady,
   opponentReady,
-  setReady
-}: ReadyScreenProps)
-{
+  setReady,
+}: ReadyScreenProps) {
   return (
     <div className="container mx-auto p-4">
       <Card className="max-w-2xl mx-auto">
@@ -33,7 +31,9 @@ export default function ReadyScreen({
         <CardContent className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">Round: {round}</h2>
-            <h3 className="text-xl">{homeTeam} vs {awayTeam}</h3>
+            <h3 className="text-xl">
+              {homeTeam} vs {awayTeam}
+            </h3>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -78,7 +78,9 @@ export default function ReadyScreen({
             <p className="text-center text-yellow-600">Your opponent is ready. Please set your team to ready.</p>
           )}
           {teamReady && opponentReady && (
-            <p className="text-center text-green-600 font-semibold">Both teams are ready! The Pick Ban session will start shortly.</p>
+            <p className="text-center text-green-600 font-semibold">
+              Both teams are ready! The Pick Ban session will start shortly.
+            </p>
           )}
         </CardContent>
       </Card>

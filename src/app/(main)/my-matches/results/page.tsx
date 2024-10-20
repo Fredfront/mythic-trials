@@ -3,11 +3,11 @@ import { serverClient } from '@/utils/supabase/newServer'
 import React from 'react'
 import Result, { TMatchResults, TTeam } from './components/Result'
 import { PickAndBansType } from '../components/Matches'
+import { MatchResultsComponent } from '@/components/match-results'
 
 export const revalidate = 0
 
-export default async function Page()
-{
+export default async function Page() {
   const { data } = await serverClient().from('pick_ban').select('*')
   const teams = await serverClient().from('teams').select('*')
   const match_results = await serverClient().from('match_results').select('*')
@@ -18,7 +18,7 @@ export default async function Page()
 
   return (
     <>
-      <Result pickAndBanData={pickAndBanData} teams={teamsData} matchResults={matchResultsData} />
+      <MatchResultsComponent pickAndBanData={pickAndBanData} teams={teamsData} matchResults={matchResultsData} />
     </>
   )
 }

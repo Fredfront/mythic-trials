@@ -2,18 +2,17 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Trophy, MapPin } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Trophy, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 
-interface CompletedScreenProps
-{
+interface CompletedScreenProps {
   homeTeam: string
   awayTeam: string
-  pickedDungeons: Array<{ id: number, name: string, image: string }>
-  tiebreakerDungeon: { id: number, name: string, image: string } | null
+  pickedDungeons: Array<{ id: number; name: string; image: string }>
+  tiebreakerDungeon: { id: number; name: string; image: string } | null
   round: number
 }
 
@@ -22,12 +21,9 @@ export default function CompletedScreen({
   awayTeam,
   pickedDungeons,
   tiebreakerDungeon,
-  round
-}: CompletedScreenProps)
-{
-
+  round,
+}: CompletedScreenProps) {
   const router = useRouter()
-
 
   return (
     <div className="container mx-auto p-4">
@@ -41,7 +37,9 @@ export default function CompletedScreen({
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-2">{homeTeam} vs {awayTeam}</h2>
+            <h2 className="text-2xl font-semibold mb-2">
+              {homeTeam} vs {awayTeam}
+            </h2>
             <p className="text-lg text-muted-foreground">The following maps have been selected:</p>
           </div>
 
@@ -57,9 +55,7 @@ export default function CompletedScreen({
                       objectFit="cover"
                       className="rounded-lg"
                     />
-                    <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
-                      Map {index + 1}
-                    </Badge>
+                    <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">Map {index + 1}</Badge>
                   </div>
                   <h3 className="text-lg font-semibold text-center">{dungeon.name}</h3>
                 </CardContent>
@@ -77,9 +73,7 @@ export default function CompletedScreen({
                       objectFit="cover"
                       className="rounded-lg"
                     />
-                    <Badge className="absolute top-2 left-2 bg-secondary text-secondary-foreground">
-                      Tiebreaker
-                    </Badge>
+                    <Badge className="absolute top-2 left-2 bg-secondary text-secondary-foreground">Tiebreaker</Badge>
                   </div>
                   <h3 className="text-lg font-semibold text-center">{tiebreakerDungeon.name}</h3>
                 </CardContent>
@@ -94,21 +88,16 @@ export default function CompletedScreen({
             </p>
           </div>
         </CardContent>
-        <div className='w-full flex justify-center p-4'>
-          <Button onClick={() =>
-            router.push(
-              '/my-matches/results?home=' +
-              homeTeam +
-              '&away=' +
-              awayTeam +
-              '&round=' +
-              round,
-            )
-          }>Legg til resultater for kamper</Button>
+        <div className="w-full flex justify-center p-4">
+          <Button
+            onClick={() =>
+              router.push('/my-matches/results?home=' + homeTeam + '&away=' + awayTeam + '&round=' + round)
+            }
+          >
+            Legg til resultater for kamper
+          </Button>
         </div>
-
       </Card>
     </div>
   )
 }
-

@@ -5,8 +5,7 @@ import { TTeam } from '../my-matches/results/components/Result'
 import { getAllTeams } from '@/app/api/getAllTeams'
 export const revalidate = 0
 
-async function Page()
-{
+async function Page() {
   const teams = await ServerClient.from('teams').select('*')
   const pickAndBansTable = await ServerClient.from('pick_ban').select('*')
   const matchResultsTable = await ServerClient.from('match_results').select('*')

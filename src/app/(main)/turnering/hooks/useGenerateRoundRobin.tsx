@@ -37,14 +37,16 @@ const roundDates = [
   '2025-01-10',
 ]
 
-type Match = [TeamMatch, TeamMatch]
+type Match = [ TeamMatch, TeamMatch ]
 
 type Round = Match[]
 
 type TournamentSchedule = Round[]
 
-export function useGenerateRoundRobin(teams: SupabaseTeamType[], email: string | undefined) {
-  function generateRoundRobinWithContacts(teams: SupabaseTeamType[]) {
+export function useGenerateRoundRobin(teams: SupabaseTeamType[], email: string | undefined)
+{
+  function generateRoundRobinWithContacts(teams: SupabaseTeamType[])
+  {
     // Extract team details in a way that retains contact person info
     const teamDetails = teams?.map((team) => ({
       name: team.name,
@@ -54,25 +56,29 @@ export function useGenerateRoundRobin(teams: SupabaseTeamType[], email: string |
     }))
 
     // Generate the round robin tournament
-    const teamNames = teamDetails.map((team: any) => team.name)
+    const teamNames = teamDetails.map((team) => team.name)
     const roundRobinRounds = robin(teams.length, teamNames)
 
     // Replace team names with objects containing the name and contact person
     const detailedRoundRobinRounds = roundRobinRounds.map((round: any) =>
-      round.map((match: string[]) =>
-        match.map((teamName: string) => {
-          const teamDetail = teamDetails.find((team) => team.name === teamName)
+    {
+      return round.map((match: string[]) =>
+      {
+
+        return match.map((teamName: string) =>
+        {
+          const teamDetail = teamDetails.find((team) => team.name === teamName);
           return {
             name: teamName,
             contactPerson: email === teamDetail?.contactPerson ? teamDetail?.contactPerson : undefined,
             team_slug: teamDetail?.team_slug,
             round: roundRobinRounds.indexOf(round) + 1,
-            roundDate: roundDates[roundRobinRounds.indexOf(round)],
+            roundDate: roundDates[ roundRobinRounds.indexOf(round) ],
             home: match.indexOf(teamName) === 0,
-          }
-        }),
-      ),
-    )
+          };
+        });
+      });
+    });
 
     return detailedRoundRobinRounds
   }

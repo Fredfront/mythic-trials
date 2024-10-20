@@ -17,6 +17,7 @@ export type TMatchData = {
   team_slug: string
   round: number
   home: boolean
+  roundDate: string
 }
 
 export default function Matches({
@@ -36,6 +37,8 @@ export default function Matches({
 
   const { detailedSchedule } = useGenerateRoundRobin(teams, '')
 
+  console.log(detailedSchedule)
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-10 w-full m-auto max-w-7xl p-4">
@@ -47,10 +50,6 @@ export default function Matches({
               <div className="grid grid-cols-1 gap-4 mt-4">
                 {round.map((match: Match[], matchIndex: number) =>
                 {
-                  console.log(round)
-
-                  if (match[ 0 ].team_slug !== myTeam?.team_slug && match[ 1 ].team_slug !== myTeam?.team_slug) return null
-
                   const homeTeam = match[ 0 ].team_slug
                   const awayTeam = match[ 1 ].team_slug
                   const homeTeamName = match[ 0 ].name

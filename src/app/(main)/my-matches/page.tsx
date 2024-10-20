@@ -5,9 +5,7 @@ import { Matches } from './components/Matches'
 
 export const revalidate = 0
 
-
-export default async function Page()
-{
+export default async function Page() {
   const teams = await ServerClient.from('teams').select('*')
 
   const pickAndBansTable = await ServerClient.from('pick_ban').select('*')

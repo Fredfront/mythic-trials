@@ -6,24 +6,22 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { AiOutlineClose } from 'react-icons/ai'
-import { usePathname, useRouter } from 'next/navigation'
+import { redirect, usePathname, useRouter } from 'next/navigation'
 import { useGetUserData } from '../auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
 import { LogOut, User } from 'lucide-react'
 import { MythicPlusTeam } from '../api/getAllTeams'
 import { UserResponse } from '@supabase/supabase-js'
 
-const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sanityTeams: MythicPlusTeam[] }) =>
-{
-  const [ isMenuOpen, setMenuOpen ] = useState(false)
+const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sanityTeams: MythicPlusTeam[] }) => {
+  const [isMenuOpen, setMenuOpen] = useState(false)
   const { user, loading } = useGetUserData()
   const pathname = usePathname()
   const router = useRouter()
 
   const team = sanityTeams.find((e) => e.contactPerson === user?.data.user?.email)
 
-  const toggleMenu = () =>
-  {
+  const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
   }
 
@@ -36,7 +34,6 @@ const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sa
               <Image width={45} height={45} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
             </Link>
           </div>
-
 
           <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1  ">
             {/* Navigation links for large screens */}
@@ -62,19 +59,18 @@ const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sa
               Turnering
             </Link>
 
-            {!loading && !user?.data.user?.email ? <div
-              onClick={() =>
-              {
-                supabase.auth.signInWithOAuth({
-                  provider: 'discord',
-                })
-              }}
-              className={
-                'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer flex items-center gap-2'
-              }
-            >
-              <User /> Logg inn
-            </div> : null}
+            {!loading && !user?.data.user?.email ? (
+              <div
+                onClick={() => {
+                  supabase.auth.signInWithOAuth({
+                    provider: 'discord',
+                  })
+                }}
+                className={'text-gray-200 hover:text-white mx-4 font-bold cursor-pointer flex items-center gap-2'}
+              >
+                <User /> Logg inn
+              </div>
+            ) : null}
 
             <Link
               href="/contact"
@@ -88,11 +84,13 @@ const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sa
             </Link>
           </div>
           <div className="flex  items-center">
-            {!team && <Link href="/signup" prefetch>
-              <Button className="hidden lg:inline-block mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
-                Påmelding
-              </Button>
-            </Link>}
+            {!team && (
+              <Link href="/signup" prefetch>
+                <Button className="hidden lg:inline-block mr-4 px-2 py-2 leading-none rounded-xl mt-0 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white">
+                  Påmelding
+                </Button>
+              </Link>
+            )}
             <div className="block lg:hidden">
               {/* Hamburger icon for mobile */}
               <button
@@ -149,10 +147,8 @@ const NavBar = ({ showLeaderboard, sanityTeams }: { showLeaderboard: boolean; sa
 
 export default NavBar
 
-const LoggedInNavBar = ({ user, teamSlug }: { user: UserResponse; teamSlug: string }) =>
-{
+const LoggedInNavBar = ({ user, teamSlug }: { user: UserResponse; teamSlug: string }) => {
   const pathname = usePathname()
-  const router = useRouter()
 
   return (
     <div className="md:flex  bg-[#112b3c] p-2 ">
@@ -186,11 +182,9 @@ const LoggedInNavBar = ({ user, teamSlug }: { user: UserResponse; teamSlug: stri
         </Link>
       </div>
       <div
-        onClick={async () =>
-        {
-          supabase.auth.signOut().then(() =>
-          {
-            router.push('/')
+        onClick={async () => {
+          supabase.auth.signOut().then(() => {
+            location.reload()
           })
         }}
         className="flex text-right ml-auto justify-end gap-2 cursor-pointer hover:font-bold"
