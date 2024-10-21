@@ -13,11 +13,13 @@ import { TeamMatch, TournamentSchedule } from '../../types'
 
 type Props = {
   intitalSchedule: TournamentSchedule
+  schedule: TournamentSchedule
 
 }
 
 const Matches: React.FC<Props> = ({
   intitalSchedule,
+  schedule
 
 }) =>
 {
@@ -212,12 +214,12 @@ const Matches: React.FC<Props> = ({
         </ScrollArea>
       </DragDropContext>
       <div className="mt-6 text-center">
-        <Button
+        {!schedule && <Button
           onClick={handleGenerateRoundRobin}
           className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
         >
           Generate Round-robin
-        </Button>
+        </Button>}
       </div>
     </div>
   )

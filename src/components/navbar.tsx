@@ -91,6 +91,7 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
               ) : (
                 <Button
                   variant="outline"
+                  className='bg-[bg-[#011624] text-white'
                   onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
                 >
                   <User className="mr-2 h-4 w-4" /> Logg inn

@@ -32,11 +32,11 @@ export default function ReadyScreen({
 
   return (
     <div className="container mx-auto p-4">
-      <Card className="max-w-2xl mx-auto">
+      <Card className="max-w-2xl mx-auto bg-[#011624]">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Pick and Ban</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 bg-[#011624]">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">Runde: {round}</h2>
             <h3 className="text-xl flex justify-center">
@@ -58,7 +58,7 @@ export default function ReadyScreen({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Card>
+            <Card className='bg-[#011624]'>
               <CardContent className="flex flex-col items-center justify-center p-4">
                 <h4 className="text-lg font-semibold mb-2">Ditt lag</h4>
                 {teamReady ? (
@@ -69,7 +69,7 @@ export default function ReadyScreen({
                 <p className="mt-2">{teamReady ? 'Ready' : 'Not Ready'}</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card className='bg-[#011624]'>
               <CardContent className="flex flex-col items-center justify-center p-4">
                 <h4 className="text-lg font-semibold mb-2">Motstander</h4>
                 {opponentReady ? (

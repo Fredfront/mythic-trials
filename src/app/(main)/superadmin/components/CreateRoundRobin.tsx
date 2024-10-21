@@ -8,6 +8,8 @@ import
 import { NextResponse } from 'next/server'
 import BracketPreview from '@/components/bracket-preview'
 import { SupabaseTeamType, TournamentSchedule } from '../../../../../types'
+import { useGetUserData } from '@/app/auth/useGetUserData'
+import { useRouter } from 'next/navigation'
 
 export function CreateMatches({
   roundDates,
@@ -25,11 +27,17 @@ export function CreateMatches({
 
   const initialSchedule = detailedSchedule
 
-  console.log(initialSchedule, detailedSchedule)
+  const { user, loading } = useGetUserData()
+  const router = useRouter()
+
+  if (loading) return <div>Loading...</div>
+
+  if (user?.data.user?.email !== 'fredrickvaagen@hotmail.com') return <div>Not authorized</div>
+
 
   return (
     <>
-      <BracketPreview intitalSchedule={initialSchedule} />
+      {schedule ? <div>Bracket already made</div> : <BracketPreview schedule={schedule} intitalSchedule={initialSchedule} />}
     </>
   )
 }

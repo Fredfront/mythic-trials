@@ -47,7 +47,7 @@ const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage, ch
           <div className="lg:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button size="icon" className="ml-12 bg-transparent">
+                <Button size="icon" className="ml-12 bg-[#011624]">
                   <Menu className="h-12 w-12" color='white' />
                   <span className='text-white'>Turnernings meny</span>
                 </Button>

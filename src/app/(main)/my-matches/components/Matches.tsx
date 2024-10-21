@@ -73,7 +73,7 @@ export function Matches({
         {
           return (
             <>
-              <div key={index} className="bg-gray-800 p-4 rounded-lg">
+              <div key={round[ 0 ].teams[ 0 ].matchUUID + index} className="bg-gray-800 p-4 rounded-lg">
                 <Accordion key={index} type="single" collapsible>
                   <h2 className="feed-header">Runde {index + 1}</h2>
                   <div className="bg-gray-800 p-4 rounded-lg">
@@ -150,6 +150,14 @@ export function Matches({
                               e.round === payloadCreateNewPickBanRow.round,
                           )?.confirm === true
 
+
+                        const oneWeekBeforePickBan = new Date(match.teams?.[ 0 ].roundDate)
+                        oneWeekBeforePickBan.setDate(oneWeekBeforePickBan.getDate() - 7)
+                        const today = new Date()
+
+                        const hidePickBanButton = today > oneWeekBeforePickBan
+
+
                         if (match.teams?.[ 0 ].contactPerson !== email && match.teams?.[ 1 ].contactPerson !== email) {
                           return null
                         }
@@ -225,7 +233,7 @@ export function Matches({
                             </AccordionItem>
 
                             <div>
-                              {!pickBanCompleted ? (
+                              {!hidePickBanButton && !pickBanCompleted ? (
                                 <Button
                                   className=''
                                   onClick={async () =>
