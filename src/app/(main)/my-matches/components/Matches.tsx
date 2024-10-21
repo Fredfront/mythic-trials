@@ -1,8 +1,7 @@
 'use client'
 import React from 'react'
-import { SupabaseTeamType, useGenerateRoundRobin } from '../../turnering/hooks/useGenerateRoundRobin'
+import { Match, SupabaseTeamType, useGenerateRoundRobin } from '../../turnering/hooks/useGenerateRoundRobin'
 import { useGetUserData } from '@/app/auth/useGetUserData'
-import { TMatchData } from '../../turnering/components/Matches'
 import { PostgrestSingleResponse } from '@supabase/supabase-js'
 import supabase from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -14,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Image from 'next/image'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import PickBanV2 from './matches/PickBanV2'
+import { InfoBoxComponent } from '@/components/info-box'
 
 export function Matches({
   teams,
@@ -39,20 +39,21 @@ export function Matches({
 
   const { detailedSchedule } = useGenerateRoundRobin(sortedTeams, email)
 
-  const [ matchData, setMatchData ] = React.useState<TMatchData[] | null>(null)
 
-  if (matchData && matchData.length === 2 && email) {
+  const [ matchData, setMatchData ] = React.useState<Match | null>(null)
+
+  if (matchData && matchData.teams.length === 2 && email) {
     return (
       <>
         <div
-          className="flex gap-1 p-1 cursor-pointer hover:font-bold"
+          className="flex gap-1 cursor-pointer hover:font-bold p-2"
           onClick={() =>
           {
             setMatchData(null)
             router.push('/my-matches')
           }}
         >
-          <ArrowLeft /> Go back
+          <ArrowLeft /> Gå tilbake
         </div>
         <PickBanV2
           sanityTeamData={sanityTeamData}
@@ -68,8 +69,11 @@ export function Matches({
     <div className=" ">
       <h1 className="text-4xl text-center font-bold mt-10">Mine kamper</h1>
 
+
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-10 w-full m-auto max-w-7xl p-4">
-        {detailedSchedule.map((round: any, index: number) =>
+        <InfoBoxComponent />
+
+        {detailedSchedule.map((round, index) =>
         {
           return (
             <>
@@ -78,14 +82,13 @@ export function Matches({
                   <h2 className="feed-header">Runde {index + 1}</h2>
                   <div className="bg-gray-800 p-4 rounded-lg">
                     <div className="grid grid-cols-1 gap-4 mt-4">
-                      {round.map((match: Match[], matchIndex: number) =>
+                      {round.map((match, matchIndex) =>
                       {
-
-                        const matchUUID = `${match[ 0 ].team_slug}-${match[ 1 ].team_slug}-round-${match[ 0 ].round}-roundDate-${match[ 0 ].roundDate}`
-                        const homeTeam = match[ 0 ].team_slug
-                        const awayTeam = match[ 1 ].team_slug
-                        const homeTeamName = match[ 0 ].name
-                        const awayTeamName = match[ 1 ].name
+                        const matchUUID = `${match.teams?.[ 0 ].team_slug}-${match.teams?.[ 1 ].team_slug}-round-${match.teams?.[ 0 ].round}-roundDate-${match.teams?.[ 0 ].roundDate}`
+                        const homeTeam = match.teams?.[ 0 ].team_slug
+                        const awayTeam = match.teams?.[ 1 ].team_slug
+                        const homeTeamName = match.teams?.[ 0 ].name
+                        const awayTeamName = match.teams?.[ 1 ].name
                         const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage
                           .asset._ref
                         const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage
@@ -123,9 +126,9 @@ export function Matches({
                             ? true
                             : false
 
-                        const findMatch = match.find((e) => e.contactPerson === email)
+                        const findMatch = match.teams.find((e) => e.contactPerson === email)
 
-                        const opponent = match.find(
+                        const opponent = match.teams.find(
                           (e) => e.round === findMatch?.round && e.contactPerson === undefined,
                         )?.team_slug
 
@@ -151,7 +154,7 @@ export function Matches({
                               e.round === payloadCreateNewPickBanRow.round,
                           )?.confirm === true
 
-                        if (match[ 0 ].contactPerson === undefined && match[ 1 ].contactPerson === undefined) {
+                        if (match.teams?.[ 0 ].contactPerson === undefined && match.teams?.[ 1 ].contactPerson === undefined) {
                           return null
                         }
 
@@ -184,7 +187,7 @@ export function Matches({
                                     </div>
                                   </div>
                                   <div className=" w-1/5 md:w-[15%] ">
-                                    <div className=" text-xs">{match[ 0 ].roundDate}</div>
+                                    <div className=" text-xs">{match.teams?.[ 0 ].roundDate}</div>
                                     {confirmedResult ? (
                                       <div>
                                         {totalHomeTeamScore} - {totalAwayTeamScore}
@@ -228,25 +231,31 @@ export function Matches({
                             <div>
                               {!pickBanCompleted ? (
                                 <Button
+                                  className=''
                                   onClick={async () =>
                                   {
                                     if (email) {
-                                      await supabase.from('pick_ban').select('*').eq('contact_person', email).eq('round', match[ 0 ].round).then((res) =>
-                                      {
-                                        if (res.data && res.data.length === 0) {
-                                          createPickBanRow(
-                                            payloadCreateNewPickBanRow.round,
-                                            email,
-                                            payloadCreateNewPickBanRow.team_slug,
-                                            payloadCreateNewPickBanRow.opponent,
-                                            payloadCreateNewPickBanRow.home,
-                                            matchUUID,
-                                          )
-                                        }
-                                      })
+                                      await supabase
+                                        .from('pick_ban')
+                                        .select('*')
+                                        .eq('contact_person', email)
+                                        .eq('round', match.teams?.[ 0 ].round)
+                                        .then((res) =>
+                                        {
+                                          if (res.data && res.data.length === 0) {
+                                            createPickBanRow(
+                                              payloadCreateNewPickBanRow.round,
+                                              email,
+                                              payloadCreateNewPickBanRow.team_slug,
+                                              payloadCreateNewPickBanRow.opponent,
+                                              payloadCreateNewPickBanRow.home,
+                                              matchUUID,
+                                            )
+                                          }
+                                        })
                                     }
                                     setMatchData(match)
-                                    router.push('/my-matches?home=' + match[ 0 ].name + '&away=' + match[ 1 ].name)
+                                    router.push('/my-matches?home=' + match.teams[ 0 ].team_slug + '&away=' + match.teams[ 1 ].team_slug)
                                   }}
                                 >
                                   Gå til Pick/Ban
@@ -256,33 +265,37 @@ export function Matches({
                                 <Button
                                   onClick={async () =>
                                   {
-                                    await supabase.from('match_results').select('*').eq('contact_person', email).eq('round', match[ 0 ].round).then((res) =>
-                                    {
-                                      if (res.data && res.data.length === 0) {
-                                        create_match_results({
-                                          matchResults: {
-                                            contact_person: email as string,
-                                            opponent: myTeam?.teamSlug === homeTeam ? awayTeam : homeTeam,
-                                            round: match[ 0 ].round,
-                                            team_slug: myTeam?.teamSlug as string,
-                                            matchUUID,
-                                          }
-                                        })
-                                      }
-                                    })
+                                    await supabase
+                                      .from('match_results')
+                                      .select('*')
+                                      .eq('contact_person', email)
+                                      .eq('round', match.teams[ 0 ].round)
+                                      .then((res) =>
+                                      {
+                                        if (res.data && res.data.length === 0) {
+                                          create_match_results({
+                                            matchResults: {
+                                              contact_person: email as string,
+                                              opponent: myTeam?.teamSlug === homeTeam ? awayTeam : homeTeam,
+                                              round: match.teams[ 0 ].round,
+                                              team_slug: myTeam?.teamSlug as string,
+                                              matchUUID,
+                                            },
+                                          })
+                                        }
+                                      })
                                       .then(() =>
                                       {
                                         router.push(
                                           '/my-matches/results?home=' +
-                                          match[ 0 ].team_slug +
+                                          match.teams[ 0 ].team_slug +
                                           '&away=' +
-                                          match[ 1 ].team_slug +
+                                          match.teams[ 1 ].team_slug +
                                           '&round=' +
-                                          match[ 0 ].round,
+                                          match.teams[ 0 ].round,
                                         )
                                       })
-                                  }
-                                  }
+                                  }}
                                 >
                                   Legg til resultat
                                 </Button>
@@ -303,14 +316,6 @@ export function Matches({
   )
 }
 
-export type Match = {
-  contactPerson: string
-  home: boolean
-  name: string
-  round: number
-  team_slug: string
-  roundDate: string
-}
 
 export type PickAndBansType = {
   bans: number[]
@@ -371,5 +376,3 @@ export async function create_match_results({ matchResults }: { matchResults: Mat
 {
   await supabase.from('match_results').insert(matchResults)
 }
-
-

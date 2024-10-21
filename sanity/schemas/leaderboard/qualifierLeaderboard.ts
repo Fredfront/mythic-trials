@@ -1,6 +1,6 @@
-export const FortifiedLeaderboard = {
-  name: 'fortifiedLeaderboard',
-  title: 'Fortified Leaderboard',
+export const QualifierLeaderboard = {
+  name: 'qualifierLeaderboard',
+  title: 'Qualifier Leaderboard',
   type: 'document',
   fields: [
     {
@@ -11,21 +11,21 @@ export const FortifiedLeaderboard = {
       options: {
         list: [
           {
-            title: "Dawn of the Infinites: Galakrond's Fall",
-            value: "Dawn of the Infinites: Galakrond's Fall",
-            id: 'dawn-of-the-infinites-galakronds-fall',
+            title: 'Ara-Kara, City of Echoes',
+            value: 'Ara-Kara, City of Echoes',
+            id: 'ara-kara-city-of-echoes',
           },
           {
-            title: "Dawn of the Infinites: Murozond's Rise",
-            value: "Dawn of the Infinites: Murozond's Rise",
-            id: 'dawn-of-the-infinites-murozonds-rise',
+            title: 'City of Threads',
+            value: 'City of Threads',
+            id: 'city-of-threads',
           },
-          { title: 'Waycrest Manor', value: 'Waycrest Manor', id: 'waycrest-manor' },
-          { title: "Atal'Dazar", value: "Atal'Dazar", id: 'ataldazar' },
-          { title: 'Darkheart Thicket', value: 'Darkheart Thicket', id: 'darkheart-thicket' },
-          { title: 'Black Rook Hold', value: 'Black Rook Hold', id: 'black-rook-hold' },
-          { title: 'Everbloom', value: 'Everbloom', id: 'everbloom' },
-          { title: 'Throne of the Tides', value: 'Throne of the Tides', id: 'throne-of-the-tides' },
+          { title: '', value: '', id: '' },
+          { title: '', value: '', id: '' },
+          { title: '', value: '', id: '' },
+          { title: '', value: '', id: '' },
+          { title: '', value: '', id: '' },
+          { title: '', value: '', id: '' },
         ],
       },
     },
@@ -80,14 +80,14 @@ export const FortifiedLeaderboard = {
       type: 'string',
       options: {
         list: [
-          { title: "Dawn of the Infinites: Galakrond's Fall", value: '35:00' },
-          { title: "Dawn of the Infinites: Murozond's Rise", value: '37:00' },
-          { title: "Atal'Dazar", value: '30:00' },
-          { title: 'Waycrest Manor', value: '36:40' },
-          { title: 'Black Rook Hold', value: '36:00' },
-          { title: 'Darkheart Thicket', value: '30:00' },
-          { title: 'Everbloom', value: '33:00' },
-          { title: 'Throne of the Tides', value: '34:00' },
+          { title: 'Ara-Kara, City of Echoes', value: '35:00' },
+          { title: 'City of Threads', value: '37:00' },
+          { title: 'Mists of Tirna Scithe', value: '30:00' },
+          { title: 'Grim Batol', value: '36:40' },
+          { title: 'The Dawnbreaker', value: '36:00' },
+          { title: 'The Necrotic Wake', value: '30:00' },
+          { title: 'The Stonevault', value: '33:00' },
+          { title: 'Siege of Boralus', value: '34:00' },
         ],
       },
     },

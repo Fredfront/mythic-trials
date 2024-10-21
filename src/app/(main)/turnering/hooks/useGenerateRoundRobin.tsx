@@ -17,6 +17,8 @@ type TeamMatch = {
   contactPerson: string
   team_slug: string
   round: number
+  home: boolean
+  roundDate: string
 }
 
 const roundDates = [
@@ -37,8 +39,10 @@ const roundDates = [
   '2025-01-10',
 ]
 
-type Match = [ TeamMatch, TeamMatch ]
-
+export type Match = {
+  teams: [ TeamMatch, TeamMatch ]
+  featured: boolean
+}
 type Round = Match[]
 
 type TournamentSchedule = Round[]
@@ -48,7 +52,7 @@ export function useGenerateRoundRobin(teams: SupabaseTeamType[], email: string |
   function generateRoundRobinWithContacts(teams: SupabaseTeamType[])
   {
     // Extract team details in a way that retains contact person info
-    const teamDetails = teams?.map((team) => ({
+    const teamDetails = teams.map((team) => ({
       name: team.name,
       contactPerson: team.contact_person,
       team_slug: team.team_slug,
@@ -59,26 +63,44 @@ export function useGenerateRoundRobin(teams: SupabaseTeamType[], email: string |
     const teamNames = teamDetails.map((team) => team.name)
     const roundRobinRounds = robin(teams.length, teamNames)
 
-    // Replace team names with objects containing the name and contact person
-    const detailedRoundRobinRounds = roundRobinRounds.map((round: any) =>
-    {
-      return round.map((match: string[]) =>
-      {
+    // Initialize a Set to keep track of featured teams
+    const featuredTeams = new Set<string>()
 
-        return match.map((teamName: string) =>
-        {
-          const teamDetail = teamDetails.find((team) => team.name === teamName);
-          return {
-            name: teamName,
-            contactPerson: email === teamDetail?.contactPerson ? teamDetail?.contactPerson : undefined,
-            team_slug: teamDetail?.team_slug,
-            round: roundRobinRounds.indexOf(round) + 1,
-            roundDate: roundDates[ roundRobinRounds.indexOf(round) ],
-            home: match.indexOf(teamName) === 0,
-          };
-        });
-      });
-    });
+    // Replace team names with objects containing the name and contact person
+    const detailedRoundRobinRounds: TournamentSchedule = roundRobinRounds.map((round: any, roundIndex: number) =>
+    {
+      const detailedRound: Round = round.map((match: string[]) =>
+      {
+        return {
+          teams: match.map((teamName: string, teamIndex: number) =>
+          {
+            const teamDetail = teamDetails.find((team) => team.name === teamName)
+            return {
+              name: teamName,
+              contactPerson: email === teamDetail?.contactPerson ? teamDetail?.contactPerson : undefined,
+              team_slug: teamDetail?.team_slug,
+              round: roundIndex + 1,
+              roundDate: roundDates[ roundIndex ],
+              home: teamIndex === 0,
+            }
+          }) as unknown as [ TeamMatch, TeamMatch ],
+          featured: false, // Initialize as not featured
+        }
+      })
+
+      // Select a featured match for the current round
+      for (let match of detailedRound) {
+        const [ team1, team2 ] = match.teams
+        if (!featuredTeams.has(team1.team_slug) && !featuredTeams.has(team2.team_slug)) {
+          match.featured = true
+          featuredTeams.add(team1.team_slug)
+          featuredTeams.add(team2.team_slug)
+          break // Only one match per round
+        }
+      }
+
+      return detailedRound
+    })
 
     return detailedRoundRobinRounds
   }

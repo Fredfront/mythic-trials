@@ -149,8 +149,6 @@ export default function Result({
     }
   }, [ contact_person, opponent_contact_person, round ])
 
-
-
   const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
 
   // Check if the results conflict (both WIN or both LOSE)
@@ -203,7 +201,7 @@ export default function Result({
 
   return (
     <div className="p-6">
-      <div className="mb-6 text-blue-600 hover:text-blue-800 cursor-pointer" onClick={() => router.push('/my-matches')}>
+      <div className="mb-6  cursor-pointer" onClick={() => router.push('/my-matches')}>
         Gå tilbake
       </div>
       <div className="w-full flex flex-col mt-10 space-y-6">
@@ -375,7 +373,12 @@ async function updateMatchResults(contact_person: string, round: number, result:
   }
 }
 
-export async function createMatchResultsRow(round: number, contact_person: string, team_slug: string, opponent: string)
+export async function createMatchResultsRow(
+  round: number,
+  contact_person: string,
+  team_slug: string,
+  opponent: string,
+)
 {
   await supabase.from('match_results').insert([
     {

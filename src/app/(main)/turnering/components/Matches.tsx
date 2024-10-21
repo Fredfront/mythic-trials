@@ -9,16 +9,8 @@ import { urlForImage } from '../../../../../sanity/lib/image'
 import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion'
 import { AccordionTrigger } from '@radix-ui/react-accordion'
-import { useGetUserData } from '@/app/auth/useGetUserData'
 
-export type TMatchData = {
-  name: string
-  contactPerson: string
-  team_slug: string
-  round: number
-  home: boolean
-  roundDate: string
-}
+
 
 export default function Matches({
   pickAndBanData,
@@ -32,27 +24,24 @@ export default function Matches({
   sanityTeamData: MythicPlusTeam[]
 })
 {
-  const { user } = useGetUserData()
-  const myTeam = teams.find((team) => team.contact_person === user?.data.user?.email)
-
   const { detailedSchedule } = useGenerateRoundRobin(teams, '')
-
-
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-10 w-full m-auto max-w-7xl p-4">
-        {detailedSchedule.map((round: any, index: number) => (
+        {detailedSchedule.map((round, index: number) => (
           <Accordion key={index} type="single" collapsible>
             <h2 className="feed-header">Runde {index + 1}</h2>
 
             <div className="bg-gray-800 p-4 rounded-lg">
               <div className="grid grid-cols-1 gap-4 mt-4">
-                {round.map((match: Match[], matchIndex: number) =>
+                {round.map((match, matchIndex) =>
                 {
-                  const homeTeam = match[ 0 ].team_slug
-                  const awayTeam = match[ 1 ].team_slug
-                  const homeTeamName = match[ 0 ].name
-                  const awayTeamName = match[ 1 ].name
+                  const matchUUID = `${match.teams?.[ 0 ].team_slug}-${match.teams?.[ 1 ].team_slug}-round-${match.teams?.[ 0 ].round}-roundDate-${match.teams?.[ 0 ].roundDate}`
+
+                  const homeTeam = match.teams?.[ 0 ].team_slug
+                  const awayTeam = match.teams?.[ 1 ].team_slug
+                  const homeTeamName = match.teams?.[ 0 ].name
+                  const awayTeamName = match.teams?.[ 1 ].name
                   const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage.asset._ref
                   const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage.asset._ref
 
@@ -60,7 +49,6 @@ export default function Matches({
                   const awayTeamMatchResults = matchResults.find((result) => result.team_slug === awayTeam)
 
                   const homeTeamWins = homeTeamMatchResults?.winner
-                  const awayTeamWins = awayTeamMatchResults?.winner
 
                   const homeTeamScoreMatchOne = homeTeamMatchResults?.match_1 || 0
                   const awayTeamScoreMatchOne = awayTeamMatchResults?.match_1 || 0
@@ -108,7 +96,7 @@ export default function Matches({
                             </div>
                           </div>
                           <div className=" w-1/5 md:w-[15%] ">
-                            <div className=" text-xs">{match[ 0 ].roundDate}</div>
+                            <div className=" text-xs">{match.teams[ 0 ].roundDate}</div>
                             {confirmedResult ? (
                               <div>
                                 {totalHomeTeamScore} - {totalAwayTeamScore}

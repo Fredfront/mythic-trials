@@ -40,16 +40,21 @@ export function MatchResultsComponent({
   const email = user?.data.user?.email
   const contact_person = user?.data.user?.email || ''
 
-  const [ myMatchResults, setMyMatchResults ] = useState<TMatchResults | null>(matchResults.find((e) => e.contact_person === contact_person && e.round === round) || null)
-  const [ opponentMatchResults, setOpponentMatchResults ] = useState<TMatchResults | null>(matchResults.find(
-    (e) => e.contact_person !== contact_person && e.round === round && e.team_slug === myMatchResults?.opponent,
-  ) || null)
+  const [ myMatchResults, setMyMatchResults ] = useState<TMatchResults | null>(
+    matchResults.find((e) => e.contact_person === contact_person && e.round === round) || null,
+  )
+  const [ opponentMatchResults, setOpponentMatchResults ] = useState<TMatchResults | null>(
+    matchResults.find(
+      (e) => e.contact_person !== contact_person && e.round === round && e.team_slug === myMatchResults?.opponent,
+    ) || null,
+  )
 
   const [ team1Results, setTeam1Results ] = useState<TeamResults>({
     match1: myMatchResults?.match_1 === 1 ? 'win' : myMatchResults?.match_1 === 0 ? 'loss' : null,
     match2: myMatchResults?.match_2 === 1 ? 'win' : myMatchResults?.match_2 === 0 ? 'loss' : null,
     match3: myMatchResults?.match_3 === 1 ? 'win' : myMatchResults?.match_3 === 0 ? 'loss' : null,
   })
+
   const [ team2Results, setTeam2Results ] = useState<TeamResults>({
     match1: opponentMatchResults?.match_1 === 1 ? 'win' : opponentMatchResults?.match_1 === 0 ? 'loss' : null,
     match2: opponentMatchResults?.match_2 === 1 ? 'win' : opponentMatchResults?.match_2 === 0 ? 'loss' : null,
@@ -58,31 +63,48 @@ export function MatchResultsComponent({
   const [ myTeamSubmitted, setMyTeamSubmitted ] = useState(false)
   const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
 
-
   useEffect(() =>
   {
     if (team1Results.match1 === null && myMatchResults?.match_1 !== null) {
-      setTeam1Results((prev) => ({ ...prev, match1: myMatchResults?.match_1 === 1 ? 'win' : myMatchResults?.match_1 === 0 ? 'loss' : null }))
+      setTeam1Results((prev) => ({
+        ...prev,
+        match1: myMatchResults?.match_1 === 1 ? 'win' : myMatchResults?.match_1 === 0 ? 'loss' : null,
+      }))
     }
 
     if (team1Results.match2 === null && myMatchResults?.match_2 !== null) {
-      setTeam1Results((prev) => ({ ...prev, match2: myMatchResults?.match_2 === 1 ? 'win' : myMatchResults?.match_2 === 0 ? 'loss' : null }))
+      setTeam1Results((prev) => ({
+        ...prev,
+        match2: myMatchResults?.match_2 === 1 ? 'win' : myMatchResults?.match_2 === 0 ? 'loss' : null,
+      }))
     }
 
     if (team1Results.match3 === null && myMatchResults?.match_3 !== null) {
-      setTeam1Results((prev) => ({ ...prev, match3: myMatchResults?.match_3 === 1 ? 'win' : myMatchResults?.match_3 === 0 ? 'loss' : null }))
+      setTeam1Results((prev) => ({
+        ...prev,
+        match3: myMatchResults?.match_3 === 1 ? 'win' : myMatchResults?.match_3 === 0 ? 'loss' : null,
+      }))
     }
 
     if (team2Results.match1 === null && opponentMatchResults?.match_1 !== null) {
-      setTeam2Results((prev) => ({ ...prev, match1: opponentMatchResults?.match_1 === 1 ? 'win' : opponentMatchResults?.match_1 === 0 ? 'loss' : null }))
+      setTeam2Results((prev) => ({
+        ...prev,
+        match1: opponentMatchResults?.match_1 === 1 ? 'win' : opponentMatchResults?.match_1 === 0 ? 'loss' : null,
+      }))
     }
 
     if (team2Results.match2 === null && opponentMatchResults?.match_2 !== null) {
-      setTeam2Results((prev) => ({ ...prev, match2: opponentMatchResults?.match_2 === 1 ? 'win' : opponentMatchResults?.match_2 === 0 ? 'loss' : null }))
+      setTeam2Results((prev) => ({
+        ...prev,
+        match2: opponentMatchResults?.match_2 === 1 ? 'win' : opponentMatchResults?.match_2 === 0 ? 'loss' : null,
+      }))
     }
 
     if (team2Results.match3 === null && opponentMatchResults?.match_3 !== null) {
-      setTeam2Results((prev) => ({ ...prev, match3: opponentMatchResults?.match_3 === 1 ? 'win' : opponentMatchResults?.match_3 === 0 ? 'loss' : null }))
+      setTeam2Results((prev) => ({
+        ...prev,
+        match3: opponentMatchResults?.match_3 === 1 ? 'win' : opponentMatchResults?.match_3 === 0 ? 'loss' : null,
+      }))
     }
   }, [
     myMatchResults,
@@ -109,8 +131,13 @@ export function MatchResultsComponent({
   const awayTeamToSlug = away_team?.toLowerCase().replace(/\s/g, '-')
   const myPickAndBansTable = pickAndBanData.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBanData.find((e) => e.team_slug === opponentTeam && e.round === round)
-  const bothTeamsConfirmed = myMatchResults?.confirm && opponentMatchResults?.confirm && myMatchResults?.winner !== null && opponentMatchResults?.winner !== null ? true : false
-
+  const bothTeamsConfirmed =
+    myMatchResults?.confirm &&
+      opponentMatchResults?.confirm &&
+      myMatchResults?.winner !== null &&
+      opponentMatchResults?.winner !== null
+      ? true
+      : false
 
   const myBans = myPickAndBansTable?.bans || []
   const myPickedDungeon = myPickAndBansTable?.pick || ''
@@ -127,13 +154,11 @@ export function MatchResultsComponent({
     return dungeonConfig.find((dungeon) => !allPickedDungeons.includes(dungeon.id) && !allBans.includes(dungeon.id))
   }
 
-
   const dungeonsNames = {
     match1: dungeonConfig.find((dungeon) => dungeon.id === firstMatch)?.name,
     match2: dungeonConfig.find((dungeon) => dungeon.id === secondMatch)?.name,
     tiebreaker: getTiebreaker()?.name,
   }
-
 
   useEffect(() =>
   {
@@ -151,10 +176,11 @@ export function MatchResultsComponent({
     getMatchresults(opponent_contact_person, round).then((res) =>
     {
       const response = res as TMatchResults[]
-      setOpponentMatchResults(response.find((e) => e.contact_person === opponent_contact_person && e.round === round) || null)
+      setOpponentMatchResults(
+        response.find((e) => e.contact_person === opponent_contact_person && e.round === round) || null,
+      )
     })
   }, [ round, opponent_contact_person ])
-
 
   useEffect(() =>
   {
@@ -216,19 +242,12 @@ export function MatchResultsComponent({
     }
   }, [ contact_person, opponent_contact_person, round ])
 
-
-
   const updateResult = (team: string, match: 'match1' | 'match2' | 'match3', result: MatchResult) =>
   {
     const setResults = team === myTeam?.team_slug ? setTeam1Results : setTeam2Results
 
     if (!needsTiebreaker(team1Results, team2Results) && team1Results.match3 !== null) {
-      updateMatchResults(
-        contact_person,
-        round,
-        null,
-        3
-      )
+      updateMatchResults(contact_person, round, null, 3)
       setResults((prev) => ({ ...prev, match3: null }))
       setTeam1Results((prev) => ({ ...prev, match3: null }))
       setTeam2Results((prev) => ({ ...prev, match3: null }))
@@ -276,8 +295,10 @@ export function MatchResultsComponent({
     )
   }
 
+  const wonBoth = myMatchResults?.match_1 === 1 && myMatchResults?.match_2 === 1
+  const lostBoth = myMatchResults?.match_1 === 0 && myMatchResults?.match_2 === 0
 
-
+  const hideTieBreaker = wonBoth || lostBoth || myMatchResults?.match_1 === null || myMatchResults?.match_2 === null
 
   const renderMatchResult = (team: string, match: 'match1' | 'match2' | 'match3') =>
   {
@@ -311,25 +332,29 @@ export function MatchResultsComponent({
   const renderTeamCard = (team: string) =>
   {
     const results = team === myTeam?.team_slug ? team1Results : team2Results
-    const opponentResults = team === myTeam?.team_slug ? team2Results : team1Results
     const submitted = team === myTeam?.team_slug ? myTeamSubmitted : opponentMatchResults?.confirm
     const opponentSubmitted = team === myTeam?.team_slug ? opponentMatchResults?.confirm : myTeamSubmitted
 
     const handleSubmit = () =>
     {
-
       const match1Point = results.match1 === 'win' ? 1 : 0
       const match2Point = results.match2 === 'win' ? 1 : 0
       const match3Point = results.match3 === 'win' ? 1 : 0
 
       const points = match1Point + match2Point + match3Point
 
-      if (team === myTeam?.team_slug) {
+      if (team === myTeam?.team_slug && myMatchResults?.confirm !== true) {
         setMyTeamSubmitted(true)
-        confirmResults(contact_person, round, points >= 2)
+        confirmResults(contact_person, round, points >= 2, true)
+      }
+
+      if (myMatchResults?.confirm === true) {
+        if (team === myTeam?.team_slug) {
+          setMyTeamSubmitted(false)
+          confirmResults(contact_person, round, points >= 2, false)
+        }
       }
     }
-
 
     if (bothTeamsConfirmed) return null
 
@@ -339,37 +364,37 @@ export function MatchResultsComponent({
       >
         <CardHeader>
           <CardTitle className="text-2xl font-bold">{team === myTeam?.team_slug ? myTeam?.name : team}</CardTitle>
-          {!bothTeamsConfirmed && <CardDescription className="text-gray-300">
-            {team === myTeam?.team_slug ? 'Enter your match results' : 'Opponents match result'}
-          </CardDescription>}
+          {!bothTeamsConfirmed && (
+            <CardDescription className="text-gray-300">
+              {team === myTeam?.team_slug ? 'Enter your match results' : 'Opponents match result'}
+            </CardDescription>
+          )}
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm font-medium mb-2">Match 1 </h3>
+              <h3 className="text-sm font-medium mb-2">Match 1: {dungeonsNames.match1} </h3>
               {renderMatchResult(team, 'match1')}
             </div>
             <div>
-              <h3 className="text-sm font-medium mb-2">Match 2</h3>
+              <h3 className="text-sm font-medium mb-2">Match 2: {dungeonsNames.match2}</h3>
               {renderMatchResult(team, 'match2')}
             </div>
             <AnimatePresence>
-              {(needsTiebreaker(team1Results, team2Results) ||
-                results.match3 !== null ||
-                opponentResults.match3 !== null) && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <h3 className="text-sm font-medium mb-2">Tiebreaker</h3>
-                    {renderMatchResult(team, 'match3')}
-                  </motion.div>
-                )}
+              {hideTieBreaker ? null : (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <h3 className="text-sm font-medium mb-2">Tiebreaker: {dungeonsNames.tiebreaker}</h3>
+                  {renderMatchResult(team, 'match3')}
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
-          {team === opponentTeam || bothTeamsConfirmed ? null : (
+          {team === opponentTeam || bothTeamsConfirmed || myMatchResults?.confirm === true ? null : (
             <Button
               onClick={handleSubmit}
               disabled={
@@ -384,6 +409,14 @@ export function MatchResultsComponent({
               Submit Results
             </Button>
           )}
+          {myMatchResults?.confirm === true && team === myMatchResults.team_slug && (
+            <Button
+              onClick={handleSubmit}
+              className="w-full py-6 text-lg bg-[#fd0202] hover:bg-[#fd0202]/90 text-white"
+            >
+              Cancel results
+            </Button>
+          )}
           <AnimatePresence>
             {submitted && !bothTeamsConfirmed && (
               <motion.div
@@ -394,7 +427,22 @@ export function MatchResultsComponent({
                 role="alert"
               >
                 <strong className="font-bold">Success!</strong>
-                <span className="block sm:inline"> Results submitted successfully.</span>
+                <span className="block sm:inline"> Results submitted successfully. .</span>
+              </motion.div>
+            )}
+            {submitted && !bothTeamsConfirmed && myTeam?.team_slug === team && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="bg-gray-300 border border-gray-500 text-black px-4 py-3 rounded relative"
+                role="alert"
+              >
+                <strong className="font-bold">Info!</strong>
+                <span className="block sm:inline">
+                  {' '}
+                  You can cancel and change result if opponent has not yet submitted.
+                </span>
               </motion.div>
             )}
             {team === myTeam?.team_slug && opponentSubmitted && !bothTeamsConfirmed && (
@@ -422,8 +470,8 @@ export function MatchResultsComponent({
       if (team1Results[ match ] === 'win' && team2Results[ match ] === 'loss') return `${myTeam?.team_slug} wins`
       if (team2Results[ match ] === 'win' && team1Results[ match ] === 'loss') return `${opponentTeam} wins`
       if (team1Results[ match ] && team2Results[ match ] && team1Results[ match ] !== team2Results[ match ]) return 'Conflict'
-      if (team1Results[ match ] === null && team2Results[ match ] === null) return 'Not played'
-      return 'Not submitted'
+      if (team1Results[ match ] === null && team2Results[ match ] === null) return ''
+      return ''
     }
 
     const calculatePoints = (results: TeamResults) =>
@@ -443,30 +491,28 @@ export function MatchResultsComponent({
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="font-medium">1: {dungeonsNames.match1} </span>
-              <Badge variant="outline" className="text-lg py-1 px-3 bg-gray-700 text-white">
-                {getMatchResult('match1')}
-              </Badge>
+              {team1Results.match1 && team2Results.match1 && <Badge variant="outline" className=" py-1 px-3 bg-gray-700 text-white">
+                {getMatchResult('match1') && getMatchResult('match1').length > 0 ? getMatchResult('match1') : null}
+              </Badge>}
             </div>
             <Separator className="bg-gray-600" />
             <div className="flex justify-between items-center">
               <span className="font-medium">2: {dungeonsNames.match2}</span>
-              <Badge variant="outline" className="text-lg py-1 px-3 bg-gray-700 text-white">
+              {team1Results.match2 && team2Results.match2 && <Badge variant="outline" className=" py-1 px-3 bg-gray-700 text-white ">
                 {getMatchResult('match2')}
-              </Badge>
+              </Badge>}
             </div>
-            {(needsTiebreaker(team1Results, team2Results) ||
-              team1Results.match3 !== null ||
-              team2Results.match3 !== null) && (
-                <>
-                  <Separator className="bg-gray-600" />
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Tiebreaker:</span>
-                    <Badge variant="outline" className="text-lg py-1 px-3 bg-gray-700 text-white">
-                      {getMatchResult('match3')}
-                    </Badge>
-                  </div>
-                </>
-              )}
+            {(needsTiebreaker(team1Results, team2Results) || team1Results.match3 !== null) && (
+              <>
+                <Separator className="bg-gray-600" />
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Tiebreaker:</span>
+                  {team1Results.match3 && team2Results.match3 && <Badge variant="outline" className="py-1 px-3 bg-gray-700 text-white">
+                    {getMatchResult('match3') ? getMatchResult('match3') : null}
+                  </Badge>}
+                </div>
+              </>
+            )}
             {myMatchResults?.confirm && opponentMatchResults?.confirm && (
               <>
                 <Separator className="bg-gray-600" />
@@ -505,7 +551,6 @@ export function MatchResultsComponent({
     )
   }
 
-
   return (
     <div className="min-h-screen bg-[#011624] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
@@ -532,10 +577,20 @@ export function MatchResultsComponent({
               {opponentTeam && renderTeamCard(opponentTeam.toLowerCase().replace(/\s/g, '-'))}
             </div>
           </div>
-          <div className={bothTeamsConfirmed ? `lg:col-span-3` : `lg:col-span-1`}>{renderMatchOverview()} <Button onClick={() =>
-          {
-            router.push('/my-matches')
-          }} className='mt-4'>Gå tilbake</Button></div>
+          <div className={bothTeamsConfirmed ? `lg:col-span-3` : `lg:col-span-1`}>
+            {renderMatchOverview()}{' '}
+            {bothTeamsConfirmed && (
+              <Button
+                onClick={() =>
+                {
+                  router.push('/my-matches')
+                }}
+                className="mt-4"
+              >
+                Gå tilbake
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -575,13 +630,13 @@ async function updateMatchResults(contact_person: string, round: number, result:
   }
 }
 
-async function confirmResults(contact_person: string, round: number, winner: boolean)
+async function confirmResults(contact_person: string, round: number, winner: boolean, confirm: boolean)
 {
   const { error } = await supabase
     .from('match_results')
     .update({
-      confirm: true,
-      winner: winner
+      confirm: confirm,
+      winner: winner,
     })
     .eq('contact_person', contact_person)
     .eq('round', round)
@@ -616,7 +671,9 @@ async function createMatchResultsIfNotExists({
       const pickBanCompletedForRound =
         res.data?.find((e) => e.team_slug === homeTeam || (e.team_slug === awayTeam && e.round === round))
           ?.completed === true
-      const matchUUID = res.data?.find((e) => e.team_slug === homeTeam || (e.team_slug === awayTeam && e.round === round)).matchUUID
+      const matchUUID = res.data?.find(
+        (e) => e.team_slug === homeTeam || (e.team_slug === awayTeam && e.round === round),
+      ).matchUUID
 
       if (res.data && res.data.length > 0 && pickBanCompletedForRound) {
         supabase
@@ -633,7 +690,7 @@ async function createMatchResultsIfNotExists({
                   opponent: myTeamSlug === homeTeam ? awayTeam : homeTeam,
                   round: round,
                   team_slug: myTeamSlug,
-                  matchUUID: matchUUID
+                  matchUUID: matchUUID,
                 },
               })
             }
@@ -641,8 +698,6 @@ async function createMatchResultsIfNotExists({
       }
     })
 }
-
-
 
 async function getMatchresults(contact_person: string, round: number)
 {

@@ -2,20 +2,18 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { useRouter, useSearchParams } from 'next/navigation'
 import supabase from '@/utils/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Check, X, Shield } from 'lucide-react'
 import { dungeonConfig } from '../../../turnering/utils/dungeonConfig'
-import { TMatchData } from '../../../turnering/components/Matches'
 import { createPickBanRow, PickAndBansType } from '../Matches'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import ReadyScreen from './pickban/ReadyScreen'
 import CompletedScreen from './pickban/CompletedScreen'
 import { useGetUserData } from '@/app/auth/useGetUserData'
-import { match } from 'assert'
+import { Match } from '@/app/(main)/turnering/hooks/useGenerateRoundRobin'
 
 function PickBanV2({
   matchData,
@@ -23,19 +21,18 @@ function PickBanV2({
   contact_person,
   sanityTeamData,
 }: {
-  matchData: TMatchData[]
+  matchData: Match
   pickAndBansTable: PickAndBansType[]
   contact_person: string
   sanityTeamData: MythicPlusTeam[]
 })
 {
-
-  const homeTeam = matchData[ 0 ].team_slug
-  const awayTeam = matchData[ 1 ].team_slug
+  const homeTeam = matchData.teams[ 0 ].team_slug
+  const awayTeam = matchData.teams[ 1 ].team_slug
   const { user, loading } = useGetUserData()
   const email = user?.data.user?.email
-  const round = matchData?.[ 0 ]?.round
-  const opponentTeam = matchData?.find((match) => match.contactPerson === undefined)?.team_slug
+  const round = matchData?.teams[ 0 ]?.round
+  const opponentTeam = matchData.teams?.find((match) => match.contactPerson === undefined)?.team_slug
   const myPickAndBansTable = pickAndBansTable.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBansTable.find((e) => e.team_slug === opponentTeam && e.round === round)
   const [ myTeamData, setMyTeamData ] = useState<PickAndBansType | undefined>(myPickAndBansTable)
@@ -49,9 +46,15 @@ function PickBanV2({
   useEffect(() =>
   {
     if (!email || !round || !myTeamSlug || !opponentTeam) return
-    createPickBanRowIfNotExist({ email, round, team_slug: myTeamSlug, opponent: opponentTeam, home: isHomeTeam, matchUUID: `${matchData[ 0 ].home}` })
+    createPickBanRowIfNotExist({
+      email,
+      round,
+      team_slug: myTeamSlug,
+      opponent: opponentTeam,
+      home: isHomeTeam,
+      matchUUID: `${matchData.teams[ 0 ].home}`,
+    })
   }, [ email, isHomeTeam, myTeamSlug, opponentTeam, round ])
-
 
   useEffect(() =>
   {
@@ -181,7 +184,6 @@ function PickBanV2({
         },
         (payload) =>
         {
-
           const updatedData = payload.new as PickAndBansType
 
           if (payload.new.contact_person === contact_person && round === payload.new.round) {
@@ -254,12 +256,13 @@ function PickBanV2({
   if (!teamReady || !opponentReady) {
     return (
       <ReadyScreen
-        homeTeam={homeTeam}
-        awayTeam={awayTeam}
+        homeTeam={matchData.teams[ 0 ].name}
+        awayTeam={matchData.teams[ 1 ].name}
         round={round}
         opponentReady={opponentReady}
         setReady={setReady}
         teamReady={teamReady}
+        sanityTeamData={sanityTeamData}
       />
     )
   }
@@ -418,23 +421,31 @@ function PickBanV2({
 
 export default PickBanV2
 
-
-
-export async function createPickBanRowIfNotExist({ email, round, team_slug, opponent, home, matchUUID }: { email: string, round: number, team_slug: string, opponent: string, home: boolean, matchUUID: string })
+export async function createPickBanRowIfNotExist({
+  email,
+  round,
+  team_slug,
+  opponent,
+  home,
+  matchUUID,
+}: {
+  email: string
+  round: number
+  team_slug: string
+  opponent: string
+  home: boolean
+  matchUUID: string
+})
 {
-  await supabase.from('pick_ban').select('*').eq('contact_person', email).eq('round', round).then((res) =>
-  {
-    if (res.data && res.data.length === 0) {
-      createPickBanRow(
-        round,
-        email,
-        team_slug,
-        opponent,
-        home,
-        matchUUID
-      )
-    }
-  }
-  )
+  await supabase
+    .from('pick_ban')
+    .select('*')
+    .eq('contact_person', email)
+    .eq('round', round)
+    .then((res) =>
+    {
+      if (res.data && res.data.length === 0) {
+        createPickBanRow(round, email, team_slug, opponent, home, matchUUID)
+      }
+    })
 }
-

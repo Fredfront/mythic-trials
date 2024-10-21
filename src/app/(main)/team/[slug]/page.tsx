@@ -6,23 +6,13 @@ import { getTyrannicalLeaderboardData } from '@/app/api/leaderboard/tyrannical'
 import { Player, getAllTeams } from '@/app/api/getAllTeams'
 import { Suspense } from 'react'
 import { getDungeonInfo } from '@/utils/dungeonHelpers'
-import atalImg from '../../../../../public/dungeons/atal.webp'
-import blackrookholdImg from '../../../../../public/dungeons/blackrookhold.webp'
-import darkheartImg from '../../../../../public/dungeons/darkheart.webp'
-import everbloomImg from '../../../../../public/dungeons/everbloom.webp'
-import fallImg from '../../../../../public/dungeons/fall.webp'
-import riseImg from '../../../../../public/dungeons/rise.webp'
-import throneImg from '../../../../../public/dungeons/throne.webp'
-import waycrestImg from '../../../../../public/dungeons/waycrest.webp'
 import { Skeleton } from '@/components/ui/skeleton'
 import { notFound } from 'next/navigation'
-import { getFortifiedLeaderboardData } from '@/app/api/leaderboard/fortified'
 
 export default async function Page({ params }: { params: { slug: string } })
 {
   const token = await getToken()
   const tyrannical = await getTyrannicalLeaderboardData()
-  const fortified = await getFortifiedLeaderboardData()
   const allTeams = await getAllTeams()
   const data = allTeams.find((e) => e.teamSlug === params.slug)
   const idForRef = allTeams.find((e) => e.teamName === data?.teamName)?._id
@@ -46,12 +36,6 @@ export default async function Page({ params }: { params: { slug: string } })
   const hasAltCharacters = data?.players.some((player) => player.alts && player.alts.length > 0)
 
   const { timeForTeam: timeForTeamTyrannical } = getDungeonInfo(tyrannical, idForRef)
-  const { timeForTeam: timeForTeamFortified } = getDungeonInfo(fortified, idForRef)
-
-
-
-
-
 
   if (allTeams.find((e) => e.teamSlug === params.slug) === undefined) return notFound()
 
@@ -123,23 +107,17 @@ export default async function Page({ params }: { params: { slug: string } })
                   <Skeleton className="h-12 w-12 rounded-full" /> <Skeleton className="h-4 w-[250px]" />
                 </div>
               }
-            >
-
-            </Suspense>
+            ></Suspense>
           </div>
 
           <div>
-
-
             <Suspense
               fallback={
                 <div className="flex">
                   <Skeleton className="h-12 w-12 rounded-full" /> <Skeleton className="h-4 w-[250px]" />
                 </div>
               }
-            >
-
-            </Suspense>
+            ></Suspense>
           </div>
         </div>
       </div>

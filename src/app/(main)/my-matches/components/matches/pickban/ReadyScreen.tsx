@@ -4,14 +4,19 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle, XCircle } from 'lucide-react'
+import { MythicPlusTeam } from '@/app/api/getAllTeams'
+import Image from 'next/image'
+import { urlForImage } from '../../../../../../../sanity/lib/image'
 
-interface ReadyScreenProps {
+interface ReadyScreenProps
+{
   round: number
   homeTeam: string
   awayTeam: string
   teamReady: boolean
   opponentReady: boolean
   setReady: () => void
+  sanityTeamData: MythicPlusTeam[]
 }
 
 export default function ReadyScreen({
@@ -21,7 +26,11 @@ export default function ReadyScreen({
   teamReady,
   opponentReady,
   setReady,
-}: ReadyScreenProps) {
+  sanityTeamData,
+}: ReadyScreenProps)
+{
+
+
   return (
     <div className="container mx-auto p-4">
       <Card className="max-w-2xl mx-auto">
@@ -31,8 +40,21 @@ export default function ReadyScreen({
         <CardContent className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">Round: {round}</h2>
-            <h3 className="text-xl">
-              {homeTeam} vs {awayTeam}
+            <h3 className="text-xl flex justify-center">
+              {sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamImage.asset._ref && <Image
+                src={urlForImage(sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamImage.asset._ref as string) || ''}
+                alt={''}
+                width={45}
+                height={45}
+                className="mr-3 w-8 h-8 rounded-full"
+              />}{sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamName} vs {sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamName}
+              {sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamImage.asset._ref && <Image
+                src={urlForImage(sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamImage.asset._ref as string) || ''}
+                alt={''}
+                width={45}
+                height={45}
+                className="ml-3 w-8 h-8 rounded-full"
+              />}
             </h3>
           </div>
 
@@ -65,7 +87,6 @@ export default function ReadyScreen({
             <Button
               onClick={setReady}
               className={`${teamReady ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} min-w-[200px]`}
-              disabled={teamReady}
             >
               {teamReady ? 'Ready' : 'Set Ready'}
             </Button>
