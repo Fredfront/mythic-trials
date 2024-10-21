@@ -13,7 +13,7 @@ import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import ReadyScreen from './pickban/ReadyScreen'
 import CompletedScreen from './pickban/CompletedScreen'
 import { useGetUserData } from '@/app/auth/useGetUserData'
-import { Match } from '@/app/(main)/turnering/hooks/useGenerateRoundRobin'
+import { Match } from '../../../../../../types'
 
 function PickBanV2({
   matchData,
@@ -42,6 +42,7 @@ function PickBanV2({
   const isMyTurn = myTeamData?.my_turn === true
   const myTeamSlug = sanityTeamData.find((e) => e.contactPerson === email)?.teamSlug || ''
   const isHomeTeam = myPickAndBansTable?.home === true
+  const matchUUID = `${matchData.teams?.[ 0 ].team_slug}-${matchData.teams?.[ 1 ].team_slug}-round-${matchData.teams?.[ 0 ].round}-roundDate-${matchData.teams?.[ 0 ].roundDate}`
 
   useEffect(() =>
   {
@@ -52,9 +53,9 @@ function PickBanV2({
       team_slug: myTeamSlug,
       opponent: opponentTeam,
       home: isHomeTeam,
-      matchUUID: `${matchData.teams[ 0 ].home}`,
+      matchUUID: matchUUID,
     })
-  }, [ email, isHomeTeam, myTeamSlug, opponentTeam, round ])
+  }, [ email, isHomeTeam, myTeamSlug, opponentTeam, round, matchUUID ])
 
   useEffect(() =>
   {

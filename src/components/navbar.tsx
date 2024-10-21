@@ -40,7 +40,6 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
     { href: '/contact', label: 'Kontakt' },
   ]
 
-  console.log(pathname)
 
   return (
     <nav className="bg-[#011624] p-4 border-b-4 border-gradient">

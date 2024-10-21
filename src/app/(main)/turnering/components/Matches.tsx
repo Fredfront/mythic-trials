@@ -1,14 +1,15 @@
 'use client'
 
 import React from 'react'
-import { useGenerateRoundRobin } from '../hooks/useGenerateRoundRobin'
-import { Match, PickAndBansType } from '../../my-matches/components/Matches'
+import { PickAndBansType } from '../../my-matches/components/Matches'
 import { TMatchResults, TTeam } from '../../my-matches/results/components/Result'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion'
 import { AccordionTrigger } from '@radix-ui/react-accordion'
+import { Badge } from '@/components/ui/badge'
+import { SupabaseTeamType, TournamentSchedule } from '../../../../../types'
 
 
 
@@ -17,14 +18,20 @@ export default function Matches({
   teams,
   matchResults,
   sanityTeamData,
+  roundDates,
+  schedule,
 }: {
   pickAndBanData: PickAndBansType[]
-  teams: TTeam[]
+  teams: SupabaseTeamType[]
   matchResults: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
+  roundDates: { round: number, round_date: string }[]
+  schedule: any
 })
 {
-  const { detailedSchedule } = useGenerateRoundRobin(teams, '')
+
+  const detailedSchedule = schedule as TournamentSchedule
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-10 w-full m-auto max-w-7xl p-4">
@@ -37,7 +44,6 @@ export default function Matches({
                 {round.map((match, matchIndex) =>
                 {
                   const matchUUID = `${match.teams?.[ 0 ].team_slug}-${match.teams?.[ 1 ].team_slug}-round-${match.teams?.[ 0 ].round}-roundDate-${match.teams?.[ 0 ].roundDate}`
-
                   const homeTeam = match.teams?.[ 0 ].team_slug
                   const awayTeam = match.teams?.[ 1 ].team_slug
                   const homeTeamName = match.teams?.[ 0 ].name
@@ -73,7 +79,7 @@ export default function Matches({
                   return (
                     <AccordionItem key={matchIndex} value={matchIndex.toString()}>
                       <AccordionTrigger className="bg-gray-700 p-4 w-full rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
-                        <div className="flex  ">
+                        <div className="flex relative ">
                           <div className="flex w-2/5 md:w-[40%] text-right justify-end">
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                               {confirmedResult ? (

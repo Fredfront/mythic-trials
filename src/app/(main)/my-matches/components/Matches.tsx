@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import { Match, SupabaseTeamType, useGenerateRoundRobin } from '../../turnering/hooks/useGenerateRoundRobin'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import { PostgrestSingleResponse } from '@supabase/supabase-js'
 import supabase from '@/utils/supabase/client'
@@ -14,30 +13,31 @@ import Image from 'next/image'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import PickBanV2 from './matches/PickBanV2'
 import { InfoBoxComponent } from '@/components/info-box'
+import { Match, SupabaseTeamType } from '../../../../../types'
+import { useGenerateRoundRobin } from '../../turnering/hooks/useGenerateRoundRobin'
 
 export function Matches({
   teams,
   pickAndBansTable,
   matchResultsTable,
   sanityTeamData,
+  roundDates,
 }: {
   teams: PostgrestSingleResponse<SupabaseTeamType[]>
   pickAndBansTable: PostgrestSingleResponse<PickAndBansType[]>
   matchResultsTable: PostgrestSingleResponse<TMatchResults[]>
   sanityTeamData: MythicPlusTeam[]
+  roundDates: { round: number; round_date: string }[]
 })
 {
   const { user } = useGetUserData()
   const email = user?.data.user?.email
-  const sortedTeams = teams.data?.sort(
-    (a: { points: number }, b: { points: number }) => a.points - b.points,
-  ) as SupabaseTeamType[]
-
+  const sortedTeams = teams.data as SupabaseTeamType[]
   const myTeam = sanityTeamData.find((team) => team.contactPerson === email)
 
   const router = useRouter()
 
-  const { detailedSchedule } = useGenerateRoundRobin(sortedTeams, email)
+  const { detailedSchedule } = useGenerateRoundRobin(roundDates, sortedTeams, email)
 
 
   const [ matchData, setMatchData ] = React.useState<Match | null>(null)

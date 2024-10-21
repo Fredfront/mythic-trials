@@ -10,6 +10,6 @@ export default async function Template({ children }: { children: React.ReactNode
 
 
   return (
-    <TournamentNavbar signupData={signupData} children={children} />
+    <TournamentNavbar signupData={signupData}>{children}</TournamentNavbar>
   )
 }
