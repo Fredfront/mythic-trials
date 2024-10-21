@@ -1,32 +1,26 @@
 'use client'
 
 import React from 'react'
-import { PickAndBansType } from '../../my-matches/components/Matches'
-import { TMatchResults, TTeam } from '../../my-matches/results/components/Result'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion'
 import { AccordionTrigger } from '@radix-ui/react-accordion'
-import { Badge } from '@/components/ui/badge'
-import { SupabaseTeamType, TournamentSchedule } from '../../../../../types'
+import { TournamentSchedule } from '../../../../../types'
+import { PickAndBansType, TMatchResults } from '../../../../../supabase/dbFunctions'
 
 
 
 export default function Matches({
-  pickAndBanData,
-  teams,
+
   matchResults,
   sanityTeamData,
-  roundDates,
   schedule,
 }: {
   pickAndBanData: PickAndBansType[]
-  teams: SupabaseTeamType[]
   matchResults: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
-  roundDates: { round: number, round_date: string }[]
-  schedule: any
+  schedule: TournamentSchedule
 })
 {
 

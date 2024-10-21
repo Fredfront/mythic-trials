@@ -8,7 +8,8 @@ import { Trophy, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 
-interface CompletedScreenProps {
+interface CompletedScreenProps
+{
   homeTeam: string
   awayTeam: string
   pickedDungeons: Array<{ id: number; name: string; image: string }>
@@ -22,7 +23,8 @@ export default function CompletedScreen({
   pickedDungeons,
   tiebreakerDungeon,
   round,
-}: CompletedScreenProps) {
+}: CompletedScreenProps)
+{
   const router = useRouter()
 
   return (
@@ -40,7 +42,7 @@ export default function CompletedScreen({
             <h2 className="text-2xl font-semibold mb-2">
               {homeTeam} vs {awayTeam}
             </h2>
-            <p className="text-lg text-muted-foreground">The following maps have been selected:</p>
+            <p className="text-lg text-muted-foreground">Følgende dungeons er valgt:</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -55,7 +57,7 @@ export default function CompletedScreen({
                       objectFit="cover"
                       className="rounded-lg"
                     />
-                    <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">Map {index + 1}</Badge>
+                    <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">Dungeon {index + 1}</Badge>
                   </div>
                   <h3 className="text-lg font-semibold text-center">{dungeon.name}</h3>
                 </CardContent>
@@ -84,7 +86,7 @@ export default function CompletedScreen({
           <div className="text-center text-lg">
             <p className="flex items-center justify-center">
               <MapPin className="w-5 h-5 mr-2 text-primary" />
-              Good luck in your matches!
+              Lykke til i kampen!
             </p>
           </div>
         </CardContent>

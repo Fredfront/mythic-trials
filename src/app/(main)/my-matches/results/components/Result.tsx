@@ -2,13 +2,13 @@
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
-import { PickAndBansType } from '../../components/Matches'
 import { dungeonConfig } from '@/app/(main)/turnering/utils/dungeonConfig'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import supabase from '@/utils/supabase/client'
 import { ArrowRight } from 'lucide-react'
+import { PickAndBansType, TTeam, TMatchResults, createMatchResultsRow, confirmMatchResults, updateMatchResults } from '../../../../../../supabase/dbFunctions'
 
 export default function Result({
   pickAndBanData,
@@ -304,92 +304,3 @@ export default function Result({
   )
 }
 
-export type TMatchResults = {
-  contact_person: string
-  id: number
-  match_1: number | null
-  match_2: number | null
-  match_3: number | null
-  opponent: string
-  round: number
-  team_slug: string
-  confirm: boolean
-  winner: boolean
-  matchUUID: string
-}
-
-export type TTeam = {
-  contact_person: string
-  id: number
-  name: string
-  points: number
-  team_slug: string
-}
-
-async function confirmMatchResults(contact_person: string, round: number, confirm: boolean, winner: boolean)
-{
-  const { data, error } = await supabase
-    .from('match_results')
-    .update({ confirm: confirm, winner: winner })
-    .eq('contact_person', contact_person)
-    .eq('round', round)
-
-  if (error) {
-    console.error(error)
-    return error
-  }
-}
-
-async function updateMatchResults(contact_person: string, round: number, result: number, match: number)
-{
-  let payload = {}
-  if (match === 1) {
-    payload = {
-      match_1: result,
-    }
-  }
-
-  if (match === 2) {
-    payload = {
-      match_2: result,
-    }
-  }
-
-  if (match === 3) {
-    payload = {
-      match_3: result,
-    }
-  }
-
-  const { error } = await supabase
-    .from('match_results')
-    .update(payload)
-    .eq('contact_person', contact_person)
-    .eq('round', round)
-
-  if (error) {
-    console.error(error)
-    return error
-  }
-}
-
-export async function createMatchResultsRow(
-  round: number,
-  contact_person: string,
-  team_slug: string,
-  opponent: string,
-)
-{
-  await supabase.from('match_results').insert([
-    {
-      contact_person: contact_person,
-      round: round,
-      team_slug: team_slug,
-      opponent: opponent,
-      match_1: null,
-      match_2: null,
-      match_3: null,
-      confirm: false,
-    },
-  ])
-}

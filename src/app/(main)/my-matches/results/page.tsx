@@ -1,11 +1,11 @@
 import { serverClient } from '@/utils/supabase/newServer'
 
 import React from 'react'
-import Result, { TMatchResults, TTeam } from './components/Result'
-import { PickAndBansType } from '../components/Matches'
+import Result from './components/Result'
 import { MatchResultsComponent } from '@/components/match-results'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { PickAndBansType, TTeam, TMatchResults } from '../../../../../supabase/dbFunctions'
 
 export const revalidate = 0
 

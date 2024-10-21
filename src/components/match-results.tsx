@@ -8,12 +8,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, CheckCircle2, XCircle, Trophy } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Separator } from '@/components/ui/separator'
-import { create_match_results, PickAndBansType } from '@/app/(main)/my-matches/components/Matches'
-import { TMatchResults, TTeam } from '@/app/(main)/my-matches/results/components/Result'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
 import { dungeonConfig } from '@/app/(main)/turnering/utils/dungeonConfig'
+import { PickAndBansType, TTeam, TMatchResults, create_match_results } from '../../supabase/dbFunctions'
 
 type MatchResult = 'win' | 'loss' | null
 

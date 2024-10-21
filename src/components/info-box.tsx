@@ -10,7 +10,7 @@ export function InfoBoxComponent()
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>Important Notice</AlertTitle>
       <AlertDescription>
-        Please be aware that if you do not submit your match results within 24 hours of the match, you will lose by walkover.
+        Vennligst vær oppmerksom på at hvis du ikke sender inn kampresultatene dine innen 24 timer etter kampen, vil du tape på walkover.
       </AlertDescription>
     </Alert>
   )

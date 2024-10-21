@@ -8,12 +8,13 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Check, X, Shield } from 'lucide-react'
 import { dungeonConfig } from '../../../turnering/utils/dungeonConfig'
-import { createPickBanRow, PickAndBansType } from '../Matches'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import ReadyScreen from './pickban/ReadyScreen'
 import CompletedScreen from './pickban/CompletedScreen'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import { Match } from '../../../../../../types'
+import { createPickBanRowIfNotExist, PickAndBansType } from '../../../../../../supabase/dbFunctions'
+import { match } from 'assert'
 
 function PickBanV2({
   matchData,
@@ -29,10 +30,11 @@ function PickBanV2({
 {
   const homeTeam = matchData.teams[ 0 ].team_slug
   const awayTeam = matchData.teams[ 1 ].team_slug
-  const { user, loading } = useGetUserData()
+  const matchUUID = `${matchData.teams?.[ 0 ].team_slug}-${matchData.teams?.[ 1 ].team_slug}-round-${matchData.teams?.[ 0 ].round}-roundDate-${matchData.teams?.[ 0 ].roundDate}`
+  const { user } = useGetUserData()
   const email = user?.data.user?.email
   const round = matchData?.teams[ 0 ]?.round
-  const opponentTeam = matchData.teams?.find((match) => match.contactPerson === undefined)?.team_slug
+  const opponentTeam = matchData.teams?.find((match) => match.matchUUID === matchUUID && email !== match.contactPerson)?.team_slug
   const myPickAndBansTable = pickAndBansTable.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBansTable.find((e) => e.team_slug === opponentTeam && e.round === round)
   const [ myTeamData, setMyTeamData ] = useState<PickAndBansType | undefined>(myPickAndBansTable)
@@ -42,7 +44,6 @@ function PickBanV2({
   const isMyTurn = myTeamData?.my_turn === true
   const myTeamSlug = sanityTeamData.find((e) => e.contactPerson === email)?.teamSlug || ''
   const isHomeTeam = myPickAndBansTable?.home === true
-  const matchUUID = `${matchData.teams?.[ 0 ].team_slug}-${matchData.teams?.[ 1 ].team_slug}-round-${matchData.teams?.[ 0 ].round}-roundDate-${matchData.teams?.[ 0 ].roundDate}`
 
   useEffect(() =>
   {
@@ -172,6 +173,8 @@ function PickBanV2({
       .eq('round', round)
   }, [ contact_person, opponentData?.step, round ])
 
+  console.log(opponentData)
+
   useEffect(() =>
   {
     const channel = supabase
@@ -257,8 +260,8 @@ function PickBanV2({
   if (!teamReady || !opponentReady) {
     return (
       <ReadyScreen
-        homeTeam={matchData.teams[ 0 ].name}
-        awayTeam={matchData.teams[ 1 ].name}
+        homeTeam={matchData.teams[ 0 ].team_slug}
+        awayTeam={matchData.teams[ 1 ].team_slug}
         round={round}
         opponentReady={opponentReady}
         setReady={setReady}
@@ -422,31 +425,3 @@ function PickBanV2({
 
 export default PickBanV2
 
-export async function createPickBanRowIfNotExist({
-  email,
-  round,
-  team_slug,
-  opponent,
-  home,
-  matchUUID,
-}: {
-  email: string
-  round: number
-  team_slug: string
-  opponent: string
-  home: boolean
-  matchUUID: string
-})
-{
-  await supabase
-    .from('pick_ban')
-    .select('*')
-    .eq('contact_person', email)
-    .eq('round', round)
-    .then((res) =>
-    {
-      if (res.data && res.data.length === 0) {
-        createPickBanRow(round, email, team_slug, opponent, home, matchUUID)
-      }
-    })
-}

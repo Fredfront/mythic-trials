@@ -111,11 +111,9 @@ async function Page()
   return (
     <Matches
       schedule={sortedRounds}
-      teams={teams}
       matchResults={matchResultsTable.data ?? []}
       pickAndBanData={pickAndBansTable.data ?? []}
       sanityTeamData={sanityTeamData}
-      roundDates={roundDates.data ?? []}
     />
   )
 }
