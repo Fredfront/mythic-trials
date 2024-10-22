@@ -2,13 +2,11 @@
 import { Icons } from '@/components/loading'
 import { useState } from 'react'
 
-export default function Contact()
-{
-  const [ error, setError ] = useState(false)
-  const [ success, setSuccess ] = useState(false)
-  const [ loading, setLoading ] = useState(false)
-  async function handleSubmit(event: any)
-  {
+export default function Contact() {
+  const [error, setError] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
+  async function handleSubmit(event: any) {
     event.preventDefault()
     const formData = new FormData(event.target)
 

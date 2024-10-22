@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Mail, Send, Loader2, CheckCircle, AlertCircle } from "lucide-react"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Mail, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
 export function ContactForm() {
   const [error, setError] = useState(false)
@@ -17,11 +17,7 @@ export function ContactForm() {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
 
-    if (
-      !formData.get('email') ||
-      !formData.get('subject') ||
-      !formData.get('message')
-    ) {
+    if (!formData.get('email') || !formData.get('subject') || !formData.get('message')) {
       return
     }
 
@@ -112,23 +108,11 @@ export function ContactForm() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="form-subject">Emne</Label>
-            <Input
-              id="form-subject"
-              required
-              name="subject"
-              type="text"
-              placeholder="Skriv emnet her"
-            />
+            <Input id="form-subject" required name="subject" type="text" placeholder="Skriv emnet her" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="form-message">Din melding</Label>
-            <Textarea
-              id="form-message"
-              required
-              name="message"
-              rows={5}
-              placeholder="Skriv din melding her..."
-            />
+            <Textarea id="form-message" required name="message" rows={5} placeholder="Skriv din melding her..." />
           </div>
         </form>
       </CardContent>

@@ -28,23 +28,19 @@ type TeamStats = {
   image: string
 }
 
-interface ResultsTableProps
-{
+interface ResultsTableProps {
   matchResults: MatchResult[]
   sanityTeamData: MythicPlusTeam[]
 }
 
-const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamData }) =>
-{
+const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamData }) => {
   // Calculate team stats
-  const calculateTeamStats = (results: MatchResult[]): TeamStats[] =>
-  {
+  const calculateTeamStats = (results: MatchResult[]): TeamStats[] => {
     const teamStatsMap: Record<string, TeamStats> = {}
 
-    results.forEach((result) =>
-    {
-      if (!teamStatsMap[ result.team_slug ]) {
-        teamStatsMap[ result.team_slug ] = {
+    results.forEach((result) => {
+      if (!teamStatsMap[result.team_slug]) {
+        teamStatsMap[result.team_slug] = {
           team_slug: result.team_slug,
           team_name: sanityTeamData.find((team) => team.teamSlug === result.team_slug)?.teamName ?? '',
           wins: 0,
@@ -54,7 +50,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
         }
       }
 
-      const teamStats = teamStatsMap[ result.team_slug ]
+      const teamStats = teamStatsMap[result.team_slug]
       let points = 0
       if (result.match_1 === 1 && result.match_2 === 1) {
         points = 2 // Win both matches
@@ -91,8 +87,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
           </TableRow>
         </TableHeader>
         <TableBody className="rounded-b-lg">
-          {teamStats.map((team, index) =>
-          {
+          {teamStats.map((team, index) => {
             return (
               <TableRow key={index} className="bg-[#052D49] even:bg-[#0B436C] border-none text-white">
                 <TableCell className="min-w-32 text-white font-bold flex items-center border-r-[1px] border-black">
@@ -102,7 +97,8 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
                     width={45}
                     height={45}
                     className="mr-3 w-8 h-8 rounded-full"
-                  /><span className="text-sm font-bold"> {team.team_name}</span>
+                  />
+                  <span className="text-sm font-bold"> {team.team_name}</span>
                 </TableCell>
                 <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-black">
                   {team.wins}
@@ -110,9 +106,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
                 <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-black">
                   {team.losses}
                 </TableCell>
-                <TableCell className="font-bold text-[#FCD20A] text-lg text-center">
-                  {team.points}
-                </TableCell>
+                <TableCell className="font-bold text-[#FCD20A] text-lg text-center">{team.points}</TableCell>
               </TableRow>
             )
           })}

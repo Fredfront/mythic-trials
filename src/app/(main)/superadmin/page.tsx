@@ -6,9 +6,10 @@ import { Match, MatchRecord, SupabaseTeamType, Team, TeamMatch, TournamentSchedu
 
 async function Page()
 {
-  const teams = await (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
-  const roundDates = await (await ServerClient.from('rounds').select('*')).data as { round: number; round_date: string }[]
-
+  const teams = (await (await ServerClient.from('teams').select('*')).data) as SupabaseTeamType[]
+  const roundDates = (await (
+    await ServerClient.from('rounds').select('*')
+  ).data) as { round: number; round_date: string }[]
 
   // Fetch matches
   const matchesResponse = await ServerClient.from('matches')
@@ -56,6 +57,16 @@ async function Page()
       roundDate: match.round_date,
       matchUUID: match.match_uuid,
       round_startTime: match.round_startTime,
+      away_team_agree_reschedule: match.away_team_agree_reschedule,
+      home_team_agree_reschedule: match.home_team_agree_reschedule,
+      away_team_proposed_rescheduled_round_date: match.away_team_proposed_rescheduled_round_date,
+      away_team_proposed_rescheduled_round_startTime: match.away_team_proposed_rescheduled_round_startTime,
+      home_team_proposed_rescheduled_round_date: match.home_team_proposed_rescheduled_round_date,
+      home_team_proposed_rescheduled_round_startTime: match.home_team_proposed_rescheduled_round_startTime,
+      rescheduled: match.rescheduled,
+      rescheduled_round_date: match.rescheduled_round_date,
+      rescheduled_round_startTime: match.rescheduled_round_startTime,
+      id: match.id,
     }
 
     const awayTeamMatch: TeamMatch = {
@@ -67,6 +78,16 @@ async function Page()
       roundDate: match.round_date,
       matchUUID: match.match_uuid,
       round_startTime: match.round_startTime,
+      away_team_agree_reschedule: match.away_team_agree_reschedule,
+      home_team_agree_reschedule: match.home_team_agree_reschedule,
+      away_team_proposed_rescheduled_round_date: match.away_team_proposed_rescheduled_round_date,
+      away_team_proposed_rescheduled_round_startTime: match.away_team_proposed_rescheduled_round_startTime,
+      home_team_proposed_rescheduled_round_date: match.home_team_proposed_rescheduled_round_date,
+      home_team_proposed_rescheduled_round_startTime: match.home_team_proposed_rescheduled_round_startTime,
+      rescheduled: match.rescheduled,
+      rescheduled_round_date: match.rescheduled_round_date,
+      rescheduled_round_startTime: match.rescheduled_round_startTime,
+      id: match.id,
     }
 
     // Create Match object
@@ -94,12 +115,11 @@ async function Page()
       return sortedMatches
     })
 
-
-
   return (
     <>
-      <div className="text-center p-4 text-4xl font-bold items-center justify-center flex flex-col gap-20">Dashbord
-        <CreateMatches schedule={sortedRounds} teams={teams ?? []} roundDates={roundDates} email='' />
+      <div className="text-center p-4 text-4xl font-bold items-center justify-center flex flex-col gap-20">
+        Dashbord
+        <CreateMatches schedule={sortedRounds} teams={teams ?? []} roundDates={roundDates} email="" />
       </div>
     </>
   )

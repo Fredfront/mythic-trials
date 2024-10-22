@@ -33,7 +33,14 @@ export type MatchRecord = {
   round_startTime: string
   rescheduled_round_date: string | null
   rescheduled_round_startTime: string | null
+  home_team_proposed_rescheduled_round_date: string | null
+  home_team_proposed_rescheduled_round_startTime: string | null
+  away_team_proposed_rescheduled_round_date: string | null
+  away_team_proposed_rescheduled_round_startTime: string | null
+  proposed_rescheduled_round_startTime: string | null
   featured: boolean
+  home_team_agree_reschedule: boolean
+  away_team_agree_reschedule: boolean
 }
 
 export type MatchWithTeams = {
@@ -55,6 +62,16 @@ export type TeamMatch = {
   roundDate: string
   matchUUID: string
   round_startTime?: string
+  rescheduled: boolean
+  rescheduled_round_date: string | null
+  rescheduled_round_startTime: string | null
+  home_team_proposed_rescheduled_round_date: string | null
+  home_team_proposed_rescheduled_round_startTime: string | null
+  away_team_proposed_rescheduled_round_date: string | null
+  away_team_proposed_rescheduled_round_startTime: string | null
+  home_team_agree_reschedule: boolean
+  away_team_agree_reschedule: boolean
+  id: string
 }
 
 export type Match = {

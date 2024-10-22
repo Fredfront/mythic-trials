@@ -1,19 +1,18 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Calendar, List, Scroll, Users, Menu, X } from "lucide-react"
-import Link from "next/link"
-import { urlForImage } from "../../../../../sanity/lib/image"
-import { usePathname } from "next/navigation"
-import { SignupPage } from "@/app/api/signup/getSignupInfo"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Calendar, List, Scroll, Users, Menu, X } from 'lucide-react'
+import Link from 'next/link'
+import { urlForImage } from '../../../../../sanity/lib/image'
+import { usePathname } from 'next/navigation'
+import { SignupPage } from '@/app/api/signup/getSignupInfo'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { TracingBeam } from '@/components/ui/tracing-beam'
 
-const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage, children: React.ReactNode }) =>
-{
+const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; children: React.ReactNode }) => {
   const pathname = usePathname()
-  const [ isOpen, setIsOpen ] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const menuItems = [
     { href: '/turnering', icon: Calendar, label: 'Kamper' },
@@ -28,8 +27,9 @@ const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage, ch
         <li key={item.href}>
           <Link href={item.href}>
             <span
-              className={`flex items-center gap-4 hover:font-bold cursor-pointer ${pathname === item.href ? 'text-[#FDB202] font-bold' : 'text-white'
-                }`}
+              className={`flex items-center gap-4 hover:font-bold cursor-pointer ${
+                pathname === item.href ? 'text-[#FDB202] font-bold' : 'text-white'
+              }`}
             >
               <item.icon className="h-6 w-6" />
               {item.label}
@@ -48,15 +48,14 @@ const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage, ch
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button size="icon" className="ml-12 bg-[#011624]">
-                  <Menu className="h-12 w-12" color='white' />
-                  <span className='text-white'>Turnernings meny</span>
+                  <Menu className="h-12 w-12" color="white" />
+                  <span className="text-white">Turnernings meny</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[240px] sm:w-[280px]">
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-lg font-semibold">Turnering</h2>
-
                   </div>
                   <NavList />
                 </div>

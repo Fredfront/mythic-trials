@@ -14,7 +14,6 @@ import CompletedScreen from './pickban/CompletedScreen'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import { Match } from '../../../../../../types'
 import { createPickBanRowIfNotExist, PickAndBansType } from '../../../../../../supabase/dbFunctions'
-import { match } from 'assert'
 
 function PickBanV2({
   matchData,
@@ -34,7 +33,9 @@ function PickBanV2({
   const { user } = useGetUserData()
   const email = user?.data.user?.email
   const round = matchData?.teams[ 0 ]?.round
-  const opponentTeam = matchData.teams?.find((match) => match.matchUUID === matchUUID && email !== match.contactPerson)?.team_slug
+  const opponentTeam = matchData.teams?.find(
+    (match) => email !== match.contactPerson,
+  )?.team_slug
   const myPickAndBansTable = pickAndBansTable.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBansTable.find((e) => e.team_slug === opponentTeam && e.round === round)
   const [ myTeamData, setMyTeamData ] = useState<PickAndBansType | undefined>(myPickAndBansTable)
@@ -44,6 +45,7 @@ function PickBanV2({
   const isMyTurn = myTeamData?.my_turn === true
   const myTeamSlug = sanityTeamData.find((e) => e.contactPerson === email)?.teamSlug || ''
   const isHomeTeam = myPickAndBansTable?.home === true
+
 
   useEffect(() =>
   {
@@ -116,7 +118,7 @@ function PickBanV2({
       .update({ ready: !teamReady })
       .eq('contact_person', contact_person)
       .eq('round', round)
-    setTeamReady(!teamReady)
+      .then(() => setTeamReady(!teamReady))
   }
 
   async function setPickedDungeon(dungeon: number)
@@ -173,7 +175,6 @@ function PickBanV2({
       .eq('round', round)
   }, [ contact_person, opponentData?.step, round ])
 
-  console.log(opponentData)
 
   useEffect(() =>
   {
@@ -317,10 +318,10 @@ function PickBanV2({
               {
                 const status = getDungeonStatus(dungeon.id)
                 return (
-                  <Card key={dungeon.id} className={`overflow-hidden ${status !== 'available' ? 'opacity-75' : ''}`}>
+                  <Card key={dungeon.id} className={`text-white overflow-hidden ${status !== 'available' ? 'opacity-75' : ''}`}>
                     <CardContent className="p-0 relative">
                       <div className="relative h-36">
-                        <Image src={dungeon.image} alt={dungeon.name} layout="fill" objectFit="cover" />
+                        <Image className='w-full h-full' src={dungeon.image} alt={dungeon.name} height={500} width={300} objectFit='contain' />
                         {status !== 'available' && (
                           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                             {status === 'picked' && <Check className="text-green-500 w-12 h-12" />}
@@ -338,7 +339,7 @@ function PickBanV2({
                           >
                             {status === 'picked' ? 'Picked' : status === 'banned' ? 'Banned' : 'Available'}
                           </Badge>
-                          <Button
+                          {status === 'available' && isMyTurn && <Button className={`${getButtonLabel(dungeon.id) === 'Pick' ? 'bg-green-500' : 'bg-red-500'}`}
                             onClick={() =>
                             {
                               if (isMyTurn && status === 'available') {
@@ -354,7 +355,7 @@ function PickBanV2({
                             size="sm"
                           >
                             {getButtonLabel(dungeon.id)}
-                          </Button>
+                          </Button>}
                         </div>
                       </div>
                     </CardContent>
@@ -366,8 +367,8 @@ function PickBanV2({
         )}
         <div>
           <Card>
-            <CardContent className="p-4">
-              <h2 className="text-xl font-semibold mb-4">Pick Ban Results</h2>
+            <CardContent className="p-4 text-white">
+              <h2 className="text-xl font-semibold mb-4 text-white">Pick Ban Results</h2>
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-semibold mb-2 flex items-center">
@@ -424,4 +425,3 @@ function PickBanV2({
 }
 
 export default PickBanV2
-

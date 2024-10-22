@@ -40,7 +40,6 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
     { href: '/contact', label: 'Kontakt' },
   ]
 
-
   return (
     <nav className="bg-[#011624] p-4 border-b-4 border-gradient">
       <div className="container mx-auto flex items-center justify-between">
@@ -68,12 +67,15 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.data.user?.user_metadata?.avatar_url} alt={user.data.user?.email || ''} />
+                        <AvatarImage
+                          src={user.data.user?.user_metadata?.avatar_url}
+                          alt={user.data.user?.email || ''}
+                        />
                         <AvatarFallback>{user.data.user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuContent className="w-56 text-white" align="end" forceMount>
                     <DropdownMenuItem asChild>
                       <Link href="/my-matches">Mine kamper</Link>
                     </DropdownMenuItem>
@@ -91,7 +93,7 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
               ) : (
                 <Button
                   variant="outline"
-                  className='bg-[bg-[#011624] text-white'
+                  className="bg-[bg-[#011624] text-white"
                   onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
                 >
                   <User className="mr-2 h-4 w-4" /> Logg inn
@@ -127,8 +129,8 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                 key={link.href}
                 href={link.href}
                 className={`text-2xl ${pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                  ? 'text-[#FDB202]'
-                  : 'text-gray-200'
+                    ? 'text-[#FDB202]'
+                    : 'text-gray-200'
                   } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >

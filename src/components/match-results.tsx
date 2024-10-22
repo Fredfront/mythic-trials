@@ -379,19 +379,16 @@ export function MatchResultsComponent({
               <h3 className="text-sm font-medium mb-2">Match 2: {dungeonsNames.match2}</h3>
               {renderMatchResult(team, 'match2')}
             </div>
-            <AnimatePresence>
+            <>
               {hideTieBreaker ? null : (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
+                <div
+
                 >
                   <h3 className="text-sm font-medium mb-2">Tiebreaker: {dungeonsNames.tiebreaker}</h3>
                   {renderMatchResult(team, 'match3')}
-                </motion.div>
+                </div>
               )}
-            </AnimatePresence>
+            </>
           </div>
           {team === opponentTeam || bothTeamsConfirmed || myMatchResults?.confirm === true ? null : (
             <Button
@@ -405,7 +402,7 @@ export function MatchResultsComponent({
               }
               className="w-full py-6 text-lg bg-[#fdb202] hover:bg-[#fdb202]/90 text-gray-900"
             >
-              Submit Results
+              Bekreft resultat
             </Button>
           )}
           {myMatchResults?.confirm === true && team === myMatchResults.team_slug && (
@@ -416,47 +413,35 @@ export function MatchResultsComponent({
               Cancel results
             </Button>
           )}
-          <AnimatePresence>
+          <>
             {submitted && !bothTeamsConfirmed && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-green-800 border border-green-600 text-green-100 px-4 py-3 rounded relative"
-                role="alert"
+              <div
+
               >
-                <strong className="font-bold">Success!</strong>
-                <span className="block sm:inline"> Results submitted successfully. .</span>
-              </motion.div>
+                <strong className="font-bold">Bekrefet!</strong>
+                <span className="block sm:inline"> Resultater er lagt til.</span>
+              </div>
             )}
             {submitted && !bothTeamsConfirmed && myTeam?.team_slug === team && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-gray-300 border border-gray-500 text-black px-4 py-3 rounded relative"
-                role="alert"
+              <div
+
               >
                 <strong className="font-bold">Info!</strong>
                 <span className="block sm:inline">
                   {' '}
-                  You can cancel and change result if opponent has not yet submitted.
+                  Du kan kansellere resultatene dine ved å trykke på Cancel results knappen.
                 </span>
-              </motion.div>
+              </div>
             )}
             {team === myTeam?.team_slug && opponentSubmitted && !bothTeamsConfirmed && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-blue-800 border border-blue-600 text-blue-100 px-4 py-3 rounded relative"
-                role="alert"
+              <div
+
               >
                 <strong className="font-bold">Heads up!</strong>
-                <span className="block sm:inline"> Your opponent has submitted their results.</span>
-              </motion.div>
+                <span className="block sm:inline"> Din motstander har lagt inn resultat</span>
+              </div>
             )}
-          </AnimatePresence>
+          </>
         </CardContent>
       </Card>
     )
@@ -490,25 +475,31 @@ export function MatchResultsComponent({
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="font-medium">1: {dungeonsNames.match1} </span>
-              {team1Results.match1 && team2Results.match1 && <Badge variant="outline" className=" py-1 px-3 bg-gray-700 text-white">
-                {getMatchResult('match1') && getMatchResult('match1').length > 0 ? getMatchResult('match1') : null}
-              </Badge>}
+              {team1Results.match1 && team2Results.match1 && (
+                <Badge variant="outline" className=" py-1 px-3 bg-gray-700 text-white">
+                  {getMatchResult('match1') && getMatchResult('match1').length > 0 ? getMatchResult('match1') : null}
+                </Badge>
+              )}
             </div>
             <Separator className="bg-gray-600" />
             <div className="flex justify-between items-center">
               <span className="font-medium">2: {dungeonsNames.match2}</span>
-              {team1Results.match2 && team2Results.match2 && <Badge variant="outline" className=" py-1 px-3 bg-gray-700 text-white ">
-                {getMatchResult('match2')}
-              </Badge>}
+              {team1Results.match2 && team2Results.match2 && (
+                <Badge variant="outline" className=" py-1 px-3 bg-gray-700 text-white ">
+                  {getMatchResult('match2')}
+                </Badge>
+              )}
             </div>
             {(needsTiebreaker(team1Results, team2Results) || team1Results.match3 !== null) && (
               <>
                 <Separator className="bg-gray-600" />
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Tiebreaker:</span>
-                  {team1Results.match3 && team2Results.match3 && <Badge variant="outline" className="py-1 px-3 bg-gray-700 text-white">
-                    {getMatchResult('match3') ? getMatchResult('match3') : null}
-                  </Badge>}
+                  {team1Results.match3 && team2Results.match3 && (
+                    <Badge variant="outline" className="py-1 px-3 bg-gray-700 text-white">
+                      {getMatchResult('match3') ? getMatchResult('match3') : null}
+                    </Badge>
+                  )}
                 </div>
               </>
             )}
@@ -551,7 +542,7 @@ export function MatchResultsComponent({
   }
 
   return (
-    <div className="min-h-screen bg-[#011624] py-12 px-4 sm:px-6 lg:px-8">
+    (<div className="min-h-screen bg-[#011624] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
         <h1 className="text-4xl font-extrabold text-center text-white">Mythic Trials Results - Round {round}</h1>
         <AnimatePresence>
@@ -592,8 +583,8 @@ export function MatchResultsComponent({
           </div>
         </div>
       </div>
-    </div>
-  )
+    </div>)
+  );
 }
 
 async function updateMatchResults(contact_person: string, round: number, result: number | null, match: number)

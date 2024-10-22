@@ -8,7 +8,14 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import supabase from '@/utils/supabase/client'
 import { ArrowRight } from 'lucide-react'
-import { PickAndBansType, TTeam, TMatchResults, createMatchResultsRow, confirmMatchResults, updateMatchResults } from '../../../../../../supabase/dbFunctions'
+import {
+  PickAndBansType,
+  TTeam,
+  TMatchResults,
+  createMatchResultsRow,
+  confirmMatchResults,
+  updateMatchResults,
+} from '../../../../../../supabase/dbFunctions'
 
 export default function Result({
   pickAndBanData,
@@ -18,14 +25,13 @@ export default function Result({
   pickAndBanData: PickAndBansType[]
   teams: TTeam[]
   matchResults: TMatchResults[]
-})
-{
+}) {
   const router = useRouter()
 
   const round = parseInt(useSearchParams().get('round') || '0')
   const home_team = useSearchParams().get('home')
   const away_team = useSearchParams().get('away')
-  const homeAndAwayTeam = [ home_team, away_team ]
+  const homeAndAwayTeam = [home_team, away_team]
 
   const opponentTeam = homeAndAwayTeam.find((e) => e !== myTeam?.team_slug)
   const { user, loading } = useGetUserData()
@@ -40,38 +46,36 @@ export default function Result({
     (e) => e.contact_person === opponent_contact_person && e.round === round,
   )
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (!loading && myMatchResults === undefined && contact_person && round && opponentTeam && myTeam?.team_slug) {
       createMatchResultsRow(round, contact_person, myTeam?.team_slug, opponentTeam)
     }
-  }, [ contact_person, loading, myMatchResults, myTeam?.team_slug, opponentTeam, round ])
+  }, [contact_person, loading, myMatchResults, myTeam?.team_slug, opponentTeam, round])
 
-  const home_team_name = useMemo(() => teams.find((e) => e.team_slug === home_team)?.name, [ home_team, teams ])
-  const away_team_name = useMemo(() => teams.find((e) => e.team_slug === away_team)?.name, [ away_team, teams ])
+  const home_team_name = useMemo(() => teams.find((e) => e.team_slug === home_team)?.name, [home_team, teams])
+  const away_team_name = useMemo(() => teams.find((e) => e.team_slug === away_team)?.name, [away_team, teams])
 
-  const [ myMap1, setMyMap1Result ] = React.useState<number | null>(myMatchResults?.match_1 ?? null)
-  const [ myMap2, setMyMap2Result ] = React.useState<number | null>(myMatchResults?.match_2 ?? null)
-  const [ myMap3, setMyMap3Result ] = React.useState<number | null>(myMatchResults?.match_3 ?? null)
+  const [myMap1, setMyMap1Result] = React.useState<number | null>(myMatchResults?.match_1 ?? null)
+  const [myMap2, setMyMap2Result] = React.useState<number | null>(myMatchResults?.match_2 ?? null)
+  const [myMap3, setMyMap3Result] = React.useState<number | null>(myMatchResults?.match_3 ?? null)
 
-  const [ opponentMap1, setOpponentMap1Result ] = React.useState<number | null>(opponentMatchResults?.match_1 ?? null)
-  const [ opponentMap2, setOpponentMap2Result ] = React.useState<number | null>(opponentMatchResults?.match_2 ?? null)
-  const [ opponentMap3, setOpponentMap3Result ] = React.useState<number | null>(opponentMatchResults?.match_3 ?? null)
+  const [opponentMap1, setOpponentMap1Result] = React.useState<number | null>(opponentMatchResults?.match_1 ?? null)
+  const [opponentMap2, setOpponentMap2Result] = React.useState<number | null>(opponentMatchResults?.match_2 ?? null)
+  const [opponentMap3, setOpponentMap3Result] = React.useState<number | null>(opponentMatchResults?.match_3 ?? null)
 
-  const [ confirm, setConfirm ] = React.useState<boolean>(myMatchResults?.confirm ?? false)
-  const [ confirmOpponent, setConfirmOpponent ] = React.useState<boolean>(opponentMatchResults?.confirm ?? false)
+  const [confirm, setConfirm] = React.useState<boolean>(myMatchResults?.confirm ?? false)
+  const [confirmOpponent, setConfirmOpponent] = React.useState<boolean>(opponentMatchResults?.confirm ?? false)
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (loading) return
     if (myMatchResults?.match_2 && myMap2 === null) setMyMap2Result(myMatchResults?.match_2)
     if (myMatchResults?.match_3 && myMap3 === null) setMyMap3Result(myMatchResults?.match_3)
     if (myMatchResults?.match_1 && myMap1 === null) setMyMap1Result(myMatchResults?.match_1)
-  }, [ loading, myMap1, myMap2, myMap3, myMatchResults?.match_1, myMatchResults?.match_2, myMatchResults?.match_3 ])
+  }, [loading, myMap1, myMap2, myMap3, myMatchResults?.match_1, myMatchResults?.match_2, myMatchResults?.match_3])
 
   const my_pick_ban_data = useMemo(
     () => pickAndBanData.find((data) => data.round === round && data.contact_person === user?.data.user?.email),
-    [ pickAndBanData, round, user?.data.user?.email ],
+    [pickAndBanData, round, user?.data.user?.email],
   )
 
   const opponent_pick_ban_data = useMemo(
@@ -82,7 +86,7 @@ export default function Result({
           data.contact_person !== user?.data.user?.email &&
           data.team_slug === my_pick_ban_data?.opponent,
       ),
-    [ my_pick_ban_data?.opponent, pickAndBanData, round, user?.data.user?.email ],
+    [my_pick_ban_data?.opponent, pickAndBanData, round, user?.data.user?.email],
   )
 
   const bannedMaps = useMemo(
@@ -91,28 +95,27 @@ export default function Result({
         .concat(opponent_pick_ban_data?.bans ?? [])
         .concat(my_pick_ban_data?.pick ?? [])
         .concat(opponent_pick_ban_data?.pick ?? []),
-    [ my_pick_ban_data?.bans, my_pick_ban_data?.pick, opponent_pick_ban_data?.bans, opponent_pick_ban_data?.pick ],
+    [my_pick_ban_data?.bans, my_pick_ban_data?.pick, opponent_pick_ban_data?.bans, opponent_pick_ban_data?.pick],
   )
 
   const map_1_id = useMemo(
     () => (my_pick_ban_data?.team_slug === home_team ? my_pick_ban_data?.pick : opponent_pick_ban_data?.pick),
-    [ home_team, my_pick_ban_data?.pick, my_pick_ban_data?.team_slug, opponent_pick_ban_data?.pick ],
+    [home_team, my_pick_ban_data?.pick, my_pick_ban_data?.team_slug, opponent_pick_ban_data?.pick],
   )
   const map_2_id = useMemo(
     () => (my_pick_ban_data?.team_slug === home_team ? opponent_pick_ban_data?.pick : my_pick_ban_data?.pick),
-    [ home_team, my_pick_ban_data?.pick, my_pick_ban_data?.team_slug, opponent_pick_ban_data?.pick ],
+    [home_team, my_pick_ban_data?.pick, my_pick_ban_data?.team_slug, opponent_pick_ban_data?.pick],
   )
 
-  const map_1 = useMemo(() => dungeonConfig.find((e) => e.id === map_1_id), [ map_1_id ])
-  const map_2 = useMemo(() => dungeonConfig.find((e) => e.id === map_2_id), [ map_2_id ])
-  const map_3 = useMemo(() => dungeonConfig.find((e) => !bannedMaps?.includes(e.id)), [ bannedMaps ])
+  const map_1 = useMemo(() => dungeonConfig.find((e) => e.id === map_1_id), [map_1_id])
+  const map_2 = useMemo(() => dungeonConfig.find((e) => e.id === map_2_id), [map_2_id])
+  const map_3 = useMemo(() => dungeonConfig.find((e) => !bannedMaps?.includes(e.id)), [bannedMaps])
 
-  const allMaps = [ map_1, map_2, map_3 ]
+  const allMaps = [map_1, map_2, map_3]
 
   const winner = myMap1 && myMap2 && myMap1 + myMap2 + (myMap3 ?? 0) === 2 ? true : false
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -122,8 +125,7 @@ export default function Result({
           schema: 'public',
           table: 'match_results',
         },
-        (payload) =>
-        {
+        (payload) => {
           const newPayload = payload.new as TMatchResults
 
           if (newPayload.contact_person === contact_person && newPayload.round === round) {
@@ -143,17 +145,15 @@ export default function Result({
       )
       .subscribe()
 
-    return () =>
-    {
+    return () => {
       supabase.removeChannel(channel)
     }
-  }, [ contact_person, opponent_contact_person, round ])
+  }, [contact_person, opponent_contact_person, round])
 
-  const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Check if the results conflict (both WIN or both LOSE)
-  const checkResultConflict = (): boolean =>
-  {
+  const checkResultConflict = (): boolean => {
     if (
       (myMap1 === 1 && opponentMap1 === 1) || // Both WIN map 1
       (myMap2 === 1 && opponentMap2 === 1) || // Both WIN map 2
@@ -168,8 +168,7 @@ export default function Result({
   }
 
   // Update the confirmation button click handler to include validation
-  const handleConfirmClick = () =>
-  {
+  const handleConfirmClick = () => {
     if (checkResultConflict()) {
       setErrorMessage('Both teams have selected the same result for one or more matches. Please resolve this conflict.')
       return
@@ -209,8 +208,7 @@ export default function Result({
           {home_team_name} vs {away_team_name}
         </div>
 
-        {allMaps.map((e, index) =>
-        {
+        {allMaps.map((e, index) => {
           let headline = ''
 
           const myValue = index === 0 ? myMap1 : index === 1 ? myMap2 : myMap3
@@ -245,8 +243,7 @@ export default function Result({
                     <Select
                       disabled={confirm}
                       value={myValueConverted}
-                      onValueChange={(e) =>
-                      {
+                      onValueChange={(e) => {
                         if (contact_person) {
                           setMyValue(e === 'win' ? 1 : 0)
                           updateMatchResults(contact_person, round, e === 'win' ? 1 : 0, index + 1)
@@ -303,4 +300,3 @@ export default function Result({
     </div>
   )
 }
-

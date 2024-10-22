@@ -5,8 +5,7 @@ import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
 import { getAllTeams } from '../api/getAllTeams'
 import NavBarV2 from '@/components/navbar'
 
-export default async function Template({ children }: { children: React.ReactNode })
-{
+export default async function Template({ children }: { children: React.ReactNode }) {
   const sanityTeams = await getAllTeams()
   return (
     <div className="flex flex-col min-h-screen">
@@ -17,10 +16,9 @@ export default async function Template({ children }: { children: React.ReactNode
   )
 }
 
-const Footer = async () =>
-{
+const Footer = async () => {
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
+  const showLeaderboard = showLeaderboardData?.[0].enabled
 
   return (
     <footer className="  shadow bg-[#272727]">

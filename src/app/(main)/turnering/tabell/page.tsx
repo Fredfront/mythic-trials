@@ -8,24 +8,22 @@ import { CalendarX } from 'lucide-react'
 
 export const revalidate = 0
 
-async function Page()
-{
+async function Page() {
   const matchResultsTable = await ServerClient.from('match_results').select('*')
   const sanityTeamData = await getAllTeams()
 
-
   if (matchResultsTable.data && matchResultsTable.data.length === 0) {
     return (
-      <div className="flex justify-center items-center p-4">
-        <Card className="w-full max-w-md">
+      <div className="flex justify-center items-center p-4 text-white">
+        <Card className="w-full max-w-md text-white">
           <CardHeader>
-            <CardTitle className="text-center flex items-center justify-center">
-              <CalendarX className="mr-2" />
+            <CardTitle className="text-center flex items-center justify-center text-white">
+              <CalendarX color="white" className="mr-2" />
               Ingen tabell tilgjengelig
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-center text-muted-foreground">
+            <p className="text-center text-white">
               Det er for øyeblikket ingen tabell tilgjengelig. Vennligst sjekk igjen senere for oppdateringer.
             </p>
           </CardContent>
@@ -34,9 +32,7 @@ async function Page()
     )
   }
 
-
   return <ResultsTable matchResults={matchResultsTable.data ?? []} sanityTeamData={sanityTeamData} />
 }
 
 export default Page
-

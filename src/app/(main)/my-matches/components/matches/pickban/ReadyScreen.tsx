@@ -29,10 +29,9 @@ export default function ReadyScreen({
   sanityTeamData,
 }: ReadyScreenProps)
 {
-
   return (
     <div className="container mx-auto p-4">
-      <Card className="max-w-2xl mx-auto bg-[#011624]">
+      <Card className="max-w-2xl mx-auto bg-[#011624] text-white">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Pick and Ban</CardTitle>
         </CardHeader>
@@ -40,25 +39,37 @@ export default function ReadyScreen({
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">Runde: {round}</h2>
             <h3 className="text-xl flex justify-center">
-              {sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamImage.asset._ref && <Image
-                src={urlForImage(sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamImage.asset._ref as string) || ''}
-                alt={''}
-                width={45}
-                height={45}
-                className="mr-3 w-8 h-8 rounded-full"
-              />}{sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamName} vs {sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamName}
-              {sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamImage.asset._ref && <Image
-                src={urlForImage(sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamImage.asset._ref as string) || ''}
-                alt={''}
-                width={45}
-                height={45}
-                className="ml-3 w-8 h-8 rounded-full"
-              />}
+              {sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamImage.asset._ref && (
+                <Image
+                  src={
+                    urlForImage(sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamImage.asset._ref as string) ||
+                    ''
+                  }
+                  alt={''}
+                  width={45}
+                  height={45}
+                  className="mr-3 w-8 h-8 rounded-full"
+                />
+              )}
+              {sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamName} vs{' '}
+              {sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamName}
+              {sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamImage.asset._ref && (
+                <Image
+                  src={
+                    urlForImage(sanityTeamData?.find((e) => e.teamSlug === awayTeam)?.teamImage.asset._ref as string) ||
+                    ''
+                  }
+                  alt={''}
+                  width={45}
+                  height={45}
+                  className="ml-3 w-8 h-8 rounded-full"
+                />
+              )}
             </h3>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Card className='bg-[#011624]'>
+            <Card className="bg-[#011624] text-white">
               <CardContent className="flex flex-col items-center justify-center p-4">
                 <h4 className="text-lg font-semibold mb-2">Ditt lag</h4>
                 {teamReady ? (
@@ -69,7 +80,7 @@ export default function ReadyScreen({
                 <p className="mt-2">{teamReady ? 'Ready' : 'Not Ready'}</p>
               </CardContent>
             </Card>
-            <Card className='bg-[#011624]'>
+            <Card className="bg-[#011624] text-white">
               <CardContent className="flex flex-col items-center justify-center p-4">
                 <h4 className="text-lg font-semibold mb-2">Motstander</h4>
                 {opponentReady ? (
@@ -91,9 +102,7 @@ export default function ReadyScreen({
             </Button>
           </div>
 
-          {teamReady && !opponentReady && (
-            <p className="text-center text-yellow-600">Venter på motstander...</p>
-          )}
+          {teamReady && !opponentReady && <p className="text-center text-yellow-600">Venter på motstander...</p>}
           {!teamReady && opponentReady && (
             <p className="text-center text-yellow-600">Motstander er klar. Vennligst gjør deg klar.</p>
           )}

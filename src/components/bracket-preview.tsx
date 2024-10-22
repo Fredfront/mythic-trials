@@ -14,27 +14,19 @@ import { TeamMatch, TournamentSchedule } from '../../types'
 type Props = {
   intitalSchedule: TournamentSchedule
   schedule: TournamentSchedule
-
 }
 
-const Matches: React.FC<Props> = ({
-  intitalSchedule,
-  schedule
-
-}) =>
+const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
 {
   const [ localSchedule, setLocalSchedule ] = useState<TournamentSchedule>(intitalSchedule)
+  const [ bracketsCreated, setBracketsCreated ] = useState(false)
 
   // Handle drag and drop
   const onDragEnd = (result: DropResult) =>
   {
     const { source, destination } = result
     if (!destination) return
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
-      return
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return
 
     const parseDroppableId = (id: string) => id.split('-').map(Number)
     const [ sourceRound, sourceMatch ] = parseDroppableId(source.droppableId)
@@ -45,12 +37,9 @@ const Matches: React.FC<Props> = ({
       round.map((match, matchIndex) =>
       {
         // Clone the teams as a tuple
-        const clonedTeams: [ TeamMatch, TeamMatch ] = [
-          { ...match.teams[ 0 ] },
-          { ...match.teams[ 1 ] },
-        ]
+        const clonedTeams: [ TeamMatch, TeamMatch ] = [ { ...match.teams[ 0 ] }, { ...match.teams[ 1 ] } ]
         return { ...match, teams: clonedTeams }
-      })
+      }),
     )
 
     // Swap the teams between source and destination
@@ -95,20 +84,53 @@ const Matches: React.FC<Props> = ({
             }
           }
           return match
-        })
-      )
+        }),
+      ),
     )
   }
 
   const handleGenerateRoundRobin = async () =>
   {
-    await createRoundRobin(localSchedule)
+    await createRoundRobin(localSchedule).then((res) =>
+    {
+      if (res.status === 200) setBracketsCreated(true)
+    })
+  }
 
+  if (bracketsCreated) {
+    return (
+      <div className="p-6 bg-[#011624] min-h-screen text-white">
+        <Card className="mb-6 bg-[#022B3A] text-white">
+          <CardHeader>
+            <CardTitle className="text-3xl font-bold text-center flex items-center justify-center">
+              <Trophy className="mr-2 text-yellow-500" />
+              Tournament Bracket Preview
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        <div className="flex justify-center items-center p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle className="text-center flex items-center justify-center text-white">
+                <Trophy className="mr-2" />
+                Tournament Brackets Created
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-center text-white text-sm">
+                The tournament brackets have been successfully created. You can now view the tournament brackets in the
+                tournament page.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="p-6 bg-[#011624] min-h-screen text-white">
-      <Card className="mb-6 bg-[#022B3A]">
+      <Card className="mb-6 bg-[#022B3A] text-white">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center flex items-center justify-center">
             <Trophy className="mr-2 text-yellow-500" />
@@ -121,11 +143,9 @@ const Matches: React.FC<Props> = ({
           <div className="flex space-x-6 pb-4">
             {localSchedule.map((round, roundIndex) => (
               <div key={roundIndex} className="min-w-[300px]">
-                <Card className="mb-4 bg-[#022B3A]">
+                <Card className="mb-4 bg-[#022B3A] text-white">
                   <CardHeader>
-                    <CardTitle className="text-xl font-semibold text-center">
-                      Round {roundIndex + 1}
-                    </CardTitle>
+                    <CardTitle className="text-xl font-semibold text-center">Round {roundIndex + 1}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {round.map((match, matchIndex) =>
@@ -141,7 +161,7 @@ const Matches: React.FC<Props> = ({
                             <Card
                               ref={provided.innerRef}
                               {...provided.droppableProps}
-                              className={`relative transition-all duration-200 ${isFeatured
+                              className={`text-white relative transition-all duration-200 ${isFeatured
                                 ? 'border-4 border-yellow-400 shadow-lg'
                                 : snapshot.isDraggingOver
                                   ? 'bg-[#014F86] shadow-lg'
@@ -175,11 +195,7 @@ const Matches: React.FC<Props> = ({
                                       >
                                         <span className="font-medium">{team.name}</span>
                                         <span>
-                                          {team.home ? (
-                                            <Home className="w-4 h-4" />
-                                          ) : (
-                                            <Plane className="w-4 h-4" />
-                                          )}
+                                          {team.home ? <Home className="w-4 h-4" /> : <Plane className="w-4 h-4" />}
                                         </span>
                                       </div>
                                     )}
@@ -189,15 +205,12 @@ const Matches: React.FC<Props> = ({
                                 {/* Feature Button */}
                                 <Button
                                   size="sm"
-                                  variant={isFeatured ? 'secondary' : 'outline'}
+
                                   onClick={() => handleFeatureMatch(roundIndex, matchIndex)}
                                   className={`mt-2 w-full flex items-center justify-center space-x-1 ${isFeatured ? 'bg-yellow-500 text-black' : 'border border-gray-500 text-gray-300'
                                     }`}
                                 >
-                                  <Star
-                                    className={`w-4 h-4 ${isFeatured ? 'text-black' : 'text-gray-400'
-                                      }`}
-                                  />
+                                  <Star className={`w-4 h-4 ${isFeatured ? 'text-black' : 'text-gray-400'}`} />
                                   <span>{isFeatured ? 'Featured' : 'Feature'}</span>
                                 </Button>
                               </CardContent>
@@ -214,12 +227,12 @@ const Matches: React.FC<Props> = ({
         </ScrollArea>
       </DragDropContext>
       <div className="mt-6 text-center">
-        {!schedule && <Button
+        <Button
           onClick={handleGenerateRoundRobin}
           className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
         >
           Generate Round-robin
-        </Button>}
+        </Button>
       </div>
     </div>
   )

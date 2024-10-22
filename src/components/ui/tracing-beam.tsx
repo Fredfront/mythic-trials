@@ -7,7 +7,7 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
 {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
-    target: ref,
+    target: ref.current ? ref as React.RefObject<HTMLElement> : undefined,
     offset: [ 'start start', 'end start' ],
   })
 
@@ -31,7 +31,9 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
   })
 
   return (
-    <motion.div ref={ref} className={cn('relative w-full max-w-5xl mx-auto h-full', className)}>
+    <motion.div ref={ref}
+    // className={cn('relative w-full max-w-5xl mx-auto h-full', className)}
+    >
       <div className="hidden lg:block absolute -left-4 md:-left-20 top-3">
         <motion.div
           transition={{
@@ -41,7 +43,7 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
           animate={{
             boxShadow: scrollYProgress.get() > 0 ? 'none' : 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
           }}
-          className="ml-[27px] h-4 w-4 rounded-full border border-netural-200 shadow-sm flex items-center justify-center"
+        // className="ml-[27px] h-4 w-4 rounded-full border border-netural-200 shadow-sm flex items-center justify-center"
         >
           <motion.div
             transition={{
@@ -52,7 +54,7 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
               backgroundColor: scrollYProgress.get() > 0 ? '#fdb202' : '#fdb202',
               borderColor: scrollYProgress.get() > 0 ? '#fdb202' : '#fdb202',
             }}
-            className="h-2 w-2  rounded-full border border-neutral-300 bg-white"
+          // className="h-2 w-2  rounded-full border border-neutral-300 bg-white"
           />
         </motion.div>
         <svg

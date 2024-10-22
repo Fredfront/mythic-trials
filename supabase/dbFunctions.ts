@@ -76,11 +76,11 @@ export async function createPickBanRowIfNotExist({
   await supabase
     .from('pick_ban')
     .select('*')
-    .eq('contact_person', email)
+    .eq('contact_person', email.trim())
     .eq('round', round)
     .then((res) => {
       if (res.data && res.data.length === 0) {
-        createPickBanRow(round, email, team_slug, opponent, home, matchUUID)
+        createPickBanRow(round, email.trim(), team_slug, opponent, home, matchUUID)
       }
     })
 }
