@@ -9,7 +9,6 @@ import React, { useState } from 'react'
 import { Menu, X, User, LogOut, ChevronDown } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import supabase from '@/utils/supabase/client'
-import { UserResponse } from '@supabase/supabase-js'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 
@@ -29,9 +28,15 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
 
   const handleLogout = async () =>
   {
-    await supabase.auth.signOut()
-    router.push('/')
-    router.refresh()
+    await supabase.auth.signOut().then(() =>
+    {
+      router.push('/')
+
+    }).then(() =>
+    {
+      window.location.reload()
+
+    })
   }
 
   const navLinks = [
@@ -93,7 +98,7 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
               ) : (
                 <Button
                   variant="outline"
-                  className="bg-[bg-[#011624] text-white"
+                  className="hidden bg-[bg-[#011624] text-white"
                   onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
                 >
                   <User className="mr-2 h-4 w-4" /> Logg inn
@@ -129,8 +134,8 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                 key={link.href}
                 href={link.href}
                 className={`text-2xl ${pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                    ? 'text-[#FDB202]'
-                    : 'text-gray-200'
+                  ? 'text-[#FDB202]'
+                  : 'text-gray-200'
                   } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
@@ -144,6 +149,13 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                 </Button>
               </Link>
             )}
+            <Button
+              variant="outline"
+              className=" bg-[bg-[#011624] text-white mt-4 px-6 py-3 "
+              onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
+            >
+              <User className="mr-2 h-4 w-4" /> Logg inn
+            </Button>
           </div>
         </div>
       )}
