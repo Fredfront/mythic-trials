@@ -149,13 +149,13 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                 </Button>
               </Link>
             )}
-            <Button
+            {!user?.data.user?.email && <Button
               variant="outline"
               className=" bg-[bg-[#011624] text-white mt-4 px-6 py-3 "
               onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
             >
               <User className="mr-2 h-4 w-4" /> Logg inn
-            </Button>
+            </Button>}
           </div>
         </div>
       )}
