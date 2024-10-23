@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React from 'react'
 
-function TeamHasBeenChanged() {
+function TeamHasBeenChanged()
+{
   const searchParams = useSearchParams()
   const teamHasBeenCreated = searchParams.get('created')
   const teamHasBeenUpdated = searchParams.get('updated')
@@ -24,19 +25,20 @@ function TeamHasBeenChanged() {
 
 export default TeamHasBeenChanged
 
-const TeamHasBeenCreatedComponent = () => {
+const TeamHasBeenCreatedComponent = () =>
+{
   return (
     <div className="p-10">
       <h1 className="text-4xl font-bold  mb-4  ">Laget ditt ble opprettet!</h1>
       <p>
-        Når en admin har godkjent registreringen din, kommer laget til å vises her på nettsiden. Første dag av
-        turneringen 2. april, mer info kommer når det nærmer seg.
+        Når en admin har godkjent registreringen din, kommer laget til å vises her på nettsiden.
       </p>
     </div>
   )
 }
 
-const TeamHasBeenUpdated = () => {
+const TeamHasBeenUpdated = () =>
+{
   return (
     <div className="p-10">
       <h1 className="text-4xl font-bold  mb-4  ">Laget ditt ble oppdatert!</h1>

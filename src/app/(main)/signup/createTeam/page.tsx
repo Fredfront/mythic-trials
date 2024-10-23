@@ -11,8 +11,9 @@ import { PlayerInfoImage } from '../components/PlayerInfoImage'
 import { useRouter } from 'next/navigation'
 import Loading from '../components/Loading'
 import { wowRealmsMapped } from '../utils/wowRealms'
-import { CrownIcon, LogOut } from 'lucide-react'
-import {
+import { CrownIcon, } from 'lucide-react'
+import
+{
   Dialog,
   DialogContent,
   DialogDescription,
@@ -24,79 +25,87 @@ import Link from 'next/link'
 import { useGetUserData } from '../../../auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
 
-function CreateTeam() {
+function CreateTeam()
+{
   const { user } = useGetUserData()
-  const [teamName, setTeamName] = useState('')
-  const [teamImage, setTeamImage] = useState<any>(null)
-  const [players, setPlayers] = useState<
-    { characterName: string; realmName: string; discordName: string; alts?: AltPlayer[] }[]
-  >([{ characterName: '', realmName: '', discordName: '', alts: [] }])
+  const [ teamName, setTeamName ] = useState('')
+  const [ teamImage, setTeamImage ] = useState<any>(null)
+  const [ players, setPlayers ] = useState<
+    { characterName: string; realmName: string; discordName: string; twitchChannel?: string; alts?: AltPlayer[] }[]
+  >([ { characterName: '', realmName: '', discordName: '', alts: [] } ])
   const router = useRouter()
 
-  const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
-  const [previewImage, setPreviewImage] = useState<any>(null)
+  const [ allTeams, setAllTeams ] = useState<MythicPlusTeam[] | null>(null)
+  const [ previewImage, setPreviewImage ] = useState<any>(null)
 
   const teamSlug = teamName?.toLowerCase().replace(/\s+/g, '-').slice(0, 200)
 
   const userEmail = user?.data.user?.email
 
   // State for input field errors
-  const [teamNameError, setTeamNameError] = useState(false)
-  const [playerErrors, setPlayerErrors] = useState<boolean[]>([])
-  const [uploadedImage, setUploadedImage] = useState<any>(null)
-  const [imageUploaded, setImageUploaded] = useState(false)
-  const [missingImageError, setMissingImageError] = useState(false)
-  const [missingPlayersError, setMissingPlayersError] = useState(false)
-  const [loadingCreateTeam, setLoadingCreateTeam] = useState(false)
-  const [teamNameAlreadyExists, setTeamNameAlreadyExists] = useState(false)
-  const [createTeamError, setCreateTeamError] = useState(false)
+  const [ teamNameError, setTeamNameError ] = useState(false)
+  const [ playerErrors, setPlayerErrors ] = useState<boolean[]>([])
+  const [ uploadedImage, setUploadedImage ] = useState<any>(null)
+  const [ imageUploaded, setImageUploaded ] = useState(false)
+  const [ missingImageError, setMissingImageError ] = useState(false)
+  const [ missingPlayersError, setMissingPlayersError ] = useState(false)
+  const [ loadingCreateTeam, setLoadingCreateTeam ] = useState(false)
+  const [ teamNameAlreadyExists, setTeamNameAlreadyExists ] = useState(false)
+  const [ createTeamError, setCreateTeamError ] = useState(false)
 
-  useEffect(() => {
-    async function fetchAllTeams() {
+  useEffect(() =>
+  {
+    async function fetchAllTeams()
+    {
       const data = await getAllTeams()
       setAllTeams(data)
     }
     fetchAllTeams()
   }, [])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push('/signup/existingTeam')
     }
-  }, [allTeams, router, user?.data.user?.email])
+  }, [ allTeams, router, user?.data.user?.email ])
   // State for image preview
 
-  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  {
     const { name, value } = event.target
 
-    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [name]: value } : player)))
+    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [ name ]: value } : player)))
   }
-  const handleAddPlayer = () => {
-    setPlayers([...players, { characterName: '', discordName: '', realmName: '' }])
+  const handleAddPlayer = () =>
+  {
+    setPlayers([ ...players, { characterName: '', discordName: '', realmName: '' } ])
   }
 
-  const handleAddAltPlayer = (index: number) => {
+  const handleAddAltPlayer = (index: number) =>
+  {
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === index
           ? {
-              ...player,
-              alts: [...(player.alts || []), { altCharacterName: '', altRealmName: '' }],
-            }
+            ...player,
+            alts: [ ...(player.alts || []), { altCharacterName: '', altRealmName: '' } ],
+          }
           : player,
       ),
     )
   }
 
   // Function to remove an alt player for a specific main player
-  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) => {
+  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) =>
+  {
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [], // Remove the alt player at the specified index
-            }
+            ...player,
+            alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [], // Remove the alt player at the specified index
+          }
           : player,
       ),
     )
@@ -106,38 +115,42 @@ function CreateTeam() {
     mainPlayerIndex: number,
     altIndex: number,
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  ) =>
+  {
     const { name, value } = event.target
 
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts?.map((alt, altIdx) =>
-                altIdx === altIndex
-                  ? {
-                      ...alt,
-                      [name]: value,
-                    }
-                  : alt,
-              ),
-            }
+            ...player,
+            alts: player.alts?.map((alt, altIdx) =>
+              altIdx === altIndex
+                ? {
+                  ...alt,
+                  [ name ]: value,
+                }
+                : alt,
+            ),
+          }
           : player,
       ),
     )
   }
 
-  const handleRemovePlayer = (index: number) => {
+  const handleRemovePlayer = (index: number) =>
+  {
     setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== index))
   }
 
-  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files && e.target.files[0]
+  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>)
+  {
+    const file = e.target.files && e.target.files[ 0 ]
     if (file && file.type.startsWith('image')) {
       setTeamImage(file)
       const reader = new FileReader()
-      reader.onloadend = () => {
+      reader.onloadend = () =>
+      {
         if (reader.result === null) return
         setPreviewImage(reader.result)
       }
@@ -145,7 +158,8 @@ function CreateTeam() {
     }
   }
 
-  async function addImage() {
+  async function addImage()
+  {
     setLoadingCreateTeam(true)
     try {
       const formData = new FormData()
@@ -178,13 +192,15 @@ function CreateTeam() {
     }
   }
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (allTeams?.find((e) => e.teamName === teamName)) {
       setTeamNameAlreadyExists(true)
     }
-  }, [allTeams, teamName])
+  }, [ allTeams, teamName ])
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) =>
+  {
     event.preventDefault()
 
     if (allTeams?.find((e) => e.teamName === teamName)) {
@@ -220,7 +236,8 @@ function CreateTeam() {
     }
   }
 
-  const createMythicPlusTeam = useCallback(async () => {
+  const createMythicPlusTeam = useCallback(async () =>
+  {
     setLoadingCreateTeam(true)
 
     try {
@@ -246,7 +263,9 @@ function CreateTeam() {
               characterName: player.characterName,
               realmName: player.realmName,
               discordName: player.discordName,
-              alts: player.alts?.map((alt) => {
+              twitchChannel: player.twitchChannel,
+              alts: player.alts?.map((alt) =>
+              {
                 return {
                   _key: uuidv4(),
                   altCharacterName: alt.altCharacterName,
@@ -285,29 +304,33 @@ function CreateTeam() {
       setLoadingCreateTeam(false)
       setCreateTeamError(true)
     } finally {
-      await supabase.from('teams').insert([{ name: teamName, contact_person: userEmail, team_slug: teamSlug }])
+      await supabase.from('teams').insert([ { name: teamName, contact_person: userEmail, team_slug: teamSlug } ])
     }
-  }, [players, router, teamName, teamSlug, uploadedImage?.data?.document?._id, userEmail])
+  }, [ players, router, teamName, teamSlug, uploadedImage?.data?.document?._id, userEmail ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (imageUploaded) {
       createMythicPlusTeam()
       setImageUploaded(false)
     }
-  }, [createMythicPlusTeam, imageUploaded])
+  }, [ createMythicPlusTeam, imageUploaded ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName) {
       setTeamName(allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName as string)
       allTeams
         ?.find((e) => e.contactPerson === user?.data.user?.email)
-        ?.players.map((player, index) => {
+        ?.players.map((player, index) =>
+        {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
             {
               characterName: player.characterName,
               realmName: player.realmName,
               discordName: player.discordName,
+              twitchChannel: player.twitchChannel,
               alts: player.alts,
             },
           ])
@@ -318,7 +341,7 @@ function CreateTeam() {
           }
         })
     }
-  }, [allTeams, user?.data.user?.email])
+  }, [ allTeams, user?.data.user?.email ])
 
   const hideCreateTeamButton =
     players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
@@ -368,7 +391,8 @@ function CreateTeam() {
               placeholder="Lagnavn"
               className="rounded-lg p-2 mb-4 w-full lg:w-1/2 bg-gray-800 text-white"
               value={teamName}
-              onChange={(e) => {
+              onChange={(e) =>
+              {
                 setTeamNameError(false)
                 setTeamName(e.target.value)
               }}
@@ -391,12 +415,13 @@ function CreateTeam() {
             <input
               type="file"
               id="teamImage"
-              onChange={(e) => {
-                if (e.target.files?.[0]?.type?.includes('image') === false) {
+              onChange={(e) =>
+              {
+                if (e.target.files?.[ 0 ]?.type?.includes('image') === false) {
                   alert('Du kan kun laste opp bilder. Prøv igjen.')
                   return
                 }
-                if (e.target.files && e.target.files?.[0]?.size > 2000000) {
+                if (e.target.files && e.target.files?.[ 0 ]?.size > 2000000) {
                   alert('Bildet er for stort. Maks 2MB')
                   return
                 }
@@ -464,8 +489,8 @@ function CreateTeam() {
                       required
                     />
                     {player.characterName &&
-                    player.realmName &&
-                    wowRealmsMapped.find((e) => e.name === player.realmName)?.name ? (
+                      player.realmName &&
+                      wowRealmsMapped.find((e) => e.name === player.realmName)?.name ? (
                       <PlayerInfoImage player={player as Player} />
                     ) : null}
                   </div>
@@ -478,6 +503,14 @@ function CreateTeam() {
                     className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
                     required
                   />
+                  <input
+                    type="text"
+                    value={player.twitchChannel}
+                    onChange={(e) => handlePlayerChange(index, e)}
+                    name={'twitchChannel'}
+                    placeholder="Twitch kanal (valgfritt)"
+                    className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
+                  />
                   <Select
                     required
                     styles={colourStyles}
@@ -488,7 +521,8 @@ function CreateTeam() {
                     isSearchable
                     name="realmName"
                     placeholder="Velg realm"
-                    onChange={(e: any) => {
+                    onChange={(e: any) =>
+                    {
                       const event = {
                         target: {
                           value: e?.name,
@@ -516,8 +550,8 @@ function CreateTeam() {
                           className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
                         />
                         {alt.altCharacterName &&
-                        alt.altRealmName &&
-                        wowRealmsMapped.find((e) => e.name === alt.altRealmName)?.name ? (
+                          alt.altRealmName &&
+                          wowRealmsMapped.find((e) => e.name === alt.altRealmName)?.name ? (
                           <PlayerInfoImage
                             player={{ characterName: alt.altCharacterName, realmName: alt.altRealmName } as Player}
                           />
@@ -532,19 +566,18 @@ function CreateTeam() {
                         isSearchable
                         name="altRealmName"
                         placeholder="Velg realm"
-                        onChange={(e: any) => {
+                        onChange={(e: any) =>
+                        {
                           const event = {
                             target: {
                               value: e?.name,
                               name: 'altRealmName',
                             },
                           }
-
                           setPlayerErrors((prevErrors) => prevErrors.map((error, i) => (i === index ? false : error)))
                           handleAltPlayerChange(index, altIndex, event as React.ChangeEvent<HTMLInputElement>)
                         }}
                       />
-
                       <Button
                         className="bg-red-500 mt-2 hover:bg-red-500 hover:scale-105 text-white"
                         type="button"
@@ -554,7 +587,7 @@ function CreateTeam() {
                       </Button>
                     </div>
                   ))}
-                  {playerErrors[index] && (
+                  {playerErrors[ index ] && (
                     <p className="text-red-500 mb-2">Fyll inn både karakternavn og realm for spiller {index + 1}.</p>
                   )}
                   <div className="flex">

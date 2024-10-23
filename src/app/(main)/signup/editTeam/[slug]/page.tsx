@@ -22,7 +22,7 @@ function EditTeam()
   const router = useRouter()
 
   const [ players, setPlayers ] = useState<
-    { characterName: string; realmName: string; discordName: string; alts?: AltPlayer[] }[]
+    { characterName: string; realmName: string; discordName: string; alts?: AltPlayer[], twitchChannel?: string }[]
   >([ { characterName: '', realmName: '', discordName: '', alts: [] } ])
 
   const [ hasEditedPlayers, setHasEditedPlayers ] = useState(false)
@@ -80,6 +80,7 @@ function EditTeam()
               characterName: player.characterName,
               realmName: player.realmName,
               discordName: player.discordName,
+              twitchChannel: player.twitchChannel,
               alts: player.alts,
             },
           ])
@@ -124,6 +125,7 @@ function EditTeam()
                 characterName: player.characterName,
                 realmName: player.realmName,
                 discordName: player.discordName,
+                twitchChannel: player.twitchChannel,
                 alts: player.alts?.map((alt) => ({
                   _key: uuidv4(),
                   altCharacterName: alt.altCharacterName,
@@ -248,7 +250,7 @@ function EditTeam()
     setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== index))
     setHasEditedPlayers(true)
   }
-  if (loadingCreateTeam) return <Loading creatingTeam={true} />
+  if (loadingCreateTeam) return <Loading updatingTeam={true} />
 
   if (errorUpdatingTeam) {
     return (
@@ -333,6 +335,14 @@ function EditTeam()
                     onChange={(e) => handlePlayerChange(index, e)}
                     name={'discordName'}
                     placeholder="Discord brukernavn"
+                    className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
+                  />
+                  <input
+                    type="text"
+                    value={player.twitchChannel}
+                    onChange={(e) => handlePlayerChange(index, e)}
+                    name={'twitchChannel'}
+                    placeholder="Twitch kanal (valgfritt)"
                     className="rounded-lg p-2 mb-2 w-full bg-gray-800 text-white"
                   />
 

@@ -63,14 +63,12 @@ export function Matches({
         (payload) =>
         {
           const updatedData = payload.new as MatchRecord[]
-          console.log(updatedData, '@@@@@@')
           if (updatedData) {
             supabase
               .from('matches')
               .select('*')
               .then((res) =>
               {
-                console.log(res, '***RES****')
                 setMatchSchedule(createSortedRounds(res.data as MatchRecord[], teams))
               })
           }

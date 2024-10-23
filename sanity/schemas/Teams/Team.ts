@@ -76,6 +76,13 @@ export const Player = {
       validation: (Rule: { required: () => any }) => Rule.required(),
     },
     {
+      type: 'string',
+      name: 'twitchChannel',
+      title: 'Twitch Channel',
+      description: 'The Twitch channel of the player',
+      validation: (Rule: { required: () => any }) => Rule.required(),
+    },
+    {
       type: 'array',
       name: 'alts',
       title: 'Alts',

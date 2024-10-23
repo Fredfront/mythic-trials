@@ -37,6 +37,7 @@ export type Player = {
   realmName: string
   characterName: string
   discordName: string
+  twitchChannel?: string
   alts: AltPlayer[]
 }
 
