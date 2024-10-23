@@ -22,7 +22,6 @@ import
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { createSortedRounds } from '../page'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
 export function Matches({
   pickAndBansData,
@@ -44,9 +43,7 @@ export function Matches({
   const email = user?.data.user?.email
   const myTeam = sanityTeamData.find((team) => team.contactPerson === email)
   const [ matchSchedule, setMatchSchedule ] = React.useState<TournamentSchedule>(schedule)
-
   const router = useRouter()
-
   const detailedSchedule = matchSchedule
 
   useEffect(() =>
@@ -82,8 +79,9 @@ export function Matches({
   }, [ teams ])
 
 
+  type matchDataType = Match & { myTeam: string } & { opponent: string }
 
-  const [ matchData, setMatchData ] = React.useState<Match | null>(null)
+  const [ matchData, setMatchData ] = React.useState<matchDataType | null>(null)
 
   if (matchData && matchData.teams.length === 2 && email) {
     return (
@@ -400,13 +398,12 @@ export function Matches({
                                           }
                                         })
                                     }
-                                    setMatchData(match)
-                                    router.push(
-                                      '/my-matches?home=' +
-                                      match.teams[ 0 ].team_slug +
-                                      '&away=' +
-                                      match.teams[ 1 ].team_slug,
-                                    )
+                                    setMatchData({
+                                      ...match,
+                                      myTeam: findMatch?.team_slug as string,
+                                      opponent: opponent as string,
+                                    })
+
                                   }}
                                 >
                                   <CheckCircle />

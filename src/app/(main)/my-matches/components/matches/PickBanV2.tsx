@@ -21,7 +21,7 @@ function PickBanV2({
   contact_person,
   sanityTeamData,
 }: {
-  matchData: Match
+  matchData: Match & { myTeam: string } & { opponent: string }
   pickAndBansTable: PickAndBansType[]
   contact_person: string
   sanityTeamData: MythicPlusTeam[]
@@ -33,18 +33,25 @@ function PickBanV2({
   const { user } = useGetUserData()
   const email = user?.data.user?.email
   const round = matchData?.teams[ 0 ]?.round
-  const opponentTeam = matchData.teams?.find(
-    (match) => email !== match.contactPerson,
-  )?.team_slug
+  const opponentTeam = matchData.opponent
   const myPickAndBansTable = pickAndBansTable.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBansTable.find((e) => e.team_slug === opponentTeam && e.round === round)
   const [ myTeamData, setMyTeamData ] = useState<PickAndBansType | undefined>(myPickAndBansTable)
   const [ opponentData, setOpponentData ] = useState<PickAndBansType | undefined>(opponentPickAndBansTable)
-  const [ teamReady, setTeamReady ] = useState(!!myPickAndBansTable)
+  const [ teamReady, setTeamReady ] = useState(!!myPickAndBansTable?.ready)
   const [ opponentReady, setOpponentReady ] = useState(!!opponentData?.ready)
   const isMyTurn = myTeamData?.my_turn === true
-  const myTeamSlug = sanityTeamData.find((e) => e.contactPerson === email)?.teamSlug || ''
+  const myTeamSlug = matchData.myTeam
   const isHomeTeam = myPickAndBansTable?.home === true
+
+
+
+
+  useEffect(() =>
+  {
+    setOpponentReady(opponentData?.ready === true ? true : false)
+
+  }, [ opponentData?.ready ])
 
 
   useEffect(() =>
@@ -60,34 +67,25 @@ function PickBanV2({
     })
   }, [ email, isHomeTeam, myTeamSlug, opponentTeam, round, matchUUID ])
 
-  useEffect(() =>
-  {
-    if (myTeamData?.ready !== teamReady) {
-      setTeamReady(myTeamData?.ready === true)
-    }
-  }, [ teamReady, myTeamData ])
 
-  useEffect(() =>
-  {
-    if (opponentData?.ready !== opponentReady) {
-      setOpponentReady(!!opponentData?.ready)
-    }
-  }, [ opponentData, opponentReady ])
+
 
   useEffect(() =>
   {
     async function fetchData()
     {
       if (!contact_person || !round) return
-      const { data: myTeamData, error } = await supabase
+      await supabase
         .from('pick_ban')
         .select()
         .eq('contact_person', contact_person)
-        .eq('round', round)
-
-      if (myTeamData && myTeamData.length > 0) {
-        setMyTeamData(myTeamData[ 0 ])
-      }
+        .eq('round', round).then((res) =>
+        {
+          if (res.data && res.data.length > 0) {
+            setMyTeamData(res.data[ 0 ])
+          }
+        }
+        )
     }
     fetchData()
   }, [ contact_person, round ])
@@ -97,15 +95,17 @@ function PickBanV2({
     async function fetchData()
     {
       if (!opponentTeam || !round) return
-      const { data: opponentData, error } = await supabase
+      await supabase
         .from('pick_ban')
         .select()
         .eq('team_slug', opponentTeam)
-        .eq('round', round)
-
-      if (opponentData && opponentData.length > 0) {
-        setOpponentData(opponentData[ 0 ])
-      }
+        .eq('round', round).then((res) =>
+        {
+          if (res.data && res.data.length > 0) {
+            setOpponentData(res.data[ 0 ])
+          }
+        }
+        )
     }
     fetchData()
   }, [ opponentTeam, round ])
@@ -189,18 +189,20 @@ function PickBanV2({
         },
         (payload) =>
         {
-          const updatedData = payload.new as PickAndBansType
 
+          const updatedData = payload.new as PickAndBansType
           if (payload.new.contact_person === contact_person && round === payload.new.round) {
             setMyTeamData(updatedData)
+            setTeamReady(updatedData.ready)
+            console.log('Update MyTeam')
           }
 
           if (payload.new.team_slug === opponentTeam && round === payload.new.round) {
             setOpponentData(updatedData)
+            setOpponentReady(updatedData.ready)
+            console.log('Update Opponent')
           }
-
           if (payload.new.team_slug === opponentTeam && payload.new.ready === true) {
-            setOpponentReady(true)
             if (myTeamData?.my_turn === false && payload.new.my_turn === false) {
               updateTurn()
             }
@@ -213,7 +215,7 @@ function PickBanV2({
     {
       supabase.removeChannel(channel)
     }
-  }, [ contact_person, myTeamData?.my_turn, opponentTeam, round, updateTurn ])
+  }, [ contact_person, myTeamData, opponentTeam, round, updateTurn ])
 
   const completed = useMemo(
     () => myTeamData?.completed === true && opponentData?.completed === true,
