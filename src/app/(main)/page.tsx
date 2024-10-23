@@ -11,18 +11,27 @@ import { getFrontpageNews } from '../api/frongpageNews/getFrontpageNewsData'
 import { PortableText } from '@portabletext/react'
 import SimplifiedLeaderboard from '../components/SimplifiedLeaderboard'
 import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
+import { DraggableRoundCarousel } from '@/components/draggable-round-carousel'
+import { ServerClient } from '@/utils/supabase/server'
+
+export type RoundType = {
+  round: number
+  round_date: string
+}
 
 export const revalidate = 0
 
 const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
-const Home = async () => {
+const Home = async () =>
+{
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
+  const rounds = (await ServerClient.from('rounds').select('*')).data as RoundType[]
 
-  const showLeaderboard = showLeaderboardData?.[0].enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
 
   return (
     <main>
@@ -46,28 +55,14 @@ const Home = async () => {
             </Link>
           </div>
         </div>
-        <div className="gap-4 p-2 flex flex-wrap justify-start text-center overflow-hidden ">
-          {rounds.map((round, index) => {
-            if (round.round === 'Semi-finaler' || round.round === 'Finale') {
-              return (
-                <div
-                  key={index}
-                  className={`flex flex-row items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6 p-2 lg:p-6 w-40 lg:w-52 ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
-                >
-                  <div className="text-center flex border-r-2 border-white flex-col mr-4">
-                    <div className="flex flex-col mr-4 ml-3 ">
-                      <span className="font-bold text-2xl"> {round.day}</span>
-                      <span className=" text-[#FDB202] font-bold text-xl lg:text-2xl">{round.month}</span>
-                    </div>
-                  </div>
-                  <div className="text-lg font-bold">{round.round}</div>
-                </div>
-              )
-            }
+        {/* <div className="gap-4 p-2 flex flex-wrap justify-center text-center overflow-hidden ">
+          {rounds.map((round, index) =>
+          {
+
             return (
               <div
                 key={index}
-                className={`flex lg:flex-row flex-col items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6  p-2 lg:p-6 lg:w-56 w-24 ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
+                className={`flex just lg:flex-row flex-col items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6  p-2 lg:p-6 lg:w-56 w-24 ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
               >
                 <div className="text-center flex lg:border-r-2 border-white flex-col mr-4">
                   <div className="flex flex-col lg:mr-4 ml-4 ">
@@ -79,7 +74,8 @@ const Home = async () => {
               </div>
             )
           })}
-        </div>
+        </div> */}
+        <DraggableRoundCarousel roundsFromDB={rounds ?? []} />
         {allTeams && allTeams.some((e) => e.teamName) ? (
           <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4  ">
             <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
@@ -132,7 +128,8 @@ const Home = async () => {
           </div>
         ) : null}
         {frontpageNews &&
-          frontpageNews.map((news, index) => {
+          frontpageNews.map((news, index) =>
+          {
             const isEvenIndex = index % 2 === 0
             if (news.showOnFrontpage === false) return null
             return (
