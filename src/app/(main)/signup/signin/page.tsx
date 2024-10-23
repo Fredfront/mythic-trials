@@ -8,23 +8,28 @@ import { useRouter } from 'next/navigation'
 import supabase from '@/utils/supabase/client'
 import { useGetUserData } from '../../../auth/useGetUserData'
 
-function Signin() {
+function Signin()
+{
   const { user, loading } = useGetUserData()
   const router = useRouter()
-  const [loadingTeams, setLoadingTeams] = useState<boolean>(true)
-  const [signupData, setSignupData] = useState<SignupPage | null>(null)
-  useEffect(() => {
-    async function fetchSignupData() {
+  const [ loadingTeams, setLoadingTeams ] = useState<boolean>(true)
+  const [ signupData, setSignupData ] = useState<SignupPage | null>(null)
+  useEffect(() =>
+  {
+    async function fetchSignupData()
+    {
       const data = await getSignupData()
       setSignupData(data)
     }
     fetchSignupData()
   }, [])
 
-  const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
+  const [ allTeams, setAllTeams ] = useState<MythicPlusTeam[] | null>(null)
 
-  useEffect(() => {
-    async function fetchAllTeams() {
+  useEffect(() =>
+  {
+    async function fetchAllTeams()
+    {
       const data = await getAllTeams()
       setAllTeams(data)
       setLoadingTeams(false)
@@ -32,7 +37,8 @@ function Signin() {
     fetchAllTeams()
   }, [])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (loadingTeams || loading) return
 
     if (!loading && user?.data.user?.email && allTeams?.find((e) => e.contactPerson === user.data.user?.email)) {
@@ -46,11 +52,15 @@ function Signin() {
       router.prefetch('/signup/createTeam')
       router.push('/signup/createTeam')
     }
-  }, [allTeams, loading, loadingTeams, router, user])
+  }, [ allTeams, loading, loadingTeams, router, user ])
 
-  function SignIn() {
+  function SignIn()
+  {
     supabase.auth.signInWithOAuth({
       provider: 'discord',
+      options: {
+        redirectTo: `${window.location.origin}/signup/createTeam`,
+      }
     })
   }
 

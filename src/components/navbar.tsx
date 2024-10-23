@@ -115,7 +115,11 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
                 <Button
                   variant="outline"
                   className="hidden lg:flex bg-[bg-[#011624] text-white"
-                  onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
+                  onClick={() => supabase.auth.signInWithOAuth({
+                    provider: 'discord', options: {
+                      redirectTo: `${window.location.origin}/`,
+                    }
+                  })}
                 >
                   <User className="mr-2 h-4 w-4" /> Logg inn
                 </Button>
@@ -169,7 +173,11 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
               <Button
                 variant="outline"
                 className=" bg-[bg-[#011624] text-white mt-4 px-6 py-3 "
-                onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
+                onClick={() => supabase.auth.signInWithOAuth({
+                  provider: 'discord', options: {
+                    redirectTo: `${window.location.origin}/`,
+                  }
+                })}
               >
                 <User className="mr-2 h-4 w-4" /> Logg inn
               </Button>

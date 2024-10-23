@@ -27,13 +27,13 @@ function ExistingTeam()
       {
         setSupabaseTeams(res.data as SupabaseTeamType[])
       })
-
-
       setAllTeams(data)
+      setLoading(false)
+
     }
     fetchAllTeams()
-    setLoading(false)
-  }, [])
+  }, [ user?.data.user?.email ])
+
 
   useEffect(() =>
   {
@@ -89,7 +89,7 @@ function ExistingTeam()
     [ allTeams, user?.data.user?.email ],
   )
 
-  if (loading) {
+  if (loading || user?.data.user?.email === undefined) {
     return (
       <div className="w-full grid place-content-center items-center h-screen">
         <div className="flex">
@@ -110,7 +110,7 @@ function ExistingTeam()
     )
   }
 
-  return (
+  return user.data.user.email && (
     <>
       <div className="w-full flex justify-center ">
         <div className="flex flex-col items-center">
