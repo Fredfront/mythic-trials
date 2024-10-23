@@ -1,40 +1,41 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
-import { motion, useTransform, useScroll, useVelocity, useSpring } from 'framer-motion'
+import { motion, useTransform, useScroll, useSpring } from 'framer-motion'
 import { cn } from '@/utils/cn'
 
-export const TracingBeam = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+const MotionDiv = motion.div as any
+
+export const TracingBeam = ({ children, className }: { children: React.ReactNode; className?: string }) =>
+{
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
-    target: ref.current ? (ref as React.RefObject<HTMLElement>) : undefined,
-    offset: ['start start', 'end start'],
+    target: ref.current ? ref as React.RefObject<HTMLElement> : undefined,
+    offset: [ 'start start', 'end start' ],
   })
 
   const contentRef = useRef<HTMLDivElement>(null)
-  const [svgHeight, setSvgHeight] = useState(0)
+  const [ svgHeight, setSvgHeight ] = useState(0)
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (contentRef.current) {
       setSvgHeight(contentRef.current.offsetHeight)
     }
   }, [])
 
-  const y1 = useSpring(useTransform(scrollYProgress, [0, 0.8], [50, svgHeight]), {
+  const y1 = useSpring(useTransform(scrollYProgress, [ 0, 0.8 ], [ 50, svgHeight ]), {
     stiffness: 500,
     damping: 90,
   })
-  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [50, svgHeight - 200]), {
+  const y2 = useSpring(useTransform(scrollYProgress, [ 0, 1 ], [ 50, svgHeight - 200 ]), {
     stiffness: 500,
     damping: 90,
   })
 
   return (
-    <motion.div
-      ref={ref}
-      // className={cn('relative w-full max-w-5xl mx-auto h-full', className)}
-    >
+    <MotionDiv ref={ref} className={cn('relative w-full max-w-5xl mx-auto h-full', className)}>
       <div className="hidden lg:block absolute -left-4 md:-left-20 top-3">
-        <motion.div
+        <MotionDiv
           transition={{
             duration: 0.2,
             delay: 0.5,
@@ -42,9 +43,9 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
           animate={{
             boxShadow: scrollYProgress.get() > 0 ? 'none' : 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
           }}
-          // className="ml-[27px] h-4 w-4 rounded-full border border-netural-200 shadow-sm flex items-center justify-center"
+          className="ml-[27px] h-4 w-4 rounded-full border border-netural-200 shadow-sm flex items-center justify-center"
         >
-          <motion.div
+          <MotionDiv
             transition={{
               duration: 0.2,
               delay: 0.5,
@@ -53,9 +54,9 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
               backgroundColor: scrollYProgress.get() > 0 ? '#fdb202' : '#fdb202',
               borderColor: scrollYProgress.get() > 0 ? '#fdb202' : '#fdb202',
             }}
-            // className="h-2 w-2  rounded-full border border-neutral-300 bg-white"
+            className="h-2 w-2  rounded-full border border-neutral-300 bg-white"
           />
-        </motion.div>
+        </MotionDiv>
         <svg
           viewBox={`0 0 20 ${svgHeight}`}
           width="20"
@@ -100,6 +101,6 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
         </svg>
       </div>
       <div ref={contentRef}>{children}</div>
-    </motion.div>
+    </MotionDiv>
   )
 }
