@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { MatchResultsComponent } from '@/components/match-results'
 import { ArrowLeft } from 'lucide-react'
@@ -8,8 +7,7 @@ import { ServerClient } from '@/utils/supabase/server'
 
 export const revalidate = 0
 
-export default async function Page()
-{
+export default async function Page() {
   const { data } = await ServerClient.from('pick_ban').select('*')
   const teams = await ServerClient.from('teams').select('*')
   const match_results = await ServerClient.from('match_results').select('*')

@@ -25,7 +25,7 @@ const Home = async () => {
   const showLeaderboard = showLeaderboardData?.[0].enabled
 
   return (
-    (<main>
+    <main>
       <div className="flex flex-col items-center ">
         <div
           style={{
@@ -111,13 +111,13 @@ const Home = async () => {
                   .map((team, index) => (
                     <React.Fragment key={team._id}>
                       {index < 3 && ( // Show only the first 3 teams on small screens
-                        (<Link
+                        <Link
                           className="rounded-md mt-4 transition translate duration-500 hover:scale-105 w-full lg:w-1/4 md:max-w-72 md:mr-4"
                           prefetch={true}
                           href={`/team/${team.teamSlug}`}
                         >
                           <TeamCard key={team._id} team={team} />
-                        </Link>)
+                        </Link>
                       )}
                     </React.Fragment>
                   ))}
@@ -185,8 +185,8 @@ const Home = async () => {
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 2 (Ims)</div>
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 3 (Ims)</div>
       </div> */}
-    </main>)
-  );
+    </main>
+  )
 }
 
 export default Home

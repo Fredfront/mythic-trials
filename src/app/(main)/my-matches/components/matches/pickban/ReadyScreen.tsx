@@ -8,8 +8,7 @@ import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import Image from 'next/image'
 import { urlForImage } from '../../../../../../../sanity/lib/image'
 
-interface ReadyScreenProps
-{
+interface ReadyScreenProps {
   round: number
   homeTeam: string
   awayTeam: string
@@ -27,8 +26,7 @@ export default function ReadyScreen({
   opponentReady,
   setReady,
   sanityTeamData,
-}: ReadyScreenProps)
-{
+}: ReadyScreenProps) {
   return (
     <div className="container mx-auto p-4">
       <Card className="max-w-2xl mx-auto bg-[#011624] text-white">

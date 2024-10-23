@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { notFound } from 'next/navigation'
 
 export default async function Page(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
+  const params = await props.params
   const token = await getToken()
   const tyrannical = await getTyrannicalLeaderboardData()
   const allTeams = await getAllTeams()

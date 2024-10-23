@@ -16,52 +16,48 @@ type Props = {
   schedule: TournamentSchedule
 }
 
-const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
-{
-  const [ localSchedule, setLocalSchedule ] = useState<TournamentSchedule>(intitalSchedule)
-  const [ bracketsCreated, setBracketsCreated ] = useState(false)
+const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) => {
+  const [localSchedule, setLocalSchedule] = useState<TournamentSchedule>(intitalSchedule)
+  const [bracketsCreated, setBracketsCreated] = useState(false)
 
   // Handle drag and drop
-  const onDragEnd = (result: DropResult) =>
-  {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination } = result
     if (!destination) return
     if (source.droppableId === destination.droppableId && source.index === destination.index) return
 
     const parseDroppableId = (id: string) => id.split('-').map(Number)
-    const [ sourceRound, sourceMatch ] = parseDroppableId(source.droppableId)
-    const [ destRound, destMatch ] = parseDroppableId(destination.droppableId)
+    const [sourceRound, sourceMatch] = parseDroppableId(source.droppableId)
+    const [destRound, destMatch] = parseDroppableId(destination.droppableId)
 
     // Deep copy schedule ensuring teams remain tuples
     const newSchedule: TournamentSchedule = localSchedule.map((round, roundIndex) =>
-      round.map((match, matchIndex) =>
-      {
+      round.map((match, matchIndex) => {
         // Clone the teams as a tuple
-        const clonedTeams: [ TeamMatch, TeamMatch ] = [ { ...match.teams[ 0 ] }, { ...match.teams[ 1 ] } ]
+        const clonedTeams: [TeamMatch, TeamMatch] = [{ ...match.teams[0] }, { ...match.teams[1] }]
         return { ...match, teams: clonedTeams }
       }),
     )
 
     // Swap the teams between source and destination
-    const draggedTeam = newSchedule[ sourceRound ][ sourceMatch ].teams[ source.index ]
-    const targetTeam = newSchedule[ destRound ][ destMatch ].teams[ destination.index ]
+    const draggedTeam = newSchedule[sourceRound][sourceMatch].teams[source.index]
+    const targetTeam = newSchedule[destRound][destMatch].teams[destination.index]
 
-    newSchedule[ destRound ][ destMatch ].teams[ destination.index ] = {
+    newSchedule[destRound][destMatch].teams[destination.index] = {
       ...draggedTeam,
       home: destination.index === 0,
     }
 
-    newSchedule[ sourceRound ][ sourceMatch ].teams[ source.index ] = {
+    newSchedule[sourceRound][sourceMatch].teams[source.index] = {
       ...targetTeam,
       home: source.index === 0,
     }
 
-    const updateMatchUUID = (round: number, match: number) =>
-    {
-      const teams = newSchedule[ round ][ match ].teams
-      const newMatchUUID = `${teams[ 0 ].team_slug}-${teams[ 1 ].team_slug}-round-${teams[ 0 ].round}-roundDate-${teams[ 0 ].roundDate}`
-      newSchedule[ round ][ match ].teams[ 0 ].matchUUID = newMatchUUID
-      newSchedule[ round ][ match ].teams[ 1 ].matchUUID = newMatchUUID
+    const updateMatchUUID = (round: number, match: number) => {
+      const teams = newSchedule[round][match].teams
+      const newMatchUUID = `${teams[0].team_slug}-${teams[1].team_slug}-round-${teams[0].round}-roundDate-${teams[0].roundDate}`
+      newSchedule[round][match].teams[0].matchUUID = newMatchUUID
+      newSchedule[round][match].teams[1].matchUUID = newMatchUUID
     }
 
     updateMatchUUID(sourceRound, sourceMatch)
@@ -71,12 +67,10 @@ const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
   }
 
   // Handler to feature a match
-  const handleFeatureMatch = (roundIndex: number, matchIndex: number) =>
-  {
+  const handleFeatureMatch = (roundIndex: number, matchIndex: number) => {
     setLocalSchedule((prevSchedule) =>
       prevSchedule.map((round, rIndex) =>
-        round.map((match, mIndex) =>
-        {
+        round.map((match, mIndex) => {
           if (rIndex === roundIndex) {
             return {
               ...match,
@@ -89,10 +83,8 @@ const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
     )
   }
 
-  const handleGenerateRoundRobin = async () =>
-  {
-    await createRoundRobin(localSchedule).then((res) =>
-    {
+  const handleGenerateRoundRobin = async () => {
+    await createRoundRobin(localSchedule).then((res) => {
       if (res.status === 200) setBracketsCreated(true)
     })
   }
@@ -148,8 +140,7 @@ const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
                     <CardTitle className="text-xl font-semibold text-center">Round {roundIndex + 1}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {round.map((match, matchIndex) =>
-                    {
+                    {round.map((match, matchIndex) => {
                       const isFeatured = match.featured
                       return (
                         <Droppable
@@ -161,12 +152,13 @@ const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
                             <Card
                               ref={provided.innerRef}
                               {...provided.droppableProps}
-                              className={`text-white relative transition-all duration-200 ${isFeatured
-                                ? 'border-4 border-yellow-400 shadow-lg'
-                                : snapshot.isDraggingOver
-                                  ? 'bg-[#014F86] shadow-lg'
-                                  : 'bg-[#013D5B]'
-                                }`}
+                              className={`text-white relative transition-all duration-200 ${
+                                isFeatured
+                                  ? 'border-4 border-yellow-400 shadow-lg'
+                                  : snapshot.isDraggingOver
+                                    ? 'bg-[#014F86] shadow-lg'
+                                    : 'bg-[#013D5B]'
+                              }`}
                             >
                               {/* Featured Badge */}
                               {isFeatured && (
@@ -186,12 +178,13 @@ const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
-                                        className={`p-3 rounded-md shadow-sm text-sm cursor-move flex items-center justify-between ${snapshot.isDragging
-                                          ? 'bg-blue-500 text-white'
-                                          : team.home
-                                            ? 'bg-blue-700 text-yellow-300'
-                                            : 'bg-red-700 text-red-300'
-                                          }`}
+                                        className={`p-3 rounded-md shadow-sm text-sm cursor-move flex items-center justify-between ${
+                                          snapshot.isDragging
+                                            ? 'bg-blue-500 text-white'
+                                            : team.home
+                                              ? 'bg-blue-700 text-yellow-300'
+                                              : 'bg-red-700 text-red-300'
+                                        }`}
                                       >
                                         <span className="font-medium">{team.name}</span>
                                         <span>
@@ -205,10 +198,10 @@ const Matches: React.FC<Props> = ({ intitalSchedule, schedule }) =>
                                 {/* Feature Button */}
                                 <Button
                                   size="sm"
-
                                   onClick={() => handleFeatureMatch(roundIndex, matchIndex)}
-                                  className={`mt-2 w-full flex items-center justify-center space-x-1 ${isFeatured ? 'bg-yellow-500 text-black' : 'border border-gray-500 text-gray-300'
-                                    }`}
+                                  className={`mt-2 w-full flex items-center justify-center space-x-1 ${
+                                    isFeatured ? 'bg-yellow-500 text-black' : 'border border-gray-500 text-gray-300'
+                                  }`}
                                 >
                                   <Star className={`w-4 h-4 ${isFeatured ? 'text-black' : 'text-gray-400'}`} />
                                   <span>{isFeatured ? 'Featured' : 'Feature'}</span>

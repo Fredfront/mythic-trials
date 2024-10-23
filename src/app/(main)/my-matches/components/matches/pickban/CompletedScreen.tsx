@@ -8,8 +8,7 @@ import { Trophy, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 
-interface CompletedScreenProps
-{
+interface CompletedScreenProps {
   homeTeam: string
   awayTeam: string
   pickedDungeons: Array<{ id: number; name: string; image: string }>
@@ -23,8 +22,7 @@ export default function CompletedScreen({
   pickedDungeons,
   tiebreakerDungeon,
   round,
-}: CompletedScreenProps)
-{
+}: CompletedScreenProps) {
   const router = useRouter()
 
   return (
@@ -47,7 +45,7 @@ export default function CompletedScreen({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pickedDungeons.map((dungeon, index) => (
-              <Card className='text-white' key={dungeon.id}>
+              <Card className="text-white" key={dungeon.id}>
                 <CardContent className="p-4">
                   <div className="relative h-48 mb-2">
                     <Image
@@ -67,7 +65,7 @@ export default function CompletedScreen({
             ))}
 
             {tiebreakerDungeon && (
-              <Card className='text-white'>
+              <Card className="text-white">
                 <CardContent className="p-4">
                   <div className="relative h-48 mb-2">
                     <Image
@@ -94,7 +92,7 @@ export default function CompletedScreen({
         </CardContent>
         <div className="w-full flex justify-center p-4">
           <Button
-            className='bg-white text-black min-w-[75px]'
+            className="bg-white text-black min-w-[75px]"
             onClick={() =>
               router.push('/my-matches/results?home=' + homeTeam + '&away=' + awayTeam + '&round=' + round)
             }

@@ -8,11 +8,10 @@ import { MatchRecord, SupabaseTeamsType, SupabaseTeamType } from '../../../../..
 
 export const revalidate = 0
 
-const page = async () =>
-{
+const page = async () => {
   const matches = (await (await ServerClient.from('matches').select('*')).data) as MatchRecord[]
   const teams = (await (await ServerClient.from('teams').select('*')).data) as SupabaseTeamType[]
-  const rounds = (await (await ServerClient.from('rounds').select('*')).data) as { round: number, round_date: string }[]
+  const rounds = (await (await ServerClient.from('rounds').select('*')).data) as { round: number; round_date: string }[]
 
   return (
     <div>

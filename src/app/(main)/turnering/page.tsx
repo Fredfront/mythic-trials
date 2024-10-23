@@ -9,8 +9,7 @@ import { createSortedRounds } from '../my-matches/page'
 
 export const revalidate = 1 // Disables ISR; adjust as needed
 
-async function Page()
-{
+async function Page() {
   // Fetch teams
   const teamsResponse = await ServerClient.from('teams').select('*')
   const teams: Team[] = teamsResponse.data ?? []
@@ -36,4 +35,3 @@ async function Page()
 }
 
 export default Page
-

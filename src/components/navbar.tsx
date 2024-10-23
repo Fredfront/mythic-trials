@@ -12,31 +12,27 @@ import supabase from '@/utils/supabase/client'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 
-const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
-{
-  const [ isMenuOpen, setMenuOpen ] = useState(false)
+const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) => {
+  const [isMenuOpen, setMenuOpen] = useState(false)
   const { user, loading } = useGetUserData()
   const pathname = usePathname()
   const router = useRouter()
 
   const team = sanityTeams.find((e) => e.contactPerson === user?.data.user?.email)
 
-  const toggleMenu = () =>
-  {
+  const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
   }
 
-  const handleLogout = async () =>
-  {
-    await supabase.auth.signOut().then(() =>
-    {
-      router.push('/')
-
-    }).then(() =>
-    {
-      window.location.reload()
-
-    })
+  const handleLogout = async () => {
+    await supabase.auth
+      .signOut()
+      .then(() => {
+        router.push('/')
+      })
+      .then(() => {
+        window.location.reload()
+      })
   }
 
   const navLinks = [
@@ -133,10 +129,11 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-2xl ${pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                  ? 'text-[#FDB202]'
-                  : 'text-gray-200'
-                  } hover:text-white font-bold`}
+                className={`text-2xl ${
+                  pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                    ? 'text-[#FDB202]'
+                    : 'text-gray-200'
+                } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
                 {link.label}
@@ -149,13 +146,15 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                 </Button>
               </Link>
             )}
-            {!user?.data.user?.email && <Button
-              variant="outline"
-              className=" bg-[bg-[#011624] text-white mt-4 px-6 py-3 "
-              onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
-            >
-              <User className="mr-2 h-4 w-4" /> Logg inn
-            </Button>}
+            {!user?.data.user?.email && (
+              <Button
+                variant="outline"
+                className=" bg-[bg-[#011624] text-white mt-4 px-6 py-3 "
+                onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
+              >
+                <User className="mr-2 h-4 w-4" /> Logg inn
+              </Button>
+            )}
           </div>
         </div>
       )}

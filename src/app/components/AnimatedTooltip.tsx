@@ -13,33 +13,29 @@ export const AnimatedTooltip = ({
     characterName: string
     realmName: string
   }[]
-}) =>
-{
+}) => {
   return items?.map((item, idx) => <Component key={idx} item={item} />)
 }
 
-const Component = (item: any) =>
-{
+const Component = (item: any) => {
   const springConfig = { stiffness: 100, damping: 5 }
 
   const x = useMotionValue(0) // going to set this value on mouse move
 
-  const [ hoveredIndex, setHoveredIndex ] = useState<number | null>(null)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   // rotate the tooltip
-  const rotate = useSpring(useTransform(x, [ -100, 100 ], [ -45, 45 ]), springConfig)
+  const rotate = useSpring(useTransform(x, [-100, 100], [-45, 45]), springConfig)
   // translate the tooltip
-  const translateX = useSpring(useTransform(x, [ -100, 100 ], [ -50, 50 ]), springConfig)
-  const handleMouseMove = (event: any) =>
-  {
+  const translateX = useSpring(useTransform(x, [-100, 100], [-50, 50]), springConfig)
+  const handleMouseMove = (event: any) => {
     const halfWidth = event.target.offsetWidth / 2
     x.set(event.nativeEvent.offsetX - halfWidth) // set the x value, which is then used in transform and rotate
   }
 
-  const [ playerInfo, setPlayerInfo ] = useState<any>(null)
+  const [playerInfo, setPlayerInfo] = useState<any>(null)
 
   // Define a debounced function for fetching player info
-  const debouncedGetPlayerInfo = debounce(async () =>
-  {
+  const debouncedGetPlayerInfo = debounce(async () => {
     const info = await getRaiderIOCharacerData({
       characterName: item?.item?.characterName,
       realmName: item?.item?.realmName,
@@ -47,18 +43,16 @@ const Component = (item: any) =>
     setPlayerInfo(info)
   }, 1)
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Call the debounced function when player changes
     debouncedGetPlayerInfo()
 
     // Cleanup function to cancel any pending debounced calls when component unmounts
-    return () =>
-    {
+    return () => {
       debouncedGetPlayerInfo.cancel()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ item ])
+  }, [item])
 
   return (
     <div
@@ -87,7 +81,7 @@ const Component = (item: any) =>
               rotate: rotate,
               whiteSpace: 'nowrap',
             }}
-          // className="absolute -top-16 -left-1/2 translate-x-1/2 flex text-xs  flex-col items-center justify-center rounded-md bg-black z-50 shadow-xl px-4 py-2"
+            // className="absolute -top-16 -left-1/2 translate-x-1/2 flex text-xs  flex-col items-center justify-center rounded-md bg-black z-50 shadow-xl px-4 py-2"
           >
             <div className="absolute inset-x-10 z-30 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent h-px " />
             <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px " />

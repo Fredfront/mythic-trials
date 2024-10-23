@@ -21,8 +21,7 @@ export default function Matches({
   matchResults: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
   schedule: TournamentSchedule
-})
-{
+}) {
   const detailedSchedule = schedule as TournamentSchedule
 
   if (!detailedSchedule || detailedSchedule.length === 0) {
@@ -55,12 +54,11 @@ export default function Matches({
 
             <div className="bg-gray-800 p-4 rounded-lg">
               <div className="grid grid-cols-1 gap-4 mt-4">
-                {round.map((match, matchIndex) =>
-                {
-                  const homeTeam = match.teams?.[ 0 ].team_slug
-                  const awayTeam = match.teams?.[ 1 ].team_slug
-                  const homeTeamName = match.teams?.[ 0 ].name
-                  const awayTeamName = match.teams?.[ 1 ].name
+                {round.map((match, matchIndex) => {
+                  const homeTeam = match.teams?.[0].team_slug
+                  const awayTeam = match.teams?.[1].team_slug
+                  const homeTeamName = match.teams?.[0].name
+                  const awayTeamName = match.teams?.[1].name
                   const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage.asset._ref
                   const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage.asset._ref
 
@@ -83,23 +81,23 @@ export default function Matches({
 
                   const confirmedResult =
                     homeTeamMatchResults?.confirm &&
-                      awayTeamMatchResults?.confirm &&
-                      homeTeamMatchResults.round === index + 1 &&
-                      awayTeamMatchResults.round === index + 1
+                    awayTeamMatchResults?.confirm &&
+                    homeTeamMatchResults.round === index + 1 &&
+                    awayTeamMatchResults.round === index + 1
                       ? true
                       : false
 
-                  const matchDate = match.teams[ 0 ].roundDate
-                  const matchStartTime = match.teams[ 0 ].round_startTime
-                  const rescheduledDate = match.teams[ 0 ].rescheduled_round_date
-                  const rescheduledStartTime = match.teams[ 0 ].rescheduled_round_startTime
+                  const matchDate = match.teams[0].roundDate
+                  const matchStartTime = match.teams[0].round_startTime
+                  const rescheduledDate = match.teams[0].rescheduled_round_date
+                  const rescheduledStartTime = match.teams[0].rescheduled_round_startTime
                   const rescheduledDateTime = new Date(`${rescheduledDate}T${rescheduledStartTime}Z`)
                   const rescheduledDateTimeString = rescheduledDateTime.toLocaleString('nb-NO', {
                     timeZone: 'UTC',
                     dateStyle: 'medium',
                     timeStyle: 'short',
                   })
-                  const hasRescheduled = match.teams[ 0 ].rescheduled
+                  const hasRescheduled = match.teams[0].rescheduled
 
                   //Convert to Oslo time and to a readable format
                   const matchDateTime = new Date(`${matchDate}T${matchStartTime}Z`)
@@ -142,8 +140,14 @@ export default function Matches({
                           </div>
                           <div className=" w-2/5 md:w-[25%] ">
                             <div className=" text-xs flex flex-col">
-                              <div className=" text-xs flex flex-col"><span className={`${hasRescheduled && rescheduledDateTimeString ? 'line-through' : ''}`}>{matchDateTimeString}</span>{hasRescheduled && <span>Ny tid: {rescheduledDateTimeString}</span>}</div>
-
+                              <div className=" text-xs flex flex-col">
+                                <span
+                                  className={`${hasRescheduled && rescheduledDateTimeString ? 'line-through' : ''}`}
+                                >
+                                  {matchDateTimeString}
+                                </span>
+                                {hasRescheduled && <span>Ny tid: {rescheduledDateTimeString}</span>}
+                              </div>
                             </div>
                             {confirmedResult ? (
                               <div>

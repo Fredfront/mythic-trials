@@ -16,21 +16,18 @@ export const metadata: Metadata = {
 }
 
 const DMSans = DM_Sans({
-  weight: [ '100', '200', '300', '400', '500', '600', '700', '800', '900' ],
-  subsets: [ 'latin' ],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
 })
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
-}>)
-{
+}>) {
   return (
     <html translate="no">
-      <body className={cn(`min-h-screen bg-[#011624] antialiased ${DMSans.className} text-white`)}>
-        {children}
-      </body>
+      <body className={cn(`min-h-screen bg-[#011624] antialiased ${DMSans.className} text-white`)}>{children}</body>
     </html>
   )
 }

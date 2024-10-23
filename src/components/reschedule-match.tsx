@@ -18,26 +18,24 @@ import supabase from '@/utils/supabase/client'
 import { nb } from 'date-fns/locale'
 
 // Simulated function to update the database
-const updateDatabase = async (data: MatchRescheduleData, id: string, isHomeTeam: boolean) =>
-{
-
-
-  const payload = isHomeTeam ? {
-    home_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
-    home_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
-    home_team_agree_reschedule: true,
-  } : {
-    away_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
-    away_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
-    away_team_agree_reschedule: true,
-  }
+const updateDatabase = async (data: MatchRescheduleData, id: string, isHomeTeam: boolean) => {
+  const payload = isHomeTeam
+    ? {
+        home_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
+        home_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
+        home_team_agree_reschedule: true,
+      }
+    : {
+        away_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
+        away_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
+        away_team_agree_reschedule: true,
+      }
 
   // Simulate a successful update
   await supabase.from('matches').update(payload).eq('id', id)
 }
 
-interface MatchRescheduleData
-{
+interface MatchRescheduleData {
   rescheduled_round_date: Date | string
   rescheduled_round_startTime: string
   proposed_rescheduled_round_date: string | null
@@ -47,9 +45,16 @@ interface MatchRescheduleData
   rescheduled: boolean
 }
 
-export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { matchesFromServer: MatchRecord[]; teams: SupabaseTeamType[], rounds: { round: number, round_date: string }[] })
-{
-  const [ matches, setMatches ] = useState(matchesFromServer)
+export default function RescheduleMatch({
+  matchesFromServer,
+  teams,
+  rounds,
+}: {
+  matchesFromServer: MatchRecord[]
+  teams: SupabaseTeamType[]
+  rounds: { round: number; round_date: string }[]
+}) {
+  const [matches, setMatches] = useState(matchesFromServer)
   const { loading, user } = useGetUserData()
   const email = user?.data.user?.email
   const searchParams = useSearchParams()
@@ -58,7 +63,7 @@ export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { 
   const homeTeam = teams.find((team) => team.id === match?.home_team_id)
   const awayTeam = teams.find((team) => team.id === match?.away_team_id)
   const isHomeTeam = homeTeam?.contact_person === email
-  const [ isSubmitting, setIsSubmitting ] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const form = useForm<MatchRescheduleData>({
     defaultValues: {
       rescheduled_round_date: new Date(match?.rescheduled_round_date || match?.round_date || ''),
@@ -66,17 +71,13 @@ export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { 
     },
   })
 
-
-
   const roundDate = rounds.find((e) => e.round === match?.round)?.round_date
 
-  const onSubmit = async (data: MatchRescheduleData) =>
-  {
+  const onSubmit = async (data: MatchRescheduleData) => {
     if (!id) return
     setIsSubmitting(true)
     try {
       const result = await updateDatabase(data, id, isHomeTeam)
-
     } catch (error) {
       toast({
         title: 'Error',
@@ -89,12 +90,14 @@ export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { 
   }
 
   const hasProposedReschedule = isHomeTeam ? match?.home_team_agree_reschedule : match?.away_team_agree_reschedule
-  const myProposedNewDate = isHomeTeam ? match?.home_team_proposed_rescheduled_round_date : match?.away_team_proposed_rescheduled_round_date
-  const myProposedNewTime = isHomeTeam ? match?.home_team_proposed_rescheduled_round_startTime : match?.away_team_proposed_rescheduled_round_startTime
+  const myProposedNewDate = isHomeTeam
+    ? match?.home_team_proposed_rescheduled_round_date
+    : match?.away_team_proposed_rescheduled_round_date
+  const myProposedNewTime = isHomeTeam
+    ? match?.home_team_proposed_rescheduled_round_startTime
+    : match?.away_team_proposed_rescheduled_round_startTime
 
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -104,32 +107,29 @@ export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { 
           schema: 'public',
           table: 'matches',
         },
-        (payload) =>
-        {
+        (payload) => {
           const updatedData = payload.new as MatchRecord
 
           if (updatedData) {
-            supabase.from('matches').select('*').then((res) =>
-            {
-              setMatches(res.data as MatchRecord[])
-            }
-            )
+            supabase
+              .from('matches')
+              .select('*')
+              .then((res) => {
+                setMatches(res.data as MatchRecord[])
+              })
           }
         },
       )
       .subscribe()
 
-    return () =>
-    {
+    return () => {
       supabase.removeChannel(channel)
     }
   }, [])
 
-
   if (loading) return <div>Loading.. </div>
 
   return (
-
     <div className="max-w-lg mx-auto">
       {hasProposedReschedule ? (
         <div className="mt-8 p-6 bg-blue-600  rounded-lg shadow-md">
@@ -141,44 +141,56 @@ export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { 
             Du har foreslått en ny dato for kampen. Motstanderlaget må godkjenne forslaget før endringen blir gjeldende.
           </p>
           <div className="bg-blue-600 p-4 rounded-md">
-            {myProposedNewDate && <p><strong>Foreslått dato:</strong> {format(new Date(myProposedNewDate || ''), 'PPP', {
-              locale: nb,
-            })}</p>}
-            <p><strong>Foreslått tid:</strong> {myProposedNewTime}</p>
+            {myProposedNewDate && (
+              <p>
+                <strong>Foreslått dato:</strong>{' '}
+                {format(new Date(myProposedNewDate || ''), 'PPP', {
+                  locale: nb,
+                })}
+              </p>
+            )}
+            <p>
+              <strong>Foreslått tid:</strong> {myProposedNewTime}
+            </p>
           </div>
-          <Button onClick={async () =>
-          {
+          <Button
+            onClick={async () => {
+              //remove proposed reschedule
+              const payload = isHomeTeam
+                ? {
+                    home_team_proposed_rescheduled_round_date: null,
+                    home_team_proposed_rescheduled_round_startTime: null,
+                    home_team_agree_reschedule: false,
+                  }
+                : {
+                    away_team_proposed_rescheduled_round_date: null,
+                    away_team_proposed_rescheduled_round_startTime: null,
+                    away_team_agree_reschedule: false,
+                  }
 
-            //remove proposed reschedule
-            const payload = isHomeTeam ? {
-              home_team_proposed_rescheduled_round_date: null,
-              home_team_proposed_rescheduled_round_startTime: null,
-              home_team_agree_reschedule: false,
-            } : {
-              away_team_proposed_rescheduled_round_date: null,
-              away_team_proposed_rescheduled_round_startTime: null,
-              away_team_agree_reschedule: false,
-            }
-
-            await supabase.from('matches').update(payload).eq('id', id)
-
-          }} className='bg-red-600'>Avbryt forespørsel</Button>
+              await supabase.from('matches').update(payload).eq('id', id)
+            }}
+            className="bg-red-600"
+          >
+            Avbryt forespørsel
+          </Button>
         </div>
-
       ) : (
         <>
           <InfoBoxComponent
             title="Viktig info"
-            description='Om du sender inn en forespørsel om å endre kampdato, må motstanderlaget godkjenne forespørselen før endringen blir gjeldende.'
+            description="Om du sender inn en forespørsel om å endre kampdato, må motstanderlaget godkjenne forespørselen før endringen blir gjeldende."
           />
           <div className="mt-8 p-6 bg-[#07527d47] text-white rounded-lg shadow-md mb-10">
             <h1 className="text-2xl font-bold mb-2">Forespørsel om å flytte kamp</h1>
-            <h2 className="text-xl mb-4">{homeTeam?.name} vs {awayTeam?.name} (runde {match?.round})</h2>
+            <h2 className="text-xl mb-4">
+              {homeTeam?.name} vs {awayTeam?.name} (runde {match?.round})
+            </h2>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name='rescheduled_round_date'
+                  name="rescheduled_round_date"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Ny dato</FormLabel>
@@ -192,9 +204,13 @@ export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { 
                                 !field.value && 'text-gray-400',
                               )}
                             >
-                              {field.value ? format(field.value, 'PPP', {
-                                locale: nb,
-                              }) : <span>Velg ny dato (Må være innenfor rundeuke)</span>}
+                              {field.value ? (
+                                format(field.value, 'PPP', {
+                                  locale: nb,
+                                })
+                              ) : (
+                                <span>Velg ny dato (Må være innenfor rundeuke)</span>
+                              )}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
                           </FormControl>
@@ -203,27 +219,32 @@ export default function RescheduleMatch({ matchesFromServer, teams, rounds }: { 
                           <Calendar
                             fromDate={new Date(roundDate || '')}
                             //to date should be new date() + 6 days
-                            toDate={new Date(new Date(roundDate || '').setDate(new Date(roundDate || '').getDate() + 6))}
+                            toDate={
+                              new Date(new Date(roundDate || '').setDate(new Date(roundDate || '').getDate() + 6))
+                            }
                             locale={nb}
                             mode="single"
                             selected={field.value as Date}
                             onSelect={field.onChange}
-
                             disabled={(date) =>
-                              loading || date < new Date() || date > new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+                              loading ||
+                              date < new Date() ||
+                              date > new Date(new Date().setFullYear(new Date().getFullYear() + 1))
                             }
                             initialFocus
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormDescription className='text-white'>Velg ny dato for kamp (Må være før neste runde starter)</FormDescription>
+                      <FormDescription className="text-white">
+                        Velg ny dato for kamp (Må være før neste runde starter)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
-                  name='rescheduled_round_startTime'
+                  name="rescheduled_round_startTime"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Ny starttid</FormLabel>
