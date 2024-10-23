@@ -5,32 +5,52 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Menu, X, User, LogOut, ChevronDown } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import supabase from '@/utils/supabase/client'
-import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { useGetUserData } from '@/app/auth/useGetUserData'
+import { SupabaseTeamType } from '../../types'
+import { MythicPlusTeam } from '@/app/api/getAllTeams'
 
-const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) => {
-  const [isMenuOpen, setMenuOpen] = useState(false)
+const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeams: MythicPlusTeam[] }) =>
+{
+  const [ isMenuOpen, setMenuOpen ] = useState(false)
   const { user, loading } = useGetUserData()
   const pathname = usePathname()
   const router = useRouter()
 
-  const team = sanityTeams.find((e) => e.contactPerson === user?.data.user?.email)
+  const team = teams?.find((e) => e.contact_person === user?.data.user?.email)
+  const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
 
-  const toggleMenu = () => {
+  async function updateTeam()
+  {
+    if (team?.approved_in_sanity === true || !mySanityTeam || !team || loading) return
+    if (team?.approved_in_sanity === false && mySanityTeam) {
+      await supabase.from('teams').update({ approved_in_sanity: true }).eq('id', team.id)
+    }
+  }
+
+  useEffect(() =>
+  {
+    updateTeam()
+  }, [ mySanityTeam, team, loading ])
+
+  const toggleMenu = () =>
+  {
     setMenuOpen(!isMenuOpen)
   }
 
-  const handleLogout = async () => {
+  const handleLogout = async () =>
+  {
     await supabase.auth
       .signOut()
-      .then(() => {
+      .then(() =>
+      {
         router.push('/')
       })
-      .then(() => {
+      .then(() =>
+      {
         window.location.reload()
       })
   }
@@ -82,7 +102,7 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) => {
                     </DropdownMenuItem>
                     {team && (
                       <DropdownMenuItem asChild>
-                        <Link href={`/signup/existingTeam/${team.teamSlug}`}>Mitt lag</Link>
+                        <Link href={`/signup/existingTeam/${team.team_slug}`}>Mitt lag</Link>
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem onClick={handleLogout}>
@@ -129,11 +149,10 @@ const NavBar = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-2xl ${
-                  pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                    ? 'text-[#FDB202]'
-                    : 'text-gray-200'
-                } hover:text-white font-bold`}
+                className={`text-2xl ${pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                  ? 'text-[#FDB202]'
+                  : 'text-gray-200'
+                  } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
                 {link.label}

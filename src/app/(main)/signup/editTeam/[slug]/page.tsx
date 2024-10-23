@@ -15,57 +15,65 @@ import { CrownIcon, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 
-function EditTeam() {
+function EditTeam()
+{
   const { user, loading } = useGetUserData()
 
   const router = useRouter()
 
-  const [players, setPlayers] = useState<
+  const [ players, setPlayers ] = useState<
     { characterName: string; realmName: string; discordName: string; alts?: AltPlayer[] }[]
-  >([{ characterName: '', realmName: '', discordName: '', alts: [] }])
+  >([ { characterName: '', realmName: '', discordName: '', alts: [] } ])
 
-  const [hasEditedPlayers, setHasEditedPlayers] = useState(false)
-  const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
+  const [ hasEditedPlayers, setHasEditedPlayers ] = useState(false)
+  const [ allTeams, setAllTeams ] = useState<MythicPlusTeam[] | null>(null)
   const hasTeam = allTeams?.find((e) => e.contactPerson === user?.data.user?.email)
   const teamSlug = useMemo(
     () => allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamSlug,
-    [allTeams, user?.data.user?.email],
+    [ allTeams, user?.data.user?.email ],
   )
-  const [errorUpdatingTeam, setErrorUpdatingTeam] = useState(false)
+  const [ errorUpdatingTeam, setErrorUpdatingTeam ] = useState(false)
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (!loading && user?.data.user?.email === undefined) {
       router.prefetch('/signup/signin')
       router.push('/signup/signin')
     }
-  }, [loading, router, teamSlug, user?.data.user?.email])
+  }, [ loading, router, teamSlug, user?.data.user?.email ])
 
-  useEffect(() => {
-    if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
+  useEffect(() =>
+  {
+    if (loading) return
+    if (!loading && allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push(`/signup/editTeam/${teamSlug}`)
     }
 
-    if (allTeams && !allTeams.find((e) => e.contactPerson === user?.data.user?.email)) {
+    if (!loading && allTeams && !allTeams.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push(`/signup`)
     }
-  }, [allTeams, user?.data.user?.email, router, teamSlug])
+  }, [ allTeams, user?.data.user?.email, router, teamSlug, loading ])
 
-  useEffect(() => {
-    async function fetchAllTeams() {
+  useEffect(() =>
+  {
+    async function fetchAllTeams()
+    {
       const data = await getAllTeams()
       setAllTeams(data)
     }
     fetchAllTeams()
   }, [])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (
       allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName &&
       allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.players
     ) {
       allTeams
         ?.find((e) => e.contactPerson === user?.data.user?.email)
-        ?.players.map((player, index) => {
+        ?.players.map((player, index) =>
+        {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
             {
@@ -82,16 +90,17 @@ function EditTeam() {
           }
         })
     }
-  }, [allTeams, user?.data.user?.email])
+  }, [ allTeams, user?.data.user?.email ])
 
-  const [playerErrors, setPlayerErrors] = useState<boolean[]>([])
+  const [ playerErrors, setPlayerErrors ] = useState<boolean[]>([])
 
-  const [missingPlayersError, setMissingPlayersError] = useState(false)
+  const [ missingPlayersError, setMissingPlayersError ] = useState(false)
 
-  const [loadingCreateTeam, setLoadingCreateTeam] = useState(false)
+  const [ loadingCreateTeam, setLoadingCreateTeam ] = useState(false)
 
   const updateMythicPlusTeam = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
+    async (event: React.FormEvent<HTMLFormElement>) =>
+    {
       event?.preventDefault()
 
       setLoadingCreateTeam(true)
@@ -158,44 +167,48 @@ function EditTeam() {
         // Handle error
       }
     },
-    [allTeams, user?.data.user?.email, players, router, teamSlug],
+    [ allTeams, user?.data.user?.email, players, router, teamSlug ],
   )
 
-  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  {
     const { name, value } = event.target
 
-    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [name]: value } : player)))
+    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [ name ]: value } : player)))
 
     setHasEditedPlayers(true)
   }
-  const handleAddPlayer = () => {
-    setPlayers([...players, { characterName: '', discordName: '', realmName: '' }])
+  const handleAddPlayer = () =>
+  {
+    setPlayers([ ...players, { characterName: '', discordName: '', realmName: '' } ])
   }
 
-  const handleAddAltPlayer = (index: number) => {
+  const handleAddAltPlayer = (index: number) =>
+  {
     setHasEditedPlayers(true)
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === index
           ? {
-              ...player,
-              alts: [...(player.alts || []), { altCharacterName: '', altRealmName: '' }],
-            }
+            ...player,
+            alts: [ ...(player.alts || []), { altCharacterName: '', altRealmName: '' } ],
+          }
           : player,
       ),
     )
   }
 
   // Function to remove an alt player for a specific main player
-  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) => {
+  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) =>
+  {
     setHasEditedPlayers(true)
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [], // Remove the alt player at the specified index
-            }
+            ...player,
+            alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [], // Remove the alt player at the specified index
+          }
           : player,
       ),
     )
@@ -205,23 +218,24 @@ function EditTeam() {
     mainPlayerIndex: number,
     altIndex: number,
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  ) =>
+  {
     const { name, value } = event.target
 
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts?.map((alt, altIdx) =>
-                altIdx === altIndex
-                  ? {
-                      ...alt,
-                      [name]: value,
-                    }
-                  : alt,
-              ),
-            }
+            ...player,
+            alts: player.alts?.map((alt, altIdx) =>
+              altIdx === altIndex
+                ? {
+                  ...alt,
+                  [ name ]: value,
+                }
+                : alt,
+            ),
+          }
           : player,
       ),
     )
@@ -229,7 +243,8 @@ function EditTeam() {
     setHasEditedPlayers(true)
   }
 
-  const handleRemovePlayer = (index: number) => {
+  const handleRemovePlayer = (index: number) =>
+  {
     setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== index))
     setHasEditedPlayers(true)
   }
@@ -305,8 +320,8 @@ function EditTeam() {
                       className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
                     />
                     {player.characterName &&
-                    player.realmName &&
-                    wowRealmsMapped.find((e) => e.name === player.realmName)?.name ? (
+                      player.realmName &&
+                      wowRealmsMapped.find((e) => e.name === player.realmName)?.name ? (
                       <PlayerInfoImage player={player as Player} />
                     ) : null}
                   </div>
@@ -330,7 +345,8 @@ function EditTeam() {
                     isSearchable
                     name="realmName"
                     placeholder="Velg realm"
-                    onChange={(e: any) => {
+                    onChange={(e: any) =>
+                    {
                       const event = {
                         target: {
                           value: e?.name,
@@ -357,8 +373,8 @@ function EditTeam() {
                           className=" rounded-l-lg  p-2 mb-2 w-full bg-gray-800 text-white"
                         />
                         {alt.altCharacterName &&
-                        alt.altRealmName &&
-                        wowRealmsMapped.find((e) => e.name === alt.altRealmName)?.name ? (
+                          alt.altRealmName &&
+                          wowRealmsMapped.find((e) => e.name === alt.altRealmName)?.name ? (
                           <PlayerInfoImage
                             player={{ characterName: alt.altCharacterName, realmName: alt.altRealmName } as Player}
                           />
@@ -373,7 +389,8 @@ function EditTeam() {
                         isSearchable
                         name="altRealmName"
                         placeholder="Velg realm"
-                        onChange={(e: any) => {
+                        onChange={(e: any) =>
+                        {
                           const event = {
                             target: {
                               value: e?.name,
@@ -395,7 +412,7 @@ function EditTeam() {
                     </div>
                   ))}
 
-                  {playerErrors[index] && (
+                  {playerErrors[ index ] && (
                     <p className="text-red-500 mb-2">Fyll inn både karakternavn og realm for spiller {index + 1}.</p>
                   )}
                   <div className="flex">
@@ -445,8 +462,8 @@ function EditTeam() {
                 type="submit"
               >
                 {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
-                playerErrors.some((e) => e === true) ||
-                (players && players.length <= 4)
+                  playerErrors.some((e) => e === true) ||
+                  (players && players.length <= 4)
                   ? 'Mangler info for å oppdatere lag'
                   : loadingCreateTeam
                     ? 'Oppdaterer lag'

@@ -4,6 +4,7 @@ export type SupabaseTeamType = {
   name: string
   contact_person: string
   team_slug: string
+  approved_in_sanity: boolean
 }
 
 export type SupabaseTeamsType = {

@@ -6,44 +6,59 @@ import Link from 'next/link'
 import { Icons } from '@/components/loading'
 import { useRouter } from 'next/navigation'
 import { AnimatedTooltip } from '@/app/components/AnimatedTooltip'
-import { LogOut } from 'lucide-react'
 import { useGetUserData } from '@/app/auth/useGetUserData'
+import { SupabaseTeamType } from '../../../../../../types'
+import { ServerClient } from '@/utils/supabase/server'
 
-function ExistingTeam() {
+function ExistingTeam()
+{
   const { user, loading: userLoading } = useGetUserData()
-
+  const [ supabaseTeams, setSupabaseTeams ] = useState<SupabaseTeamType[] | null>(null)
   const router = useRouter()
-  const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
-  const [loading, setLoading] = useState(false)
-  React.useEffect(() => {
-    async function fetchAllTeams() {
+  const [ allTeams, setAllTeams ] = useState<MythicPlusTeam[] | null>(null)
+  const [ loading, setLoading ] = useState(false)
+  React.useEffect(() =>
+  {
+    setLoading(true)
+    async function fetchAllTeams()
+    {
       const data = await getAllTeams()
+      await ServerClient.from('teams').select('*').then((res) =>
+      {
+        setSupabaseTeams(res.data as SupabaseTeamType[])
+      })
+
+
       setAllTeams(data)
     }
     fetchAllTeams()
+    setLoading(false)
   }, [])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (userLoading || loading) return
     if (user?.data.user?.email === undefined) {
       router.push('/signup/signin')
     }
-  }, [loading, router, user?.data.user?.email, userLoading])
+  }, [ loading, router, user?.data.user?.email, userLoading ])
 
   const teamSlug = useMemo(
     () => allTeams?.find((e) => e.contactPerson === user?.data.user?.email),
-    [allTeams, user?.data.user?.email],
+    [ allTeams, user?.data.user?.email ],
   )?.teamSlug
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push(`/signup/existingTeam/${teamSlug}`)
     }
-  }, [allTeams, user?.data.user?.email, router, teamSlug])
+  }, [ allTeams, user?.data.user?.email, router, teamSlug ])
 
   const mappedTeam = allTeams
     ?.find((e) => e.contactPerson === user?.data.user?.email)
-    ?.players.map((player) => {
+    ?.players.map((player) =>
+    {
       return {
         id: player.characterName,
         characterName: player.characterName,
@@ -53,8 +68,10 @@ function ExistingTeam() {
 
   const mappedAlts = allTeams
     ?.find((e) => e.contactPerson === user?.data.user?.email)
-    ?.players.map((player) => {
-      return player.alts?.map((alt) => {
+    ?.players.map((player) =>
+    {
+      return player.alts?.map((alt) =>
+      {
         return {
           id: alt.altCharacterName,
           characterName: alt.altCharacterName,
@@ -69,7 +86,7 @@ function ExistingTeam() {
       allTeams
         ?.find((e) => e.contactPerson === user?.data.user?.email)
         ?.players.some((player) => player.alts && player.alts.length > 0),
-    [allTeams, user?.data.user?.email],
+    [ allTeams, user?.data.user?.email ],
   )
 
   if (loading) {
@@ -78,6 +95,17 @@ function ExistingTeam() {
         <div className="flex">
           Henter laginfo... <Icons.spinner className="h-4 w-4 animate-spin mt-1 ml-2" />
         </div>
+      </div>
+    )
+  }
+
+
+  if (supabaseTeams?.find((e) => e.contact_person === user?.data.user?.email)?.approved_in_sanity === false) {
+
+    return (
+      <div className='flex items-center m-auto w-full justify-center mt-10'>
+        <h1 className="text-2xl font-bold mb-4">
+          Laget ditt ({supabaseTeams?.find((e) => e.contact_person === user?.data.user?.email)?.name}) er registrert men venter på godkjenning.</h1>
       </div>
     )
   }
@@ -100,14 +128,15 @@ function ExistingTeam() {
             <>
               <h2>Alt characters</h2>
               <div className="flex flex-row items-center justify-center mb-10 w-full">
-                <AnimatedTooltip items={mappedAlts?.[0] as any} />
+                <AnimatedTooltip items={mappedAlts?.[ 0 ] as any} />
               </div>
             </>
           ) : null}
 
           <Link href={`/signup/editTeam/${teamSlug}`}>
             <Button
-              onClick={() => {
+              onClick={() =>
+              {
                 setLoading(true)
               }}
               className=" mt-10 mb-8  inline-block text-xs px-2 py-2 leading-none  rounded-xl  bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold  text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
