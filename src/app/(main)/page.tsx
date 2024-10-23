@@ -55,26 +55,6 @@ const Home = async () =>
             </Link>
           </div>
         </div>
-        {/* <div className="gap-4 p-2 flex flex-wrap justify-center text-center overflow-hidden ">
-          {rounds.map((round, index) =>
-          {
-
-            return (
-              <div
-                key={index}
-                className={`flex just lg:flex-row flex-col items-center bg-[#021F33] rounded-lg mt-2 lg:mt-6  p-2 lg:p-6 lg:w-56 w-24 ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
-              >
-                <div className="text-center flex lg:border-r-2 border-white flex-col mr-4">
-                  <div className="flex flex-col lg:mr-4 ml-4 ">
-                    <span className="font-bold text-2xl"> {round.day}</span>
-                    <span className=" text-[#FDB202] font-bold text-xl lg:text-2xl">{round.month}</span>
-                  </div>
-                </div>
-                <div className="text-lg font-bold border-t-2 lg:border-t-0">{round.round}</div>
-              </div>
-            )
-          })}
-        </div> */}
         <DraggableRoundCarousel roundsFromDB={rounds ?? []} />
         {allTeams && allTeams.some((e) => e.teamName) ? (
           <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4  ">
