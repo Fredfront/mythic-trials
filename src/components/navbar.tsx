@@ -20,8 +20,19 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
   const pathname = usePathname()
   const router = useRouter()
 
+
   const team = teams?.find((e) => e.contact_person === user?.data.user?.email)
   const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
+
+  const [ myTeam, setMyTeam ] = useState<SupabaseTeamType | undefined>(team)
+
+  useEffect(() =>
+  {
+    if (team && !myTeam) {
+      setMyTeam(team)
+    }
+  }, [ team ])
+
 
   async function updateTeam()
   {
@@ -54,6 +65,36 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
         window.location.reload()
       })
   }
+
+
+  useEffect(() =>
+  {
+    const channel = supabase
+      .channel('pick_ban')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'teams',
+        },
+        (payload) =>
+        {
+          const newPayload = payload.new as SupabaseTeamType
+
+          if (newPayload.contact_person === user?.data.user?.email) {
+            setMyTeam(newPayload)
+          }
+
+        },
+      )
+      .subscribe()
+
+    return () =>
+    {
+      supabase.removeChannel(channel)
+    }
+  }, [ user?.data.user?.email ])
 
   const navLinks = [
     { href: '/', label: 'Hovedside' },
@@ -100,9 +141,9 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
                     <DropdownMenuItem asChild>
                       <Link href="/my-matches">Mine kamper</Link>
                     </DropdownMenuItem>
-                    {team && (
+                    {myTeam && (
                       <DropdownMenuItem asChild>
-                        <Link href={`/signup/existingTeam/${team.team_slug}`}>Mitt lag</Link>
+                        <Link href={`/signup/existingTeam/${myTeam.team_slug}`}>Mitt lag</Link>
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem onClick={handleLogout}>
@@ -127,7 +168,7 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
             </>
           )}
 
-          {!team && !loading && (
+          {!myTeam && !loading && (
             <Link href="/signup" prefetch>
               <Button className="bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
                 Påmelding
@@ -162,7 +203,7 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
                 {link.label}
               </Link>
             ))}
-            {!team && (
+            {!myTeam && (
               <Link href="/signup" prefetch onClick={toggleMenu}>
                 <Button className="mt-4 px-6 py-3 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold text-xl hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
                   Påmelding
