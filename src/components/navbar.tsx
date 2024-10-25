@@ -2,37 +2,51 @@
 
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import
+{
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { Menu, X, User, LogOut, ChevronDown } from 'lucide-react'
+import { Menu, X, User, LogOut } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import supabase from '@/utils/supabase/client'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import { SupabaseTeamType } from '../../types'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 
-const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeams: MythicPlusTeam[] }) =>
+const NavBar = ({
+  teams,
+  sanityTeams,
+}: {
+  teams?: SupabaseTeamType[]
+  sanityTeams: MythicPlusTeam[]
+}) =>
 {
   const [ isMenuOpen, setMenuOpen ] = useState(false)
   const { user, loading } = useGetUserData()
   const pathname = usePathname()
   const router = useRouter()
 
-
   const team = teams?.find((e) => e.contact_person === user?.data.user?.email)
   const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
 
   const [ myTeam, setMyTeam ] = useState<SupabaseTeamType | undefined>(team)
+
+  // State to hold superadmins and check if the current user is a superadmin
+  const [ superadmins, setSuperadmins ] = useState<any[]>([])
+  const [ isSuperadmin, setIsSuperadmin ] = useState<boolean>(false)
 
   useEffect(() =>
   {
     if (team && !myTeam) {
       setMyTeam(team)
     }
-  }, [ team ])
-
+  }, [ team, myTeam ])
 
   async function updateTeam()
   {
@@ -54,18 +68,39 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
 
   const handleLogout = async () =>
   {
-    await supabase.auth
-      .signOut()
-      .then(() =>
-      {
-        router.push('/')
-      })
-      .then(() =>
-      {
-        window.location.reload()
-      })
+    await supabase.auth.signOut().then(() =>
+    {
+      router.push('/')
+      window.location.reload()
+    })
   }
 
+  // Fetch superadmins on component mount
+  useEffect(() =>
+  {
+    async function fetchSuperadmins()
+    {
+      const { data, error } = await supabase.from('superadmins').select('*')
+      if (error) {
+        console.error('Error fetching superadmins:', error)
+        setSuperadmins([])
+      } else {
+        setSuperadmins(data || [])
+      }
+    }
+    fetchSuperadmins()
+  }, [])
+
+  // Check if the current user is a superadmin
+  useEffect(() =>
+  {
+    if (!user?.data.user?.email || superadmins.length === 0) {
+      setIsSuperadmin(false)
+    } else {
+      const isAdmin = superadmins.some((admin) => admin.email === user.data.user?.email)
+      setIsSuperadmin(isAdmin)
+    }
+  }, [ user, superadmins ])
 
   useEffect(() =>
   {
@@ -85,7 +120,6 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
           if (newPayload.contact_person === user?.data.user?.email) {
             setMyTeam(newPayload)
           }
-
         },
       )
       .subscribe()
@@ -106,7 +140,12 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
     <nav className="bg-[#011624] p-4 border-b-4 border-gradient">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center flex-shrink-0 text-white">
-          <Image width={45} height={45} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
+          <Image
+            width={45}
+            height={45}
+            src="/MT_logo_white.webp"
+            alt="Mythic Trials Sesong 2 Logo"
+          />
         </Link>
 
         <div className="hidden lg:flex items-center space-x-8">
@@ -114,11 +153,22 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
             <Link
               key={link.href}
               href={link.href}
-              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === link.href ? 'text-yellow-500' : ''}`}
+              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === link.href ? 'text-yellow-500' : ''
+                }`}
             >
               {link.label}
             </Link>
           ))}
+          {/* Add Superadmin link if the user is a superadmin */}
+          {isSuperadmin && (
+            <Link
+              href="/superadmin"
+              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === '/superadmin' ? 'text-yellow-500' : ''
+                }`}
+            >
+              Superadmin
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center space-x-4">
@@ -133,7 +183,9 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
                           src={user.data.user?.user_metadata?.avatar_url}
                           alt={user.data.user?.email || ''}
                         />
-                        <AvatarFallback>{user.data.user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                        <AvatarFallback>
+                          {user.data.user?.email?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
@@ -146,6 +198,12 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
                         <Link href={`/signup/existingTeam/${myTeam.team_slug}`}>Mitt lag</Link>
                       </DropdownMenuItem>
                     )}
+                    {/* Add Superadmin menu item if the user is a superadmin */}
+                    {isSuperadmin && (
+                      <DropdownMenuItem asChild>
+                        <Link href="/superadmin">Superadmin</Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Logg ut</span>
@@ -155,12 +213,15 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
               ) : (
                 <Button
                   variant="outline"
-                  className="hidden lg:flex bg-[bg-[#011624] text-white"
-                  onClick={() => supabase.auth.signInWithOAuth({
-                    provider: 'discord', options: {
-                      redirectTo: `${window.location.origin}/`,
-                    }
-                  })}
+                  className="hidden lg:flex bg-[#011624] text-white"
+                  onClick={() =>
+                    supabase.auth.signInWithOAuth({
+                      provider: 'discord',
+                      options: {
+                        redirectTo: `${window.location.origin}/`,
+                      },
+                    })
+                  }
                 >
                   <User className="mr-2 h-4 w-4" /> Logg inn
                 </Button>
@@ -182,6 +243,7 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex flex-col bg-[#011624] p-4">
           <div className="flex justify-end">
@@ -194,7 +256,8 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-2xl ${pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                className={`text-2xl ${pathname === link.href ||
+                  (link.href !== '/' && pathname.startsWith(link.href))
                   ? 'text-[#FDB202]'
                   : 'text-gray-200'
                   } hover:text-white font-bold`}
@@ -203,6 +266,17 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
                 {link.label}
               </Link>
             ))}
+            {/* Add Superadmin link in mobile menu if the user is a superadmin */}
+            {isSuperadmin && (
+              <Link
+                href="/superadmin"
+                className={`text-2xl ${pathname === '/superadmin' ? 'text-[#FDB202]' : 'text-gray-200'
+                  } hover:text-white font-bold`}
+                onClick={toggleMenu}
+              >
+                Superadmin
+              </Link>
+            )}
             {!myTeam && (
               <Link href="/signup" prefetch onClick={toggleMenu}>
                 <Button className="mt-4 px-6 py-3 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold text-xl hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
@@ -213,12 +287,15 @@ const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[], sanityTeam
             {!user?.data.user?.email && (
               <Button
                 variant="outline"
-                className=" bg-[bg-[#011624] text-white mt-4 px-6 py-3 "
-                onClick={() => supabase.auth.signInWithOAuth({
-                  provider: 'discord', options: {
-                    redirectTo: `${window.location.origin}/`,
-                  }
-                })}
+                className="bg-[#011624] text-white mt-4 px-6 py-3"
+                onClick={() =>
+                  supabase.auth.signInWithOAuth({
+                    provider: 'discord',
+                    options: {
+                      redirectTo: `${window.location.origin}/`,
+                    },
+                  })
+                }
               >
                 <User className="mr-2 h-4 w-4" /> Logg inn
               </Button>

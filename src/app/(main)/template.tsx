@@ -6,6 +6,7 @@ import { getAllTeams } from '../api/getAllTeams'
 import NavBarV2 from '@/components/navbar'
 import { ServerClient } from '@/utils/supabase/server'
 import { SupabaseTeamType } from '../../../types'
+import { Toaster } from '@/components/ui/toaster'
 
 export default async function Template({ children }: { children: React.ReactNode })
 {
@@ -19,6 +20,8 @@ export default async function Template({ children }: { children: React.ReactNode
     <div className="flex flex-col min-h-screen">
       <NavBarV2 sanityTeams={sanityTeams} teams={teams} />
       <div className="flex-grow">{children}</div>
+      <Toaster />
+
       <Footer />
     </div>
   )

@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { cn } from '@/lib/utils'
 import { DM_Sans } from 'next/font/google'
 import { ThemeProvider } from '../components/theme-provider'
+import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: 'Nerdelandslaget - Mythic Trials',
@@ -16,15 +17,16 @@ export const metadata: Metadata = {
 }
 
 const DMSans = DM_Sans({
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  subsets: ['latin'],
+  weight: [ '100', '200', '300', '400', '500', '600', '700', '800', '900' ],
+  subsets: [ 'latin' ],
 })
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
-}>) {
+}>)
+{
   return (
     <html translate="no">
       <body className={cn(`min-h-screen bg-[#011624] antialiased ${DMSans.className} text-white`)}>{children}</body>
