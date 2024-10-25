@@ -74,11 +74,53 @@ export default function RescheduleMatch({
   const roundDate = rounds.find((e) => e.round === match?.round)?.round_date
 
   const onSubmit = async (data: MatchRescheduleData) => {
-    if (!id) return
+    if (!id || !match) return
     setIsSubmitting(true)
     try {
-      const result = await updateDatabase(data, id, isHomeTeam)
+      // Update the database
+      await updateDatabase(data, id, isHomeTeam)
+
+      // Determine the receiving team
+      const receivingTeam = isHomeTeam ? awayTeam : homeTeam
+
+      // Prepare the message
+      const channelName = `${homeTeam?.team_slug}-vs-${awayTeam?.team_slug}`
+      const roleName = receivingTeam?.name // Assuming the role name matches the team name
+
+      const message = `📢       
+      **${isHomeTeam ? homeTeam?.name : awayTeam?.name}** has proposed a new match date! @everyone
+
+      **New Date:** ${format(new Date(data.rescheduled_round_date), 'PPP', { locale: nb })}
+      **New Time:** ${data.rescheduled_round_startTime}
+  
+      Please respond to the reschedule request.
+  
+      [Go to my matches](https://trials.nl-wow.no/my-matches)`
+
+      // Send message to Discord channel with role mention
+      const response = await fetch('/api/discord/send-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelName, message, roleName }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        console.error('Error sending message to Discord:', result)
+        toast({
+          title: 'Error',
+          description: 'There was an error notifying the opponent on Discord.',
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Success',
+          description: 'Reschedule request sent and opponent notified on Discord.',
+        })
+      }
     } catch (error) {
+      console.error('Error in onSubmit:', error)
       toast({
         title: 'Error',
         description: 'There was an error rescheduling the match. Please try again.',
@@ -168,7 +210,42 @@ export default function RescheduleMatch({
                     away_team_agree_reschedule: false,
                   }
 
-              await supabase.from('matches').update(payload).eq('id', id)
+              await supabase
+                .from('matches')
+                .update(payload)
+                .eq('id', id)
+                .then(() => {
+                  toast({
+                    title: 'Forespørsel avbrutt',
+                    description: 'Forespørselen om å endre kampdato er avbrutt.',
+                  })
+                })
+
+              const receivingTeam = isHomeTeam ? awayTeam : homeTeam
+
+              // Prepare the message
+              const channelName = `${homeTeam?.team_slug}-vs-${awayTeam?.team_slug}`
+              const roleName = receivingTeam?.name // Assuming the role name matches the team name
+
+              const message = `📢**${isHomeTeam ? homeTeam?.name : awayTeam?.name}** has cancelled the reschedule request. @everyone`
+
+              // Send message to Discord channel with role mention
+              const response = await fetch('/api/discord/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ channelName, message, roleName }),
+              })
+
+              const result = await response.json()
+
+              if (!response.ok) {
+                console.error('Error sending message to Discord:', result)
+                toast({
+                  title: 'Error',
+                  description: 'There was an error notifying the opponent on Discord.',
+                  variant: 'destructive',
+                })
+              }
             }}
             className="bg-red-600"
           >

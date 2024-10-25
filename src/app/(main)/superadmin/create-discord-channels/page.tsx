@@ -1,12 +1,8 @@
-import { ServerClient } from "@/utils/supabase/server";
-import CreateDiscordChannels from "./CreateDiscordChannels";
+import { ServerClient } from '@/utils/supabase/server'
+import CreateDiscordChannels from './CreateDiscordChannels'
 
-const page = async () =>
-{
-
-
-
+const page = async () => {
   return <CreateDiscordChannels />
 }
 
-export default page;
+export default page

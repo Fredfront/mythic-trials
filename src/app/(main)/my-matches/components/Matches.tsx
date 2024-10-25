@@ -22,6 +22,7 @@ import
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { createSortedRounds } from '../page'
+import { toast } from '@/hooks/use-toast'
 
 export function Matches({
   pickAndBansData,
@@ -48,7 +49,6 @@ export function Matches({
 
   useEffect(() =>
   {
-
     if (!teams || loading || user?.data.user?.email === undefined) return
 
     const channel = supabase
@@ -297,6 +297,34 @@ export function Matches({
                                           away_team_agree_reschedule: false,
                                         }
                                       await supabase.from('matches').update(payload).eq('id', match.teams[ 0 ].id)
+
+
+                                      //send discord message
+                                      const channelName = `${homeTeam}-vs-${awayTeam}`
+                                      const roleName = myTeam?.teamName
+                                      const message = `📢 **${myTeam?.teamName}** has ACCEPTED the request to reschedule! @everyone
+
+Ny tid: ${proposedRescheduledDateTimeString} `
+
+                                      // Send message to Discord channel with role mention
+                                      const response = await fetch('/api/discord/send-message', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ channelName, message, roleName }),
+                                      })
+
+                                      if (response.ok) {
+                                        toast({
+                                          title: 'Success',
+                                          description: 'Message sent to Discord',
+                                        })
+                                      } else {
+                                        toast({
+                                          title: 'Error',
+                                          description: 'Failed to send message to Discord',
+                                        })
+                                      }
+
                                     }}
                                     className="bg-green-400 text-white"
                                   >
@@ -318,6 +346,31 @@ export function Matches({
                                           away_team_agree_reschedule: false,
                                         }
                                       await supabase.from('matches').update(payload).eq('id', match.teams[ 0 ].id)
+
+                                      //send discord message
+                                      const channelName = `${homeTeam}-vs-${awayTeam}`
+                                      const roleName = myTeam?.teamName
+                                      const message = `📢 **${myTeam?.teamName}** has DECLINED the request to reschedule! @everyone`
+                                      // Send message to Discord channel with role mention
+                                      const response = await fetch('/api/discord/send-message', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ channelName, message, roleName }),
+                                      })
+
+                                      if (response.ok) {
+                                        toast({
+                                          title: 'Success',
+                                          description: 'Message sent to Discord',
+                                        })
+                                      } else {
+                                        toast({
+                                          title: 'Error',
+                                          description: 'Failed to send message to Discord',
+                                        })
+                                      }
+
+
                                     }}
                                     className="bg-red-600 text-white"
                                   >

@@ -7,7 +7,7 @@ export const colourStyles: StylesConfig = {
     backgroundColor: '#374151',
     padding: '0.5rem',
     borderRadius: '0.25rem',
-    marginLeft: '-1rem'
+    marginLeft: '-1rem',
   }),
   input: (styles) => ({
     ...styles,
@@ -26,8 +26,7 @@ export const colourStyles: StylesConfig = {
     color: 'white',
     border: 'none',
   }),
-  option: (styles, { isDisabled, isFocused, isSelected }) =>
-  {
+  option: (styles, { isDisabled, isFocused, isSelected }) => {
     return {
       ...styles,
       backgroundColor: 'rgb(31 41 55 / var(--tw-bg-opacity))',
@@ -35,7 +34,7 @@ export const colourStyles: StylesConfig = {
       cursor: isDisabled ? 'not-allowed' : 'default',
 
       ':hover': {
-        ...styles[ ':hover' ],
+        ...styles[':hover'],
         backgroundColor: '#4a5568',
         color: 'white', // Set text color to white on hover
         cursor: 'pointer',

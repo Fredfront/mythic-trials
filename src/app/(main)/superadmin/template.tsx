@@ -6,22 +6,19 @@ import supabase from '@/utils/supabase/client'
 import React from 'react'
 import { User } from '@supabase/supabase-js'
 
-export default function Template({ children }: { children: React.ReactNode })
-{
+export default function Template({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
-  const [ superadmins, setSuperadmins ] = useState<any[]>([])
-  const [ user, setUser ] = React.useState<User | null>(null)
-  const [ loading, setLoading ] = useState<boolean>(true)
+  const [superadmins, setSuperadmins] = useState<any[]>([])
+  const [user, setUser] = React.useState<User | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
   // Fetch user and superadmins on component mount
-  useEffect(() =>
-  {
+  useEffect(() => {
     fetchUserAndAdmins()
   }, [])
 
-  async function fetchUserAndAdmins()
-  {
+  async function fetchUserAndAdmins() {
     setLoading(true)
     try {
       // Fetch the current user
@@ -49,20 +46,18 @@ export default function Template({ children }: { children: React.ReactNode })
   }
 
   // Compute isAuthorized when user or superadmins change
-  const isAuthorized = React.useMemo(() =>
-  {
+  const isAuthorized = React.useMemo(() => {
     if (!user || superadmins.length === 0) return false
     return superadmins.some((admin) => admin.email === user.email)
-  }, [ user, superadmins ])
+  }, [user, superadmins])
 
   // Redirect if not authorized
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (loading) return
     if (!isAuthorized) {
       router.replace('/')
     }
-  }, [ loading, isAuthorized, router ])
+  }, [loading, isAuthorized, router])
 
   // Show a loading indicator or the children
   if (loading) {

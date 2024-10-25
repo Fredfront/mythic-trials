@@ -5,29 +5,27 @@ import { cn } from '@/utils/cn'
 
 const MotionDiv = motion.div as any
 
-export const TracingBeam = ({ children, className }: { children: React.ReactNode; className?: string }) =>
-{
+export const TracingBeam = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
-    target: ref.current ? ref as React.RefObject<HTMLElement> : undefined,
-    offset: [ 'start start', 'end start' ],
+    target: ref.current ? (ref as React.RefObject<HTMLElement>) : undefined,
+    offset: ['start start', 'end start'],
   })
 
   const contentRef = useRef<HTMLDivElement>(null)
-  const [ svgHeight, setSvgHeight ] = useState(0)
+  const [svgHeight, setSvgHeight] = useState(0)
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (contentRef.current) {
       setSvgHeight(contentRef.current.offsetHeight)
     }
   }, [])
 
-  const y1 = useSpring(useTransform(scrollYProgress, [ 0, 0.8 ], [ 50, svgHeight ]), {
+  const y1 = useSpring(useTransform(scrollYProgress, [0, 0.8], [50, svgHeight]), {
     stiffness: 500,
     damping: 90,
   })
-  const y2 = useSpring(useTransform(scrollYProgress, [ 0, 1 ], [ 50, svgHeight - 200 ]), {
+  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [50, svgHeight - 200]), {
     stiffness: 500,
     damping: 90,
   })

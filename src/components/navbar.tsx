@@ -2,13 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import
-{
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -19,15 +13,8 @@ import { useGetUserData } from '@/app/auth/useGetUserData'
 import { SupabaseTeamType } from '../../types'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 
-const NavBar = ({
-  teams,
-  sanityTeams,
-}: {
-  teams?: SupabaseTeamType[]
-  sanityTeams: MythicPlusTeam[]
-}) =>
-{
-  const [ isMenuOpen, setMenuOpen ] = useState(false)
+const NavBar = ({ teams, sanityTeams }: { teams?: SupabaseTeamType[]; sanityTeams: MythicPlusTeam[] }) => {
+  const [isMenuOpen, setMenuOpen] = useState(false)
   const { user, loading } = useGetUserData()
   const pathname = usePathname()
   const router = useRouter()
@@ -35,51 +22,43 @@ const NavBar = ({
   const team = teams?.find((e) => e.contact_person === user?.data.user?.email)
   const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
 
-  const [ myTeam, setMyTeam ] = useState<SupabaseTeamType | undefined>(team)
+  const [myTeam, setMyTeam] = useState<SupabaseTeamType | undefined>(team)
 
   // State to hold superadmins and check if the current user is a superadmin
-  const [ superadmins, setSuperadmins ] = useState<any[]>([])
-  const [ isSuperadmin, setIsSuperadmin ] = useState<boolean>(false)
+  const [superadmins, setSuperadmins] = useState<any[]>([])
+  const [isSuperadmin, setIsSuperadmin] = useState<boolean>(false)
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (team && !myTeam) {
       setMyTeam(team)
     }
-  }, [ team, myTeam ])
+  }, [team, myTeam])
 
-  async function updateTeam()
-  {
+  async function updateTeam() {
     if (team?.approved_in_sanity === true || !mySanityTeam || !team || loading) return
     if (team?.approved_in_sanity === false && mySanityTeam) {
       await supabase.from('teams').update({ approved_in_sanity: true }).eq('id', team.id)
     }
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateTeam()
-  }, [ mySanityTeam, team, loading ])
+  }, [mySanityTeam, team, loading])
 
-  const toggleMenu = () =>
-  {
+  const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
   }
 
-  const handleLogout = async () =>
-  {
-    await supabase.auth.signOut().then(() =>
-    {
+  const handleLogout = async () => {
+    await supabase.auth.signOut().then(() => {
       router.push('/')
       window.location.reload()
     })
   }
 
   // Fetch superadmins on component mount
-  useEffect(() =>
-  {
-    async function fetchSuperadmins()
-    {
+  useEffect(() => {
+    async function fetchSuperadmins() {
       const { data, error } = await supabase.from('superadmins').select('*')
       if (error) {
         console.error('Error fetching superadmins:', error)
@@ -92,18 +71,16 @@ const NavBar = ({
   }, [])
 
   // Check if the current user is a superadmin
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (!user?.data.user?.email || superadmins.length === 0) {
       setIsSuperadmin(false)
     } else {
       const isAdmin = superadmins.some((admin) => admin.email === user.data.user?.email)
       setIsSuperadmin(isAdmin)
     }
-  }, [ user, superadmins ])
+  }, [user, superadmins])
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -113,8 +90,7 @@ const NavBar = ({
           schema: 'public',
           table: 'teams',
         },
-        (payload) =>
-        {
+        (payload) => {
           const newPayload = payload.new as SupabaseTeamType
 
           if (newPayload.contact_person === user?.data.user?.email) {
@@ -124,11 +100,10 @@ const NavBar = ({
       )
       .subscribe()
 
-    return () =>
-    {
+    return () => {
       supabase.removeChannel(channel)
     }
-  }, [ user?.data.user?.email ])
+  }, [user?.data.user?.email])
 
   const navLinks = [
     { href: '/', label: 'Hovedside' },
@@ -140,12 +115,7 @@ const NavBar = ({
     <nav className="bg-[#011624] p-4 border-b-4 border-gradient">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center flex-shrink-0 text-white">
-          <Image
-            width={45}
-            height={45}
-            src="/MT_logo_white.webp"
-            alt="Mythic Trials Sesong 2 Logo"
-          />
+          <Image width={45} height={45} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
         </Link>
 
         <div className="hidden lg:flex items-center space-x-8">
@@ -153,8 +123,9 @@ const NavBar = ({
             <Link
               key={link.href}
               href={link.href}
-              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === link.href ? 'text-yellow-500' : ''
-                }`}
+              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${
+                pathname === link.href ? 'text-yellow-500' : ''
+              }`}
             >
               {link.label}
             </Link>
@@ -163,8 +134,9 @@ const NavBar = ({
           {isSuperadmin && (
             <Link
               href="/superadmin"
-              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === '/superadmin' ? 'text-yellow-500' : ''
-                }`}
+              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${
+                pathname === '/superadmin' ? 'text-yellow-500' : ''
+              }`}
             >
               Superadmin
             </Link>
@@ -183,9 +155,7 @@ const NavBar = ({
                           src={user.data.user?.user_metadata?.avatar_url}
                           alt={user.data.user?.email || ''}
                         />
-                        <AvatarFallback>
-                          {user.data.user?.email?.charAt(0).toUpperCase()}
-                        </AvatarFallback>
+                        <AvatarFallback>{user.data.user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
@@ -256,11 +226,11 @@ const NavBar = ({
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-2xl ${pathname === link.href ||
-                  (link.href !== '/' && pathname.startsWith(link.href))
-                  ? 'text-[#FDB202]'
-                  : 'text-gray-200'
-                  } hover:text-white font-bold`}
+                className={`text-2xl ${
+                  pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                    ? 'text-[#FDB202]'
+                    : 'text-gray-200'
+                } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
                 {link.label}
@@ -270,8 +240,9 @@ const NavBar = ({
             {isSuperadmin && (
               <Link
                 href="/superadmin"
-                className={`text-2xl ${pathname === '/superadmin' ? 'text-[#FDB202]' : 'text-gray-200'
-                  } hover:text-white font-bold`}
+                className={`text-2xl ${
+                  pathname === '/superadmin' ? 'text-[#FDB202]' : 'text-gray-200'
+                } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
                 Superadmin

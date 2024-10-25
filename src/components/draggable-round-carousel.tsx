@@ -6,26 +6,22 @@ import { Button } from '@/components/ui/button'
 import { useDrag } from '@use-gesture/react'
 import { RoundType } from '@/app/(main)/page'
 
-interface Round
-{
+interface Round {
   day: string
   month: string
   round: string
   date: number
 }
 
-
-export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundType[] })
-{
+export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundType[] }) {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const [ showLeftArrow, setShowLeftArrow ] = useState(false)
-  const [ showRightArrow, setShowRightArrow ] = useState(true)
-  const [ isDragging, setIsDragging ] = useState(false)
+  const [showLeftArrow, setShowLeftArrow] = useState(false)
+  const [showRightArrow, setShowRightArrow] = useState(true)
+  const [isDragging, setIsDragging] = useState(false)
 
   const rounds = mapRounds(roundsFromDB)
 
-  const updateArrows = () =>
-  {
+  const updateArrows = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
       setShowLeftArrow(scrollLeft > 0)
@@ -33,8 +29,7 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
     }
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const currentRef = scrollRef.current
     currentRef?.addEventListener('scroll', updateArrows)
     updateArrows() // Check initial state
@@ -42,37 +37,37 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
     return () => currentRef?.removeEventListener('scroll', updateArrows)
   }, [])
 
-  const bind = useDrag(({ active, movement: [ mx ], direction: [ xDir ], cancel }) =>
-  {
-    if (scrollRef.current) {
-      if (active && Math.abs(mx) > 2) {
-        scrollRef.current.scrollLeft -= mx
-        setIsDragging(true)
-      } else {
-        setIsDragging(false)
+  const bind = useDrag(
+    ({ active, movement: [mx], direction: [xDir], cancel }) => {
+      if (scrollRef.current) {
+        if (active && Math.abs(mx) > 2) {
+          scrollRef.current.scrollLeft -= mx
+          setIsDragging(true)
+        } else {
+          setIsDragging(false)
+        }
       }
-    }
-  }, { filterTaps: true, rubberband: true })
+    },
+    { filterTaps: true, rubberband: true },
+  )
 
-  const scroll = (direction: 'left' | 'right') =>
-  {
+  const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       const scrollAmount = scrollRef.current.clientWidth * 0.8 // Scroll 80% of the width
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     }
   }
 
   return (
     <div className="relative w-full overflow-hidden">
-      {showLeftArrow && (
-        <div className="absolute left-0 top-0 bottom-0 w-16  z-10 pointer-events-none" />
-      )}
+      {showLeftArrow && <div className="absolute left-0 top-0 bottom-0 w-16  z-10 pointer-events-none" />}
       <Button
-        className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 transition-opacity duration-300 ease-in-out ${showLeftArrow ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 transition-opacity duration-300 ease-in-out ${
+          showLeftArrow ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         size="icon"
         variant="secondary"
         onClick={() => scroll('left')}
@@ -81,8 +76,9 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
         <ChevronLeft className="h-6 w-6" />
       </Button>
       <Button
-        className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 transition-opacity duration-300 ease-in-out ${showRightArrow ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 transition-opacity duration-300 ease-in-out ${
+          showRightArrow ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         size="icon"
         variant="secondary"
         onClick={() => scroll('right')}
@@ -96,8 +92,9 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
       <div
         {...bind()}
         ref={scrollRef}
-        className={`flex overflow-x-auto scrollbar-hide gap-4 p-4 w-full cursor-grab active:cursor-grabbing ${isDragging ? 'will-change-transform' : ''
-          }`}
+        className={`flex overflow-x-auto scrollbar-hide gap-4 p-4 w-full cursor-grab active:cursor-grabbing ${
+          isDragging ? 'will-change-transform' : ''
+        }`}
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -107,8 +104,9 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
         {rounds.map((round, index) => (
           <div
             key={index}
-            className={`flex-shrink-0 flex flex-col items-center bg-[#021F33] rounded-lg p-4 w-[200px] transition-transform ${isDragging ? 'scale-[0.98]' : ''
-              } ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
+            className={`flex-shrink-0 flex flex-col items-center bg-[#021F33] rounded-lg p-4 w-[200px] transition-transform ${
+              isDragging ? 'scale-[0.98]' : ''
+            } ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
           >
             <div className="text-center flex border-b border-white pb-2 mb-2 w-full">
               <div className="flex flex-col w-full">
@@ -124,51 +122,41 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
   )
 }
 
-
-
-
-
 type DBRound = {
-  round: number;
-  round_date: string; // format 'YYYY-MM-DD'
-};
-
-interface Round
-{
-  day: string;
-  month: string;
-  round: string;
-  date: number; // timestamp in milliseconds
+  round: number
+  round_date: string // format 'YYYY-MM-DD'
 }
 
-function parseDate(dateStr: string): { year: number; month: number; day: number }
-{
-  const [ yearStr, monthStr, dayStr ] = dateStr.split('-');
-  const year = parseInt(yearStr, 10);
-  const month = parseInt(monthStr, 10) - 1; // Months are zero-indexed
-  const day = parseInt(dayStr, 10);
-  return { year, month, day };
+interface Round {
+  day: string
+  month: string
+  round: string
+  date: number // timestamp in milliseconds
 }
 
-function mapRounds(dbRounds: DBRound[]): Round[]
-{
-  const monthNames = [ 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-    'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC' ];
-  return dbRounds.map(dbRound =>
-  {
-    const { year, month, day } = parseDate(dbRound.round_date);
+function parseDate(dateStr: string): { year: number; month: number; day: number } {
+  const [yearStr, monthStr, dayStr] = dateStr.split('-')
+  const year = parseInt(yearStr, 10)
+  const month = parseInt(monthStr, 10) - 1 // Months are zero-indexed
+  const day = parseInt(dayStr, 10)
+  return { year, month, day }
+}
+
+function mapRounds(dbRounds: DBRound[]): Round[] {
+  const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+  return dbRounds.map((dbRound) => {
+    const { year, month, day } = parseDate(dbRound.round_date)
     // Create a date object in UTC
-    const date = new Date(Date.UTC(year, month, day));
+    const date = new Date(Date.UTC(year, month, day))
     // Format day and month
-    const dayStr = date.getUTCDate().toString().replace(/^0/, ''); // Remove leading zero
-    const monthStr = monthNames[ date.getUTCMonth() ];
+    const dayStr = date.getUTCDate().toString().replace(/^0/, '') // Remove leading zero
+    const monthStr = monthNames[date.getUTCMonth()]
     // Build the Round object
     return {
       day: dayStr,
       month: monthStr,
       round: `Runde ${dbRound.round}`,
       date: date.getTime(),
-    };
-  });
+    }
+  })
 }
-
