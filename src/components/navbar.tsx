@@ -13,73 +13,67 @@ import { useGetUserData } from '@/app/auth/useGetUserData'
 import { SupabaseTeamType } from '../../types'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 
-const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[]; sanityTeams: MythicPlusTeam[]; superadmins: { email: string }[] }) =>
-{
-  const [ isMenuOpen, setMenuOpen ] = useState(false)
+const NavBar = ({
+  teams,
+  sanityTeams,
+  superadmins,
+}: {
+  teams?: SupabaseTeamType[]
+  sanityTeams: MythicPlusTeam[]
+  superadmins: { email: string }[]
+}) => {
+  const [isMenuOpen, setMenuOpen] = useState(false)
   const { user, loading } = useGetUserData()
   const pathname = usePathname()
   const router = useRouter()
 
-  console.log(loading)
-
-
   const team = teams?.find((e) => e.contact_person === user?.data.user?.email)
   const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
 
-  const [ myTeam, setMyTeam ] = useState<SupabaseTeamType | undefined>(team)
+  const [myTeam, setMyTeam] = useState<SupabaseTeamType | undefined>(team)
 
-  const [ isSuperadmin, setIsSuperadmin ] = useState<boolean>(false)
+  const [isSuperadmin, setIsSuperadmin] = useState<boolean>(false)
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (team && !myTeam) {
       setMyTeam(team)
     }
-  }, [ team, myTeam ])
+  }, [team, myTeam])
 
-  async function updateTeam()
-  {
+  async function updateTeam() {
     if (team?.approved_in_sanity === true || !mySanityTeam || !team || loading) return
     if (team?.approved_in_sanity === false && mySanityTeam) {
       await supabase.from('teams').update({ approved_in_sanity: true }).eq('id', team.id)
     }
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateTeam()
-  }, [ mySanityTeam, team, loading ])
+  }, [mySanityTeam, team, loading])
 
-  const toggleMenu = () =>
-  {
+  const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
   }
 
-  const handleLogout = async () =>
-  {
-    await supabase.auth.signOut().then(() =>
-    {
+  const handleLogout = async () => {
+    await supabase.auth.signOut().then(() => {
       localStorage.removeItem('user')
       router.push('/')
       window.location.reload()
     })
   }
 
-
-
   // Check if the current user is a superadmin
-  useEffect(() =>
-  {
-    if (!user?.data.user?.email || superadmins && superadmins.length === 0 || !superadmins) {
+  useEffect(() => {
+    if (!user?.data.user?.email || (superadmins && superadmins.length === 0) || !superadmins) {
       setIsSuperadmin(false)
     } else {
       const isAdmin = superadmins.some((admin: { email: string }) => admin.email === user.data.user?.email)
       setIsSuperadmin(isAdmin)
     }
-  }, [ user, superadmins ])
+  }, [user, superadmins])
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -89,8 +83,7 @@ const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[
           schema: 'public',
           table: 'teams',
         },
-        (payload) =>
-        {
+        (payload) => {
           const newPayload = payload.new as SupabaseTeamType
 
           if (newPayload.contact_person === user?.data.user?.email) {
@@ -100,11 +93,10 @@ const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[
       )
       .subscribe()
 
-    return () =>
-    {
+    return () => {
       supabase.removeChannel(channel)
     }
-  }, [ user?.data.user?.email ])
+  }, [user?.data.user?.email])
 
   const navLinks = [
     { href: '/', label: 'Hovedside' },
@@ -124,8 +116,9 @@ const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[
             <Link
               key={link.href}
               href={link.href}
-              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === link.href ? 'text-yellow-500' : ''
-                }`}
+              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${
+                pathname === link.href ? 'text-yellow-500' : ''
+              }`}
             >
               {link.label}
             </Link>
@@ -134,8 +127,9 @@ const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[
           {isSuperadmin && (
             <Link
               href="/superadmin"
-              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === '/superadmin' ? 'text-yellow-500' : ''
-                }`}
+              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${
+                pathname === '/superadmin' ? 'text-yellow-500' : ''
+              }`}
             >
               Superadmin
             </Link>
@@ -225,10 +219,11 @@ const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-2xl ${pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                  ? 'text-[#FDB202]'
-                  : 'text-gray-200'
-                  } hover:text-white font-bold`}
+                className={`text-2xl ${
+                  pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                    ? 'text-[#FDB202]'
+                    : 'text-gray-200'
+                } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
                 {link.label}
@@ -238,8 +233,9 @@ const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[
             {isSuperadmin && (
               <Link
                 href="/superadmin"
-                className={`text-2xl ${pathname === '/superadmin' ? 'text-[#FDB202]' : 'text-gray-200'
-                  } hover:text-white font-bold`}
+                className={`text-2xl ${
+                  pathname === '/superadmin' ? 'text-[#FDB202]' : 'text-gray-200'
+                } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
                 Superadmin

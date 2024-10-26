@@ -9,8 +9,7 @@ import { SupabaseTeamType } from '../../../types'
 import { Toaster } from '@/components/ui/toaster'
 import { serverClient } from '@/utils/supabase/newServer'
 
-export default async function Template({ children }: { children: React.ReactNode })
-{
+export default async function Template({ children }: { children: React.ReactNode }) {
   const teams = (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
   const superadmins = (await ServerClient.from('superadmins').select('*')).data as { email: string }[]
   const sanityTeams = await getAllTeams()
@@ -26,10 +25,9 @@ export default async function Template({ children }: { children: React.ReactNode
   )
 }
 
-const Footer = async () =>
-{
+const Footer = async () => {
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
+  const showLeaderboard = showLeaderboardData?.[0].enabled
 
   return (
     <footer className="  shadow bg-[#272727]">
