@@ -14,11 +14,6 @@ export default async function Template({ children }: { children: React.ReactNode
   const teams = (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
   const superadmins = (await ServerClient.from('superadmins').select('*')).data as { email: string }[]
   const sanityTeams = await getAllTeams()
-  const supabase = await serverClient()
-  const { data, error } = await supabase.auth.getUser()
-
-  console.log(data, error)
-
 
   return (
     <div className="flex flex-col min-h-screen">

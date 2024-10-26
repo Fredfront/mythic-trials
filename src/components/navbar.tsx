@@ -20,6 +20,9 @@ const NavBar = ({ teams, sanityTeams, superadmins }: { teams?: SupabaseTeamType[
   const pathname = usePathname()
   const router = useRouter()
 
+  console.log(loading)
+
+
   const team = teams?.find((e) => e.contact_person === user?.data.user?.email)
   const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
 

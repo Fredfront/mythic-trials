@@ -17,7 +17,6 @@ export function useGetUserData()
         setUser(res)
         if (res.data.user?.email) {
           setLoading(false)
-
         }
 
 
@@ -26,6 +25,9 @@ export function useGetUserData()
       {
         setLoading(false)
         console.error(err)
+      }).finally(() =>
+      {
+        setLoading(false)
       })
   }
 
