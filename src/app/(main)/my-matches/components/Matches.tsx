@@ -381,15 +381,15 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                             )}
 
                             <AccordionItem value={matchIndex.toString()}>
-                              <AccordionTrigger className="bg-gray-700 p-4 w-full !no-underline rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div">
-                                <div className="flex  w-full relative ">
+                              <AccordionTrigger className="bg-gray-700 p-4 w-full min-h-[120px] !no-underline rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div">
+                                <div className="flex w-full relative ">
                                   {match.featured ? (
-                                    <div className="hidden md:flex absolute top-0 left-0">
+                                    <div className="hidden md:flex absolute top-0 left-0  -mt-6 ">
                                       <Badge>Featured</Badge>
                                     </div>
                                   ) : null}
                                   {hasRescheduled && (
-                                    <Badge className="hidden md:flex bg-white text-black absolute right-0 top-0 mr-10">
+                                    <Badge className="hidden md:flex bg-white text-black absolute right-0 top-0 -mt-4 -mr-4">
                                       Rescheduled
                                     </Badge>
                                   )}

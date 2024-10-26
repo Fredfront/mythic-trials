@@ -21,7 +21,8 @@ export default function Matches({
   matchResults: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
   schedule: TournamentSchedule
-}) {
+})
+{
   const detailedSchedule = schedule as TournamentSchedule
 
   if (!detailedSchedule || detailedSchedule.length === 0) {
@@ -54,11 +55,12 @@ export default function Matches({
 
             <div className="bg-gray-800 p-4 rounded-lg">
               <div className="grid grid-cols-1 gap-4 mt-4">
-                {round.map((match, matchIndex) => {
-                  const homeTeam = match.teams?.[0].team_slug
-                  const awayTeam = match.teams?.[1].team_slug
-                  const homeTeamName = match.teams?.[0].name
-                  const awayTeamName = match.teams?.[1].name
+                {round.map((match, matchIndex) =>
+                {
+                  const homeTeam = match.teams?.[ 0 ].team_slug
+                  const awayTeam = match.teams?.[ 1 ].team_slug
+                  const homeTeamName = match.teams?.[ 0 ].name
+                  const awayTeamName = match.teams?.[ 1 ].name
                   const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage.asset._ref
                   const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage.asset._ref
 
@@ -81,23 +83,23 @@ export default function Matches({
 
                   const confirmedResult =
                     homeTeamMatchResults?.confirm &&
-                    awayTeamMatchResults?.confirm &&
-                    homeTeamMatchResults.round === index + 1 &&
-                    awayTeamMatchResults.round === index + 1
+                      awayTeamMatchResults?.confirm &&
+                      homeTeamMatchResults.round === index + 1 &&
+                      awayTeamMatchResults.round === index + 1
                       ? true
                       : false
 
-                  const matchDate = match.teams[0].roundDate
-                  const matchStartTime = match.teams[0].round_startTime
-                  const rescheduledDate = match.teams[0].rescheduled_round_date
-                  const rescheduledStartTime = match.teams[0].rescheduled_round_startTime
+                  const matchDate = match.teams[ 0 ].roundDate
+                  const matchStartTime = match.teams[ 0 ].round_startTime
+                  const rescheduledDate = match.teams[ 0 ].rescheduled_round_date
+                  const rescheduledStartTime = match.teams[ 0 ].rescheduled_round_startTime
                   const rescheduledDateTime = new Date(`${rescheduledDate}T${rescheduledStartTime}Z`)
                   const rescheduledDateTimeString = rescheduledDateTime.toLocaleString('nb-NO', {
                     timeZone: 'UTC',
                     dateStyle: 'medium',
                     timeStyle: 'short',
                   })
-                  const hasRescheduled = match.teams[0].rescheduled
+                  const hasRescheduled = match.teams[ 0 ].rescheduled
 
                   //Convert to Oslo time and to a readable format
                   const matchDateTime = new Date(`${matchDate}T${matchStartTime}Z`)
@@ -109,13 +111,18 @@ export default function Matches({
 
                   return (
                     <AccordionItem key={matchIndex} value={matchIndex.toString()}>
-                      <AccordionTrigger className="bg-gray-700 p-4 w-full rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
+                      <AccordionTrigger className="bg-gray-700 p-4 w-full rounded-lg min-h-[100px]  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
                         <div className="flex relative ">
                           {match.featured ? (
-                            <div className="hidden md:flex absolute top-0 left-0">
+                            <div className="hidden md:flex absolute top-0 left-0  -mt-4 " >
                               <Badge>Featured</Badge>
                             </div>
                           ) : null}
+                          {hasRescheduled && (
+                            <Badge className="hidden md:flex bg-white text-black absolute right-0 top-0 -mt-2 ">
+                              Rescheduled
+                            </Badge>
+                          )}
 
                           <div className="flex w-2/5 md:w-[40%] text-right justify-end">
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">

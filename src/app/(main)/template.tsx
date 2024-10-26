@@ -7,14 +7,22 @@ import NavBarV2 from '@/components/navbar'
 import { ServerClient } from '@/utils/supabase/server'
 import { SupabaseTeamType } from '../../../types'
 import { Toaster } from '@/components/ui/toaster'
+import { serverClient } from '@/utils/supabase/newServer'
 
-export default async function Template({ children }: { children: React.ReactNode }) {
+export default async function Template({ children }: { children: React.ReactNode })
+{
   const teams = (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
+  const superadmins = (await ServerClient.from('superadmins').select('*')).data as { email: string }[]
   const sanityTeams = await getAllTeams()
+  const supabase = await serverClient()
+  const { data, error } = await supabase.auth.getUser()
+
+  console.log(data, error)
+
 
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBarV2 sanityTeams={sanityTeams} teams={teams} />
+      <NavBarV2 sanityTeams={sanityTeams} teams={teams} superadmins={superadmins} />
       <div className="flex-grow">{children}</div>
       <Toaster />
 
@@ -23,9 +31,10 @@ export default async function Template({ children }: { children: React.ReactNode
   )
 }
 
-const Footer = async () => {
+const Footer = async () =>
+{
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData?.[0].enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
 
   return (
     <footer className="  shadow bg-[#272727]">
