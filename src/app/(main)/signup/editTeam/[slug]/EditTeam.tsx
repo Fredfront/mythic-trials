@@ -15,31 +15,34 @@ import { CrownIcon, PlusCircle, Trash2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 
-function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
+function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] })
+{
   const { user, loading } = useGetUserData()
   const router = useRouter()
-
-  const [players, setPlayers] = useState<
+  const discordUsername: string | undefined = user?.data.user?.identities?.find((e) => e.provider === 'discord')?.identity_data?.full_name ?? undefined
+  const [ players, setPlayers ] = useState<
     { characterName: string; realmName: string; discordName: string; alts?: AltPlayer[]; twitchChannel?: string }[]
-  >([{ characterName: '', realmName: '', discordName: '', alts: [] }])
+  >([ { characterName: '', realmName: '', discordName: '', alts: [] } ])
 
-  const [hasEditedPlayers, setHasEditedPlayers] = useState(false)
+  const [ hasEditedPlayers, setHasEditedPlayers ] = useState(false)
   const hasTeam = allTeams?.find((e) => e.contactPerson === user?.data.user?.email)
   const teamSlug = allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamSlug
 
-  const [errorUpdatingTeam, setErrorUpdatingTeam] = useState(false)
-  const [playerErrors, setPlayerErrors] = useState<boolean[]>([])
-  const [missingPlayersError, setMissingPlayersError] = useState(false)
-  const [loadingCreateTeam, setLoadingCreateTeam] = useState(false)
+  const [ errorUpdatingTeam, setErrorUpdatingTeam ] = useState(false)
+  const [ playerErrors, setPlayerErrors ] = useState<boolean[]>([])
+  const [ missingPlayersError, setMissingPlayersError ] = useState(false)
+  const [ loadingCreateTeam, setLoadingCreateTeam ] = useState(false)
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (
       allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName &&
       allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.players
     ) {
       allTeams
         ?.find((e) => e.contactPerson === user?.data.user?.email)
-        ?.players.map((player, index) => {
+        ?.players.map((player, index) =>
+        {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
             {
@@ -57,9 +60,10 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
           }
         })
     }
-  }, [allTeams, user?.data.user?.email])
+  }, [ allTeams, user?.data.user?.email ])
 
-  const updateMythicPlusTeam = async (event: React.FormEvent<HTMLFormElement>) => {
+  const updateMythicPlusTeam = async (event: React.FormEvent<HTMLFormElement>) =>
+  {
     event?.preventDefault()
     setLoadingCreateTeam(true)
 
@@ -120,39 +124,43 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
     }
   }
 
-  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  {
     const { name, value } = event.target
-    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [name]: value } : player)))
+    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [ name ]: value } : player)))
     setHasEditedPlayers(true)
   }
 
-  const handleAddPlayer = () => {
-    setPlayers([...players, { characterName: '', discordName: '', realmName: '' }])
+  const handleAddPlayer = () =>
+  {
+    setPlayers([ ...players, { characterName: '', discordName: '', realmName: '' } ])
   }
 
-  const handleAddAltPlayer = (index: number) => {
+  const handleAddAltPlayer = (index: number) =>
+  {
     setHasEditedPlayers(true)
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === index
           ? {
-              ...player,
-              alts: [...(player.alts || []), { altCharacterName: '', altRealmName: '' }],
-            }
+            ...player,
+            alts: [ ...(player.alts || []), { altCharacterName: '', altRealmName: '' } ],
+          }
           : player,
       ),
     )
   }
 
-  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) => {
+  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) =>
+  {
     setHasEditedPlayers(true)
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [],
-            }
+            ...player,
+            alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [],
+          }
           : player,
       ),
     )
@@ -162,29 +170,31 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
     mainPlayerIndex: number,
     altIndex: number,
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  ) =>
+  {
     const { name, value } = event.target
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts?.map((alt, altIdx) =>
-                altIdx === altIndex
-                  ? {
-                      ...alt,
-                      [name]: value,
-                    }
-                  : alt,
-              ),
-            }
+            ...player,
+            alts: player.alts?.map((alt, altIdx) =>
+              altIdx === altIndex
+                ? {
+                  ...alt,
+                  [ name ]: value,
+                }
+                : alt,
+            ),
+          }
           : player,
       ),
     )
     setHasEditedPlayers(true)
   }
 
-  const handleRemovePlayer = (index: number) => {
+  const handleRemovePlayer = (index: number) =>
+  {
     setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== index))
     setHasEditedPlayers(true)
   }
@@ -284,7 +294,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                         onChange={(e) => handlePlayerChange(index, e)}
                         name="characterName"
                         placeholder="Karakter navn"
-                        className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                        className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
                       />
                       {player.characterName &&
                         player.realmName &&
@@ -295,11 +305,12 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                     <input
                       required
                       type="text"
-                      value={player.discordName}
+                      disabled={index === 0 && discordUsername ? true : false}
+                      value={index === 0 && discordUsername ? discordUsername : player.discordName}
                       onChange={(e) => handlePlayerChange(index, e)}
                       name="discordName"
                       placeholder="Discord brukernavn"
-                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
                     />
                     <input
                       type="text"
@@ -307,7 +318,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                       onChange={(e) => handlePlayerChange(index, e)}
                       name="twitchChannel"
                       placeholder="Twitch kanal (valgfritt)"
-                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
                     />
                     <Select
                       required
@@ -318,7 +329,8 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                       isSearchable
                       name="realmName"
                       placeholder="Velg realm"
-                      onChange={(e: any) => {
+                      onChange={(e: any) =>
+                      {
                         const event = {
                           target: {
                             value: e?.name,
@@ -343,7 +355,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                               onChange={(e) => handleAltPlayerChange(index, altIndex, e)}
                               name="altCharacterName"
                               placeholder="Karakter navn"
-                              className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                              className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
                             />
                             {alt.altCharacterName &&
                               alt.altRealmName &&
@@ -363,7 +375,8 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                             isSearchable
                             name="altRealmName"
                             placeholder="Velg realm"
-                            onChange={(e: any) => {
+                            onChange={(e: any) =>
+                            {
                               const event = {
                                 target: {
                                   value: e?.name,
@@ -389,7 +402,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                     </div>
                   )}
 
-                  {playerErrors[index] && (
+                  {playerErrors[ index ] && (
                     <p className="text-red-500 text-sm">Fyll inn både karakternavn og realm for spiller {index + 1}.</p>
                   )}
 
@@ -448,8 +461,8 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                 type="submit"
               >
                 {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
-                playerErrors.some((e) => e === true) ||
-                (players && players.length <= 4)
+                  playerErrors.some((e) => e === true) ||
+                  (players && players.length <= 4)
                   ? 'Mangler info for å oppdatere lag'
                   : loadingCreateTeam
                     ? 'Oppdaterer lag'

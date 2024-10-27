@@ -1,3 +1,9 @@
+export type dungeonConfigType = {
+  name: string
+  id: number
+  image: string
+}
+
 export const dungeonConfig = [
   {
     name: 'Ara-Kara, City of Echoes',
@@ -42,4 +48,4 @@ export const dungeonConfig = [
     id: 8,
     image: '/dungeons/siege.jpg',
   },
-]
+] as dungeonConfigType[]

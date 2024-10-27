@@ -7,13 +7,16 @@ import { Badge } from '@/components/ui/badge'
 import { Trophy, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { Match } from '../../../../../../../types'
 
-interface CompletedScreenProps {
+interface CompletedScreenProps
+{
   homeTeam: string
   awayTeam: string
   pickedDungeons: Array<{ id: number; name: string; image: string }>
   tiebreakerDungeon: { id: number; name: string; image: string } | null
   round: number
+  matchData: Match & { myTeam: string } & { opponent: string }
 }
 
 export default function CompletedScreen({
@@ -22,30 +25,32 @@ export default function CompletedScreen({
   pickedDungeons,
   tiebreakerDungeon,
   round,
-}: CompletedScreenProps) {
+  matchData
+}: CompletedScreenProps)
+{
   const router = useRouter()
 
   return (
     <div className="container mx-auto p-4">
-      <Card className="max-w-4xl mx-auto text-white">
+      <Card className="max-w-4xl mx-auto text-white bg-gray-800">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center flex items-center justify-center">
             <Trophy className="w-8 h-8 mr-2 text-yellow-500" />
-            Pick Ban Completed
+            Pick/ban ferdig!
             <Trophy className="w-8 h-8 ml-2 text-yellow-500" />
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">
-              {homeTeam} vs {awayTeam}
+              {matchData.teams?.[ 0 ].name} vs {matchData.teams?.[ 1 ].name}
             </h2>
             <p className="text-lg text-white">Følgende dungeons er valgt:</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pickedDungeons.map((dungeon, index) => (
-              <Card className="text-white" key={dungeon.id}>
+              <Card className="text-white bg-gray-700" key={dungeon.id}>
                 <CardContent className="p-4">
                   <div className="relative h-48 mb-2">
                     <Image
@@ -65,7 +70,7 @@ export default function CompletedScreen({
             ))}
 
             {tiebreakerDungeon && (
-              <Card className="text-white">
+              <Card className="text-white bg-gray-700">
                 <CardContent className="p-4">
                   <div className="relative h-48 mb-2">
                     <Image
@@ -85,14 +90,13 @@ export default function CompletedScreen({
 
           <div className="text-center text-lg">
             <p className="flex items-center justify-center">
-              <MapPin className="w-5 h-5 mr-2 text-primary" />
               Lykke til i kampen!
             </p>
           </div>
         </CardContent>
         <div className="w-full flex justify-center p-4">
           <Button
-            className="bg-white text-black min-w-[75px]"
+            className=" text-black min-w-[75px] bg-yellow-500"
             onClick={() =>
               router.push('/my-matches/results?home=' + homeTeam + '&away=' + awayTeam + '&round=' + round)
             }

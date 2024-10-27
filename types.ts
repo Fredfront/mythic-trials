@@ -11,11 +11,6 @@ export type SupabaseTeamsType = {
   teams: SupabaseTeamType[]
 }
 
-type roundDates = {
-  round_date: string
-  round: number
-}
-
 export type Team = {
   id: string
   name: string

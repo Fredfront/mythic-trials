@@ -97,6 +97,7 @@ export type TMatchResults = {
   confirm: boolean
   winner: boolean
   matchUUID: string
+  warcraft_logs_report: string[]
 }
 
 export type TTeam = {

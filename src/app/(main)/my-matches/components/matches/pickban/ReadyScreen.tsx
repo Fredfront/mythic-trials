@@ -8,7 +8,8 @@ import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import Image from 'next/image'
 import { urlForImage } from '../../../../../../../sanity/lib/image'
 
-interface ReadyScreenProps {
+interface ReadyScreenProps
+{
   round: number
   homeTeam: string
   awayTeam: string
@@ -26,14 +27,15 @@ export default function ReadyScreen({
   opponentReady,
   setReady,
   sanityTeamData,
-}: ReadyScreenProps) {
+}: ReadyScreenProps)
+{
   return (
-    <div className="container mx-auto p-4">
-      <Card className="max-w-2xl mx-auto bg-[#011624] text-white">
+    <div className="container mx-auto p-4 ">
+      <Card className="max-w-2xl mx-auto bg-gray-800 text-white">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Pick and Ban</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6 bg-[#011624]">
+        <CardContent className="space-y-6 bg-gray-800">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">Runde: {round}</h2>
             <h3 className="text-xl flex justify-center">
@@ -67,7 +69,7 @@ export default function ReadyScreen({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Card className="bg-[#011624] text-white">
+            <Card className="bg-gray-700 text-white">
               <CardContent className="flex flex-col items-center justify-center p-4">
                 <h4 className="text-lg font-semibold mb-2">Ditt lag</h4>
                 {teamReady ? (
@@ -78,7 +80,7 @@ export default function ReadyScreen({
                 <p className="mt-2">{teamReady ? 'Ready' : 'Not Ready'}</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#011624] text-white">
+            <Card className="bg-gray-700 text-white">
               <CardContent className="flex flex-col items-center justify-center p-4">
                 <h4 className="text-lg font-semibold mb-2">Motstander</h4>
                 {opponentReady ? (
@@ -94,7 +96,7 @@ export default function ReadyScreen({
           <div className="flex justify-center">
             <Button
               onClick={setReady}
-              className={`${teamReady ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} min-w-[200px]`}
+              className={`${teamReady ? 'bg-green-600 hover:bg-green-700' : 'bg-yellow-500 hover:bg-yellow-700 text-black'} min-w-[200px]`}
             >
               {teamReady ? 'Klar' : 'Jeg er klar'}
             </Button>
