@@ -15,8 +15,9 @@ import { DraggableRoundCarousel } from '@/components/draggable-round-carousel'
 import { ServerClient } from '@/utils/supabase/server'
 
 export type RoundType = {
-  round: number
   round_date: string
+  description: string
+  type: 'signup' | 'group_stage' | 'playoff' | 'qualifier'
 }
 
 export const revalidate = 0
@@ -29,7 +30,8 @@ const Home = async () =>
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
-  const rounds = (await ServerClient.from('rounds').select('*')).data as RoundType[]
+  const rounds = (await ServerClient.from('rounds').select('*').order('round_date', { ascending: true })
+  ).data as RoundType[]
 
   const showLeaderboard = showLeaderboardData?.[ 0 ]?.enabled
 
