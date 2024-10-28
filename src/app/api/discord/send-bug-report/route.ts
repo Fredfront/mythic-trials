@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
   try {
     // Parse the JSON body from the request
-    const { title, description, environment, from } = await request.json()
+    const { title, description, environment, from, username } = await request.json()
 
     // Validate input fields
     if (!title || !description || !environment || !from) {
@@ -55,6 +55,10 @@ export async function POST(request: Request) {
             {
               name: 'From',
               value: from,
+            },
+            {
+              name: 'Discord user',
+              value: username,
             },
           ],
           color: 0xff0000, // Optional: Set a color for the embed (red in this case)

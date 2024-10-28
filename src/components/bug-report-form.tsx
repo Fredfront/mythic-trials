@@ -1,25 +1,26 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { AlertCircle } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { useGetUserData } from "@/app/auth/useGetUserData"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { AlertCircle } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { useGetUserData } from '@/app/auth/useGetUserData'
 
-export default function BugReportForm()
-{
+export default function BugReportForm() {
   const { user } = useGetUserData()
   const userEmail = user?.data.user?.email
 
-  const [ isSubmitting, setIsSubmitting ] = useState(false)
+  const username = user?.data.user?.identities?.find((identity) => identity.provider === 'discord')?.identity_data
+    ?.full_name
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) =>
-  {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsSubmitting(true)
 
@@ -30,7 +31,8 @@ export default function BugReportForm()
     // Include the userEmail in the payload
     const bugReportWithEmail = {
       ...bugReport,
-      from: userEmail || "Anonymous", // Fallback to 'Anonymous' if email not available
+      from: userEmail || 'Anonymous', // Fallback to 'Anonymous' if email not available
+      username: username || 'Anonymous', // Fallback to 'Anonymous' if Discord username not available
     }
 
     try {
@@ -44,7 +46,7 @@ export default function BugReportForm()
 
       if (response.ok) {
         toast({
-          title: "Bug Report Submitted",
+          title: 'Bug Report Submitted',
           description: "Thank you for your report. We'll investigate the issue and get back to you soon.",
         })
         form.reset()
@@ -55,9 +57,9 @@ export default function BugReportForm()
     } catch (error) {
       console.error('Submission Error:', error)
       toast({
-        title: "Error",
-        description: "Failed to submit bug report. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to submit bug report. Please try again.',
+        variant: 'destructive',
       })
     } finally {
       setIsSubmitting(false)
@@ -74,7 +76,9 @@ export default function BugReportForm()
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-gray-200">Bug tittel</Label>
+              <Label htmlFor="title" className="text-gray-200">
+                Bug tittel
+              </Label>
               <Input
                 id="title"
                 name="title"
@@ -84,7 +88,9 @@ export default function BugReportForm()
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-gray-200">Detaljert beskrivelse</Label>
+              <Label htmlFor="description" className="text-gray-200">
+                Detaljert beskrivelse
+              </Label>
               <Textarea
                 id="description"
                 name="description"
@@ -94,7 +100,9 @@ export default function BugReportForm()
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="environment" className="text-gray-200">Environment Details</Label>
+              <Label htmlFor="environment" className="text-gray-200">
+                Environment Details
+              </Label>
               <Input
                 id="environment"
                 name="environment"
@@ -107,12 +115,7 @@ export default function BugReportForm()
             {/* <input type="hidden" name="from" value={userEmail || 'Anonymous'} /> */}
           </CardContent>
           <CardFooter className="flex justify-end">
-
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-[#B8860B] hover:bg-[#DAA520] text-white"
-            >
+            <Button type="submit" disabled={isSubmitting} className="bg-[#B8860B] hover:bg-[#DAA520] text-white">
               {isSubmitting ? (
                 <>
                   <AlertCircle className="mr-2 h-4 w-4 animate-spin" />

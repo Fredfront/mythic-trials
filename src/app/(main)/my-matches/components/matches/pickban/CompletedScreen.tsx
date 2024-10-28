@@ -9,8 +9,7 @@ import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { Match } from '../../../../../../../types'
 
-interface CompletedScreenProps
-{
+interface CompletedScreenProps {
   homeTeam: string
   awayTeam: string
   pickedDungeons: Array<{ id: number; name: string; image: string }>
@@ -25,9 +24,8 @@ export default function CompletedScreen({
   pickedDungeons,
   tiebreakerDungeon,
   round,
-  matchData
-}: CompletedScreenProps)
-{
+  matchData,
+}: CompletedScreenProps) {
   const router = useRouter()
 
   return (
@@ -43,7 +41,7 @@ export default function CompletedScreen({
         <CardContent className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">
-              {matchData.teams?.[ 0 ].name} vs {matchData.teams?.[ 1 ].name}
+              {matchData.teams?.[0].name} vs {matchData.teams?.[1].name}
             </h2>
             <p className="text-lg text-white">Følgende dungeons er valgt:</p>
           </div>
@@ -89,9 +87,7 @@ export default function CompletedScreen({
           </div>
 
           <div className="text-center text-lg">
-            <p className="flex items-center justify-center">
-              Lykke til i kampen!
-            </p>
+            <p className="flex items-center justify-center">Lykke til i kampen!</p>
           </div>
         </CardContent>
         <div className="w-full flex justify-center p-4">

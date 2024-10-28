@@ -20,17 +20,15 @@ export default function Matches({
   sanityTeamData,
   schedule,
   teamsWithLiveChannels,
-  pickAndBanData
+  pickAndBanData,
 }: {
   pickAndBanData: PickAndBansType[]
   matchResults: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
   schedule: TournamentSchedule
   teamsWithLiveChannels: TeamLiveStatus[]
-})
-{
+}) {
   const detailedSchedule = schedule as TournamentSchedule
-
 
   if (!detailedSchedule || detailedSchedule.length === 0) {
     return (
@@ -62,12 +60,11 @@ export default function Matches({
 
             <div className="bg-gray-800 p-4 rounded-lg">
               <div className="grid grid-cols-1 gap-4 mt-4">
-                {round.map((match, matchIndex) =>
-                {
-                  const homeTeam = match.teams?.[ 0 ].team_slug
-                  const awayTeam = match.teams?.[ 1 ].team_slug
-                  const homeTeamName = match.teams?.[ 0 ].name
-                  const awayTeamName = match.teams?.[ 1 ].name
+                {round.map((match, matchIndex) => {
+                  const homeTeam = match.teams?.[0].team_slug
+                  const awayTeam = match.teams?.[1].team_slug
+                  const homeTeamName = match.teams?.[0].name
+                  const awayTeamName = match.teams?.[1].name
                   const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage.asset._ref
                   const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage.asset._ref
 
@@ -90,23 +87,23 @@ export default function Matches({
 
                   const confirmedResult =
                     homeTeamMatchResults?.confirm &&
-                      awayTeamMatchResults?.confirm &&
-                      homeTeamMatchResults.round === index + 1 &&
-                      awayTeamMatchResults.round === index + 1
+                    awayTeamMatchResults?.confirm &&
+                    homeTeamMatchResults.round === index + 1 &&
+                    awayTeamMatchResults.round === index + 1
                       ? true
                       : false
 
-                  const matchDate = match.teams[ 0 ].roundDate
-                  const matchStartTime = match.teams[ 0 ].round_startTime
-                  const rescheduledDate = match.teams[ 0 ].rescheduled_round_date
-                  const rescheduledStartTime = match.teams[ 0 ].rescheduled_round_startTime
+                  const matchDate = match.teams[0].roundDate
+                  const matchStartTime = match.teams[0].round_startTime
+                  const rescheduledDate = match.teams[0].rescheduled_round_date
+                  const rescheduledStartTime = match.teams[0].rescheduled_round_startTime
                   const rescheduledDateTime = new Date(`${rescheduledDate}T${rescheduledStartTime}Z`)
                   const rescheduledDateTimeString = rescheduledDateTime.toLocaleString('nb-NO', {
                     timeZone: 'UTC',
                     dateStyle: 'medium',
                     timeStyle: 'short',
                   })
-                  const hasRescheduled = match.teams[ 0 ].rescheduled
+                  const hasRescheduled = match.teams[0].rescheduled
 
                   //Convert to Oslo time and to a readable format
                   const matchDateTime = new Date(`${matchDate}T${matchStartTime}Z`)
@@ -116,27 +113,51 @@ export default function Matches({
                     timeStyle: 'short',
                   })
 
+                  const homTeamTwitchChannels =
+                    teamsWithLiveChannels.find((team) => team.teamSlug === homeTeam)?.twitch_channels || []
+                  const awayTeamTwitchChannels =
+                    teamsWithLiveChannels.find((team) => team.teamSlug === awayTeam)?.twitch_channels || []
 
-                  const homTeamTwitchChannels = teamsWithLiveChannels.find((team) => team.teamSlug === homeTeam)?.twitch_channels || []
-                  const awayTeamTwitchChannels = teamsWithLiveChannels.find((team) => team.teamSlug === awayTeam)?.twitch_channels || []
+                  const hasMatchResults = matchResults.find(
+                    (e) =>
+                      e.round === index + 1 && homeTeam === e.team_slug && e.match_1 !== null && e.match_2 !== null,
+                  )
 
-                  const hasMatchResults = matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug && e.match_1 !== null && e.match_2 !== null)
+                  const matchOneName = dungeonConfig.find(
+                    (e) =>
+                      e.id ===
+                      pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[1].team_slug)
+                        ?.pick,
+                  )?.name
+                  const matchTwoName = dungeonConfig.find(
+                    (e) =>
+                      e.id ===
+                      pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[0].team_slug)
+                        ?.pick,
+                  )?.name
+                  const homeTeamBans =
+                    pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[0].team_slug)
+                      ?.bans || []
+                  const awayTeamBans =
+                    pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[1].team_slug)
+                      ?.bans || []
+                  const hasTieBreaker =
+                    matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)?.match_3 !== null
+                  const allBans = [...homeTeamBans, ...awayTeamBans]
+                  const homeTeamPick =
+                    pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[0].team_slug)
+                      ?.pick || 0
+                  const awayTeamPick =
+                    pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[1].team_slug)
+                      ?.pick || 0
 
-                  const matchOneName = dungeonConfig.find((e) => e.id === pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[ 1 ].team_slug)?.pick)?.name
-                  const matchTwoName = dungeonConfig.find((e) => e.id === pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[ 0 ].team_slug)?.pick)?.name
-                  const homeTeamBans = pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[ 0 ].team_slug)?.bans || []
-                  const awayTeamBans = pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[ 1 ].team_slug)?.bans || []
-                  const hasTieBreaker = matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)?.match_3 !== null
-                  const allBans = [ ...homeTeamBans, ...awayTeamBans ]
-                  const homeTeamPick = pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[ 0 ].team_slug)?.pick || 0
-                  const awayTeamPick = pickAndBanData.find((e) => e.round === index + 1 && e.team_slug === match.teams[ 1 ].team_slug)?.pick || 0
+                  const combinedPickAndBans = [...homeTeamBans, ...awayTeamBans, homeTeamPick, awayTeamPick] as number[]
 
-                  const combinedPickAndBans = [ ...homeTeamBans, ...awayTeamBans, homeTeamPick, awayTeamPick ] as number[]
+                  const tieBreaker = hasTieBreaker
+                    ? dungeonConfig.find((e) => e.id === findMissingIds(dungeonConfig, combinedPickAndBans))
+                    : null
 
-                  const tieBreaker = hasTieBreaker ? dungeonConfig.find((e) => e.id === findMissingIds(dungeonConfig, combinedPickAndBans)) : null
-
-                  const allBansmapped = allBans.map((ban) =>
-                  {
+                  const allBansmapped = allBans.map((ban) => {
                     return {
                       name: dungeonConfig.find((e) => e.id === ban)?.name,
                       image: dungeonConfig.find((e) => e.id === ban)?.image,
@@ -153,13 +174,14 @@ export default function Matches({
                             </div>
                           ) : null}
                           {hasRescheduled && (
-                            <Badge className="hidden md:flex  absolute right-0 top-0 -mt-2 ">
-                              Kamp flyttet
-                            </Badge>
+                            <Badge className="hidden md:flex  absolute right-0 top-0 -mt-2 ">Kamp flyttet</Badge>
                           )}
-                          {!match.featured && homTeamTwitchChannels && homTeamTwitchChannels.length > 0 || !match.featured && awayTeamTwitchChannels && awayTeamTwitchChannels.length > 0 ? (
-                            <div className={`hidden md:flex absolute top-0 ${hasRescheduled ? 'left-0' : 'right-0'} -mt-4 items-center gap-2 `}>
-                              Live <Circle width={10} height={10} fill='red' />
+                          {(!match.featured && homTeamTwitchChannels && homTeamTwitchChannels.length > 0) ||
+                          (!match.featured && awayTeamTwitchChannels && awayTeamTwitchChannels.length > 0) ? (
+                            <div
+                              className={`hidden md:flex absolute top-0 ${hasRescheduled ? 'left-0' : 'right-0'} -mt-4 items-center gap-2 `}
+                            >
+                              Live <Circle width={10} height={10} fill="red" />
                             </div>
                           ) : null}
                           <div className="flex w-2/5 md:w-[40%] text-right justify-end">
@@ -234,7 +256,7 @@ export default function Matches({
                             <CardContent className="space-y-4">
                               {homTeamTwitchChannels.length > 0 && (
                                 <div>
-                                  <h3 className="text-sm font-medium mb-2 text-white">{match.teams[ 0 ].name} Streams</h3>
+                                  <h3 className="text-sm font-medium mb-2 text-white">{match.teams[0].name} Streams</h3>
                                   <div className="flex flex-wrap gap-2">
                                     {homTeamTwitchChannels.map((channel, index) => (
                                       <TwitchButton key={index} channel={channel} />
@@ -244,7 +266,7 @@ export default function Matches({
                               )}
                               {awayTeamTwitchChannels.length > 0 && (
                                 <div>
-                                  <h3 className="text-sm font-medium mb-2 text-white">{match.teams[ 1 ].name} Streams</h3>
+                                  <h3 className="text-sm font-medium mb-2 text-white">{match.teams[1].name} Streams</h3>
                                   <div className="flex flex-wrap gap-2">
                                     {awayTeamTwitchChannels.map((channel, index) => (
                                       <TwitchButton key={index} channel={channel} />
@@ -255,78 +277,124 @@ export default function Matches({
                             </CardContent>
                           </Card>
                         )}
-                        {hasMatchResults !== undefined && <Card className='bg-gray-700 border-none mt-2'>
-                          <CardHeader>
-                            <CardTitle className="text-lg font-semibold">Kamp oversikt</CardTitle>
-                            <CardDescription className=''> {match.teams[ 0 ].name} vs {match.teams[ 1 ].name}</CardDescription>
-                          </CardHeader>
-                          <CardContent className="grid gap-4">
-                            <div>
-                              <h3 className="text-sm font-medium mb-2">Banned Maps</h3>
-                              <div className="flex flex-wrap gap-2">
-                                {allBansmapped.map((e, index) => (
-                                  <Badge key={index} variant='default' className="flex items-center gap-1 p-2 bg-gray-600">
-                                    <Image
-                                      width={24}
-                                      height={24}
-                                      className="w-6 h-6 rounded-full border-2 border-primary"
-                                      alt={e.name || ''}
-                                      src={e.image || ''}
-                                    />
-                                    <span className="text-xs">{e.name}</span>
-                                  </Badge>
-                                ))}
+                        {hasMatchResults !== undefined && (
+                          <Card className="bg-gray-700 border-none mt-2">
+                            <CardHeader>
+                              <CardTitle className="text-lg font-semibold">Kamp oversikt</CardTitle>
+                              <CardDescription className="">
+                                {' '}
+                                {match.teams[0].name} vs {match.teams[1].name}
+                              </CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid gap-4">
+                              <div>
+                                <h3 className="text-sm font-medium mb-2">Banned Maps</h3>
+                                <div className="flex flex-wrap gap-2">
+                                  {allBansmapped.map((e, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="default"
+                                      className="flex items-center gap-1 p-2 bg-gray-600"
+                                    >
+                                      <Image
+                                        width={24}
+                                        height={24}
+                                        className="w-6 h-6 rounded-full border-2 border-primary"
+                                        alt={e.name || ''}
+                                        src={e.image || ''}
+                                      />
+                                      <span className="text-xs">{e.name}</span>
+                                    </Badge>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                            <Separator />
-                            <div className="grid gap-2">
-                              <MatchResult title="Kamp 1" matchName={matchOneName || ''} homeScore={homeTeamScoreMatchOne} awayScore={awayTeamScoreMatchOne} />
-                              <MatchResult title="Kamp 2" matchName={matchTwoName || ''} homeScore={homeTeamScoreMatchTwo} awayScore={awayTeamScoreMatchTwo} />
-                              {hasTieBreaker && (
+                              <Separator />
+                              <div className="grid gap-2">
                                 <MatchResult
-                                  title="Tiebreaker"
-                                  matchName={tieBreaker?.name || ''}
-                                  homeScore={homeTeamScoreMatchThree}
-                                  awayScore={awayTeamScoreMatchThree}
+                                  title="Kamp 1"
+                                  matchName={matchOneName || ''}
+                                  homeScore={homeTeamScoreMatchOne}
+                                  awayScore={awayTeamScoreMatchOne}
                                 />
-                              )}
-                            </div>
-                            <Separator className='mb-2' />
-                            <CardTitle className="text-lg font-semibold">Warcraft logs</CardTitle>
-                            <div className='flex gap-4 flex-col '>
-                              {matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)?.warcraft_logs_report && (
-                                <div>
-                                  <h3 className="text-sm font-medium mb-2">{match.teams[ 0 ].name} logs</h3>
-                                  <div className='bg-gray-600 p-4 rounded-lg'>
-                                    <div className="flex  gap-2">
-                                      {matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)?.warcraft_logs_report.map((link, index) => (
-                                        <Button key={index} variant="secondary" className="bg-gray-800 hover:bg-gray-700 text-white">
-                                          <a className='flex items-center gap-2' href={`https://warcraftlogs.com/reports/${link}`} target="_blank" rel="noreferrer">Log {index + 1} <ExternalLink /> </a>
-                                        </Button>
-                                      ))}
+                                <MatchResult
+                                  title="Kamp 2"
+                                  matchName={matchTwoName || ''}
+                                  homeScore={homeTeamScoreMatchTwo}
+                                  awayScore={awayTeamScoreMatchTwo}
+                                />
+                                {hasTieBreaker && (
+                                  <MatchResult
+                                    title="Tiebreaker"
+                                    matchName={tieBreaker?.name || ''}
+                                    homeScore={homeTeamScoreMatchThree}
+                                    awayScore={awayTeamScoreMatchThree}
+                                  />
+                                )}
+                              </div>
+                              <Separator className="mb-2" />
+                              <CardTitle className="text-lg font-semibold">Warcraft logs</CardTitle>
+                              <div className="flex gap-4 flex-col ">
+                                {matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                  ?.warcraft_logs_report && (
+                                  <div>
+                                    <h3 className="text-sm font-medium mb-2">{match.teams[0].name} logs</h3>
+                                    <div className="bg-gray-600 p-4 rounded-lg">
+                                      <div className="flex  gap-2">
+                                        {matchResults
+                                          .find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                          ?.warcraft_logs_report.map((link, index) => (
+                                            <Button
+                                              key={index}
+                                              variant="secondary"
+                                              className="bg-gray-800 hover:bg-gray-700 text-white"
+                                            >
+                                              <a
+                                                className="flex items-center gap-2"
+                                                href={`https://warcraftlogs.com/reports/${link}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                              >
+                                                Log {index + 1} <ExternalLink />{' '}
+                                              </a>
+                                            </Button>
+                                          ))}
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              )}
-                              {matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)?.warcraft_logs_report && (
-                                <div>
-                                  <h3 className="text-sm font-medium mb-2">{match.teams[ 1 ].name} logs</h3>
+                                )}
+                                {matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                  ?.warcraft_logs_report && (
+                                  <div>
+                                    <h3 className="text-sm font-medium mb-2">{match.teams[1].name} logs</h3>
 
-                                  <div className='bg-gray-600  p-4 rounded-lg'>
-                                    <div className="flex  gap-2">
-                                      {matchResults.find((e) => e.round === index + 1 && awayTeam === e.team_slug)?.warcraft_logs_report.map((link, index) => (
-                                        <Button key={index} variant="secondary" className="bg-gray-800 hover:bg-gray-700 text-white ">
-                                          <a className='flex items-center gap-2' href={`https://warcraftlogs.com/reports/${link}`} target="_blank" rel="noreferrer">Log {index + 1} <ExternalLink /> </a>
-                                        </Button>
-                                      ))}
+                                    <div className="bg-gray-600  p-4 rounded-lg">
+                                      <div className="flex  gap-2">
+                                        {matchResults
+                                          .find((e) => e.round === index + 1 && awayTeam === e.team_slug)
+                                          ?.warcraft_logs_report.map((link, index) => (
+                                            <Button
+                                              key={index}
+                                              variant="secondary"
+                                              className="bg-gray-800 hover:bg-gray-700 text-white "
+                                            >
+                                              <a
+                                                className="flex items-center gap-2"
+                                                href={`https://warcraftlogs.com/reports/${link}`}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                              >
+                                                Log {index + 1} <ExternalLink />{' '}
+                                              </a>
+                                            </Button>
+                                          ))}
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              )}
-                            </div>
-
-                          </CardContent>
-                        </Card>}
+                                )}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        )}
                       </AccordionContent>
                     </AccordionItem>
                   )
@@ -340,25 +408,39 @@ export default function Matches({
   )
 }
 
+function findMissingIds(dungeonConfig: dungeonConfigType[], selectedIds: number[]): number | undefined {
+  const configIds = dungeonConfig.map((dungeon) => dungeon.id)
+  const selectedIdsSet = new Set(selectedIds)
 
-
-function findMissingIds(dungeonConfig: dungeonConfigType[], selectedIds: number[]): number | undefined
-{
-  const configIds = dungeonConfig.map(dungeon => dungeon.id);
-  const selectedIdsSet = new Set(selectedIds);
-
-  const missingId = configIds.find(id => !selectedIdsSet.has(id));
-  return missingId;
+  const missingId = configIds.find((id) => !selectedIdsSet.has(id))
+  return missingId
 }
 
-
-function MatchResult({ title, matchName, homeScore, awayScore }: { title: string, matchName: string, homeScore: number, awayScore: number })
-{
+function MatchResult({
+  title,
+  matchName,
+  homeScore,
+  awayScore,
+}: {
+  title: string
+  matchName: string
+  homeScore: number
+  awayScore: number
+}) {
   return (
     <div className="bg-gray-600 p-2 rounded-md">
       <div className="text-sm font-medium mb-1">{title}</div>
       <div className="flex justify-between items-center">
-        <div className="text-sm flex gap-1 items-center"><Image alt={matchName} height={16} width={16} className='w-4 rounded-full h-4' src={dungeonConfig.find((e) => e.name === matchName)?.image || ''} /> {matchName}</div>
+        <div className="text-sm flex gap-1 items-center">
+          <Image
+            alt={matchName}
+            height={16}
+            width={16}
+            className="w-4 rounded-full h-4"
+            src={dungeonConfig.find((e) => e.name === matchName)?.image || ''}
+          />{' '}
+          {matchName}
+        </div>
         <div className="text-sm font-semibold">
           {homeScore} - {awayScore}
         </div>
@@ -367,21 +449,10 @@ function MatchResult({ title, matchName, homeScore, awayScore }: { title: string
   )
 }
 
-
-function TwitchButton({ channel }: { channel: string })
-{
+function TwitchButton({ channel }: { channel: string }) {
   return (
-    <Button
-      variant="secondary"
-      className="bg-purple-600 hover:bg-purple-700 text-white"
-      asChild
-    >
-      <a
-        href={`https://twitch.tv/${channel}`}
-        target="_blank"
-        rel="noreferrer"
-        className="flex items-center gap-2"
-      >
+    <Button variant="secondary" className="bg-purple-600 hover:bg-purple-700 text-white" asChild>
+      <a href={`https://twitch.tv/${channel}`} target="_blank" rel="noreferrer" className="flex items-center gap-2">
         <TwitchIcon className="w-4 h-4" />
         <span>{channel}</span>
       </a>

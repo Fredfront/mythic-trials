@@ -10,8 +10,7 @@ import { getLiveStreams, getTwitchAccessToken, TeamLiveStatus } from '@/lib/twit
 
 export const revalidate = 1 // Disables ISR; adjust as needed
 
-async function Page()
-{
+async function Page() {
   // Fetch teams
   const teamsResponse = await ServerClient.from('teams').select('*')
   const teams: Team[] = teamsResponse.data ?? []
@@ -26,7 +25,6 @@ async function Page()
   const matchResultsTable = await ServerClient.from('match_results').select('*')
   const sanityTeamData = await getAllTeams()
 
-
   // Extract unique Twitch channels
   const twitchChannels = Array.from(
     new Set(
@@ -34,37 +32,32 @@ async function Page()
         team.players
           .map((player) => player.twitchChannel)
           .filter((channel): channel is string => Boolean(channel))
-          .map((channel) => channel.toLowerCase())
-      )
-    )
-  );
+          .map((channel) => channel.toLowerCase()),
+      ),
+    ),
+  )
   // Get access token
-  const accessToken = await getTwitchAccessToken();
+  const accessToken = await getTwitchAccessToken()
 
   // Get live channels
-  const liveChannels = await getLiveStreams(accessToken, twitchChannels);
+  const liveChannels = await getLiveStreams(accessToken, twitchChannels)
   // Annotate teams and players with live status
   const teamsWithLiveChannels: TeamLiveStatus[] = sanityTeamData
-    .map((team) =>
-    {
+    .map((team) => {
       const liveChannelsForTeam = team.players
         .map((player) => player.twitchChannel?.toLowerCase())
-        .filter(
-          (channel): channel is string =>
-            channel !== undefined && liveChannels.includes(channel)
-        );
+        .filter((channel): channel is string => channel !== undefined && liveChannels.includes(channel))
 
       if (liveChannelsForTeam.length === 0) {
-        return null; // Exclude teams with no live channels
+        return null // Exclude teams with no live channels
       }
 
       return {
         teamSlug: team.teamSlug,
         twitch_channels: Array.from(new Set(liveChannelsForTeam)), // Remove duplicates
-      };
+      }
     })
-    .filter((team): team is TeamLiveStatus => team !== null);
-
+    .filter((team): team is TeamLiveStatus => team !== null)
 
   // const teamsWithLiveChannelsMockData =
   //   [
@@ -87,9 +80,6 @@ async function Page()
   //       ]
   //     }
   //   ]
-
-
-
 
   return (
     <Matches

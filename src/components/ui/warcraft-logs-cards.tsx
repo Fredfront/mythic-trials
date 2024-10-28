@@ -1,22 +1,28 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { ExternalLink } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Match, MatchRecord } from "../../../types"
-import { TMatchResults } from "@/supabase/dbFunctions"
-export default function WarcraftLogsCards({ match, matchResults, index }: { match: Match, matchResults: TMatchResults[], index: number })
-{
-  const [ activeTab, setActiveTab ] = useState<string>(match.teams[ 0 ].team_slug)
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { ExternalLink } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Match, MatchRecord } from '../../../types'
+import { TMatchResults } from '@/supabase/dbFunctions'
+export default function WarcraftLogsCards({
+  match,
+  matchResults,
+  index,
+}: {
+  match: Match
+  matchResults: TMatchResults[]
+  index: number
+}) {
+  const [activeTab, setActiveTab] = useState<string>(match.teams[0].team_slug)
 
-  const homeTeam = match.teams[ 0 ].team_slug
-  const awayTeam = match.teams[ 1 ].team_slug
+  const homeTeam = match.teams[0].team_slug
+  const awayTeam = match.teams[1].team_slug
 
-  const getTeamLogs = (teamSlug: string) =>
-  {
+  const getTeamLogs = (teamSlug: string) => {
     return matchResults.find((e) => e.round === index + 1 && teamSlug === e.team_slug)?.warcraft_logs_report || []
   }
 
