@@ -23,14 +23,15 @@ export const revalidate = 0
 
 const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
-const Home = async () => {
+const Home = async () =>
+{
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
   const rounds = (await ServerClient.from('rounds').select('*')).data as RoundType[]
 
-  const showLeaderboard = showLeaderboardData?.[0].enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ].enabled
 
   return (
     <main>
@@ -42,9 +43,9 @@ const Home = async () => {
           className={`flex flex-col items-center justify-center h-full  w-full bg-cover bg-center bg-no-repeat  `}
         >
           <Image src={logo} alt="Nerdelandslaget" width={250} height={250} priority />
-          <h2 className={`${LifeCraft.className} text-8xl text-white `}>sesong 2</h2>
-          <p className="text-center  font-medium text-white ">
-            Vi er tilbake for sesong 2 av Mythic Trials arrangert av Nerdelandslaget WoW.{' '}
+          <h2 className={`${LifeCraft.className} text-8xl text-white `}>sesong 3</h2>
+          <p className="text-center font-medium max-w-2xl  text-lg sm:text-xl shadow-sm ">
+            Vi er tilbake for sesong 3 av Mythic Trials arrangert av Nerdelandslaget WoW.
           </p>
           <div className="flex gap-4 mt-10 pb-10 ">
             <Link href="/rules">
@@ -107,7 +108,8 @@ const Home = async () => {
           </div>
         ) : null}
         {frontpageNews &&
-          frontpageNews.map((news, index) => {
+          frontpageNews.map((news, index) =>
+          {
             const isEvenIndex = index % 2 === 0
             if (news.showOnFrontpage === false) return null
             return (

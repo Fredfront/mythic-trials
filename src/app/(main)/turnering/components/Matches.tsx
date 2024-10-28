@@ -4,8 +4,7 @@ import React from 'react'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import Image from 'next/image'
-import { Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion'
-import { AccordionTrigger } from '@radix-ui/react-accordion'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { TournamentSchedule } from '../../../../../types'
 import { PickAndBansType, TMatchResults } from '../../../../supabase/dbFunctions'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
@@ -14,9 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { TeamLiveStatus } from '@/lib/twitch'
 import { dungeonConfig, dungeonConfigType } from '../utils/dungeonConfig'
 import { Separator } from '@/components/ui/separator'
-import { match } from 'assert'
 import { Button } from '@/components/ui/button'
-import WarcraftLogsCards from '@/components/ui/warcraft-logs-cards'
 
 export default function Matches({
   matchResults,
@@ -146,14 +143,10 @@ export default function Matches({
                     }
                   })
 
-                  const allTwitchChannels = [ ...homTeamTwitchChannels, ...awayTeamTwitchChannels ]
-
-
-
                   return (
                     <AccordionItem key={matchIndex} value={matchIndex.toString()}>
-                      <AccordionTrigger className="bg-gray-700 p-4 w-full rounded-lg  min-h-[100px]  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
-                        <div className="flex relative ">
+                      <AccordionTrigger className="bg-gray-700 p-4 w-full min-h-[120px] !no-underline rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
+                        <div className="flex w-full relative  ">
                           {match.featured ? (
                             <div className="hidden md:flex absolute top-0 left-0  -mt-4 ">
                               <Badge>Featured</Badge>

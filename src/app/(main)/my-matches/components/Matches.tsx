@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, CalendarX, Check, CheckCircle, Clock, Info, X, XCircle } from 'lucide-react'
+import { ArrowLeft, CalendarX, Check, CheckCircle, Clock, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
@@ -13,12 +13,12 @@ import PickBanV2 from './matches/PickBanV2'
 import { InfoBoxComponent } from '@/components/info-box'
 import { Match, MatchRecord, Team, TournamentSchedule } from '../../../../../types'
 import
-  {
-    create_match_results,
-    createPickBanRow,
-    PickAndBansType,
-    TMatchResults,
-  } from '../../../../supabase/dbFunctions'
+{
+  create_match_results,
+  createPickBanRow,
+  PickAndBansType,
+  TMatchResults,
+} from '../../../../supabase/dbFunctions'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { createSortedRounds } from '../page'
