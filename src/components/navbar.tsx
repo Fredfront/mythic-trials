@@ -31,10 +31,8 @@ const NavBar = ({
   const { user, loading } = useGetUserData()
   const pathname = usePathname()
   const router = useRouter()
-
   const team = teams?.find((e) => e.contact_person === user?.data.user?.email)
   const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
-
   const [ myTeam, setMyTeam ] = useState<SupabaseTeamType | undefined>(team)
 
   const [ isSuperadmin, setIsSuperadmin ] = useState<boolean>(false)
