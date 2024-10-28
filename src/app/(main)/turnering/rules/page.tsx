@@ -1,10 +1,33 @@
 import { getRulesData } from '@/app/api/rules/getRulesData'
-import { User, Hourglass, Trophy, Smile } from 'lucide-react'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { User, Hourglass, Trophy, Smile, CalendarX, Scroll } from 'lucide-react'
 import { PortableText } from 'next-sanity'
 
-async function page() {
+async function page()
+{
   const rulesData = await getRulesData()
-  return (
+
+  if (!rulesData) {
+    return (
+      <div className="flex justify-center items-center p-4 text-white">
+        <Card className="w-full max-w-md text-white">
+          <CardHeader>
+            <CardTitle className="text-center flex items-center justify-center text-white">
+              <Scroll color="white" className="mr-2" />
+              Ingen regler tilgjengelig
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-center text-white">
+              Det er for øyeblikket ingen regler tilgjengelig. Vennligst sjekk igjen senere for oppdateringer.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return rulesData && (
     <>
       <div className="flex max-w-5xl justify-center m-auto">
         <RuleIconBox />
@@ -25,7 +48,8 @@ async function page() {
 
 export default page
 
-const RuleIconBox = () => {
+const RuleIconBox = () =>
+{
   return (
     <div className="flex gap-4 mt-12 flex-wrap pl-4 pr-4 lg:pl-0 ">
       <div className="bg-[#021F33] md:w-52 w-full md:h-20 p-2 lg:text-left text-center rounded-md items-center flex flex-col md:flex-row justify-center">

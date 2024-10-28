@@ -23,21 +23,22 @@ export const revalidate = 0
 
 const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
-const Home = async () => {
+const Home = async () =>
+{
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
   const rounds = (await ServerClient.from('rounds').select('*')).data as RoundType[]
 
-  const showLeaderboard = showLeaderboardData?.[0].enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ]?.enabled
 
   return (
     <main>
       <div className="flex flex-col items-center ">
         <div
           style={{
-            backgroundImage: `url(${urlForImage(frontpageData.mainImage.asset._ref as string) as string})`,
+            backgroundImage: `url(${urlForImage(frontpageData?.mainImage.asset._ref as string) as string})`,
           }}
           className={`flex flex-col items-center justify-center h-full  w-full bg-cover bg-center bg-no-repeat  `}
         >
@@ -107,7 +108,8 @@ const Home = async () => {
           </div>
         ) : null}
         {frontpageNews &&
-          frontpageNews.map((news, index) => {
+          frontpageNews.map((news, index) =>
+          {
             const isEvenIndex = index % 2 === 0
             if (news.showOnFrontpage === false) return null
             return (

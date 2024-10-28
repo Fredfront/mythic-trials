@@ -3,14 +3,29 @@ import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 import { urlForImage } from '../../../../../sanity/lib/image'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Scroll, Users } from 'lucide-react'
 
-async function Teams() {
+async function Teams()
+{
   const allTeams = await getAllTeams()
 
   if (allTeams && allTeams.length === 0) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <h1 className="text-4xl font-bold text-white">Fant ingen lag</h1>
+      <div className="flex justify-center items-center p-4 text-white">
+        <Card className="w-full max-w-md text-white">
+          <CardHeader>
+            <CardTitle className="text-center flex items-center justify-center text-white">
+              <Users color="white" className="mr-2" />
+              Ingen lag funnet
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-center text-white">
+              Det er for øyeblikket ingen påmeldte lag. Vennligst sjekk igjen senere for oppdateringer.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     )
   }
