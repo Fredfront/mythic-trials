@@ -1,5 +1,3 @@
-import { getAllTeams } from '@/app/api/getAllTeams'
-import { InfoBoxComponent } from '@/components/info-box'
 import RescheduleMatch from '@/components/reschedule-match'
 import { ServerClient } from '@/utils/supabase/server'
 import { ArrowLeft } from 'lucide-react'

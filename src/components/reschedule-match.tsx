@@ -18,24 +18,26 @@ import supabase from '@/utils/supabase/client'
 import { nb } from 'date-fns/locale'
 
 // Simulated function to update the database
-const updateDatabase = async (data: MatchRescheduleData, id: string, isHomeTeam: boolean) => {
+const updateDatabase = async (data: MatchRescheduleData, id: string, isHomeTeam: boolean) =>
+{
   const payload = isHomeTeam
     ? {
-        home_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
-        home_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
-        home_team_agree_reschedule: true,
-      }
+      home_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
+      home_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
+      home_team_agree_reschedule: true,
+    }
     : {
-        away_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
-        away_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
-        away_team_agree_reschedule: true,
-      }
+      away_team_proposed_rescheduled_round_date: format(new Date(data.rescheduled_round_date), 'yyyy-MM-dd'),
+      away_team_proposed_rescheduled_round_startTime: data.rescheduled_round_startTime,
+      away_team_agree_reschedule: true,
+    }
 
   // Simulate a successful update
   await supabase.from('matches').update(payload).eq('id', id)
 }
 
-interface MatchRescheduleData {
+interface MatchRescheduleData
+{
   rescheduled_round_date: Date | string
   rescheduled_round_startTime: string
   proposed_rescheduled_round_date: string | null
@@ -53,8 +55,9 @@ export default function RescheduleMatch({
   matchesFromServer: MatchRecord[]
   teams: SupabaseTeamType[]
   rounds: { round: number; round_date: string }[]
-}) {
-  const [matches, setMatches] = useState(matchesFromServer)
+})
+{
+  const [ matches, setMatches ] = useState(matchesFromServer)
   const { loading, user } = useGetUserData()
   const email = user?.data.user?.email
   const searchParams = useSearchParams()
@@ -63,7 +66,7 @@ export default function RescheduleMatch({
   const homeTeam = teams.find((team) => team.id === match?.home_team_id)
   const awayTeam = teams.find((team) => team.id === match?.away_team_id)
   const isHomeTeam = homeTeam?.contact_person === email
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [ isSubmitting, setIsSubmitting ] = useState(false)
   const form = useForm<MatchRescheduleData>({
     defaultValues: {
       rescheduled_round_date: new Date(match?.rescheduled_round_date || match?.round_date || ''),
@@ -73,7 +76,8 @@ export default function RescheduleMatch({
 
   const roundDate = rounds.find((e) => e.round === match?.round)?.round_date
 
-  const onSubmit = async (data: MatchRescheduleData) => {
+  const onSubmit = async (data: MatchRescheduleData) =>
+  {
     if (!id || !match) return
     setIsSubmitting(true)
     try {
@@ -139,7 +143,8 @@ export default function RescheduleMatch({
     ? match?.home_team_proposed_rescheduled_round_startTime
     : match?.away_team_proposed_rescheduled_round_startTime
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -149,14 +154,16 @@ export default function RescheduleMatch({
           schema: 'public',
           table: 'matches',
         },
-        (payload) => {
+        (payload) =>
+        {
           const updatedData = payload.new as MatchRecord
 
           if (updatedData) {
             supabase
               .from('matches')
               .select('*')
-              .then((res) => {
+              .then((res) =>
+              {
                 setMatches(res.data as MatchRecord[])
               })
           }
@@ -164,7 +171,8 @@ export default function RescheduleMatch({
       )
       .subscribe()
 
-    return () => {
+    return () =>
+    {
       supabase.removeChannel(channel)
     }
   }, [])
@@ -196,25 +204,27 @@ export default function RescheduleMatch({
             </p>
           </div>
           <Button
-            onClick={async () => {
+            onClick={async () =>
+            {
               //remove proposed reschedule
               const payload = isHomeTeam
                 ? {
-                    home_team_proposed_rescheduled_round_date: null,
-                    home_team_proposed_rescheduled_round_startTime: null,
-                    home_team_agree_reschedule: false,
-                  }
+                  home_team_proposed_rescheduled_round_date: null,
+                  home_team_proposed_rescheduled_round_startTime: null,
+                  home_team_agree_reschedule: false,
+                }
                 : {
-                    away_team_proposed_rescheduled_round_date: null,
-                    away_team_proposed_rescheduled_round_startTime: null,
-                    away_team_agree_reschedule: false,
-                  }
+                  away_team_proposed_rescheduled_round_date: null,
+                  away_team_proposed_rescheduled_round_startTime: null,
+                  away_team_agree_reschedule: false,
+                }
 
               await supabase
                 .from('matches')
                 .update(payload)
                 .eq('id', id)
-                .then(() => {
+                .then(() =>
+                {
                   toast({
                     title: 'Forespørsel avbrutt',
                     description: 'Forespørselen om å endre kampdato er avbrutt.',
@@ -258,7 +268,7 @@ export default function RescheduleMatch({
             title="Viktig info"
             description="Om du sender inn en forespørsel om å endre kampdato, må motstanderlaget godkjenne forespørselen før endringen blir gjeldende."
           />
-          <div className="mt-8 p-6 bg-[#07527d47] text-white rounded-lg shadow-md mb-10">
+          <div className="mt-8 p-6 bg-gray-800 text-white rounded-lg shadow-md mb-10">
             <h1 className="text-2xl font-bold mb-2">Forespørsel om å flytte kamp</h1>
             <h2 className="text-xl mb-4">
               {homeTeam?.name} vs {awayTeam?.name} (runde {match?.round})
@@ -277,7 +287,7 @@ export default function RescheduleMatch({
                             <Button
                               variant={'outline'}
                               className={cn(
-                                'w-full pl-3 text-left font-normal bg-[#011624] border-white',
+                                'w-full pl-3 text-left font-normal bg-gray-600  border-white',
                                 !field.value && 'text-gray-400',
                               )}
                             >
@@ -294,6 +304,7 @@ export default function RescheduleMatch({
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
+                            className=''
                             fromDate={new Date(roundDate || '')}
                             //to date should be new date() + 6 days
                             toDate={
@@ -329,7 +340,7 @@ export default function RescheduleMatch({
                         <input
                           disabled={loading}
                           type="time"
-                          className="flex h-10  rounded-md border border-input bg-[#011624] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex h-10  rounded-md border border-input bg-gray-600 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           {...field}
                         />
                       </FormControl>
@@ -340,7 +351,7 @@ export default function RescheduleMatch({
 
                 <Button
                   type="submit"
-                  className="w-full bg-white text-[#011624] hover:bg-gray-200 transition-colors"
+                  className="w-full bg-yellow-500 text-[#011624] hover:bg-gray-200 transition-colors"
                   disabled={loading || isSubmitting}
                 >
                   {isSubmitting ? 'Rescheduling...' : 'Foreslå ny kampdato'}
