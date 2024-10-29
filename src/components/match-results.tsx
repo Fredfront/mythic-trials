@@ -201,7 +201,7 @@ export function MatchResultsComponent({
       const response = res as TMatchResults[]
       setMyMatchResults(response.find((e) => e.contact_person === contact_person && e.round === round) || null)
     })
-  }, [ round, contact_person ])
+  }, [ round, contact_person, email ])
 
   useEffect(() =>
   {
@@ -227,7 +227,7 @@ export function MatchResultsComponent({
     ) {
       return router.push('/my-matches')
     }
-  }, [ myPickAndBansTable, loading, homeTeamToSlug, awayTeamToSlug ])
+  }, [ myPickAndBansTable, loading, homeTeamToSlug, awayTeamToSlug, router ])
 
   useEffect(() =>
   {

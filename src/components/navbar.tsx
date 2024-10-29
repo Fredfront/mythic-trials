@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Menu, X, User, LogOut, Edit, Gamepad, Users, Bug } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import supabase from '@/utils/supabase/client'
@@ -50,18 +50,18 @@ const NavBar = ({
     }
   }, [ team, myTeam ])
 
-  async function updateTeam()
+  const updateTeam = useCallback(async () =>
   {
     if (team?.approved_in_sanity === true || !mySanityTeam || !team || loading) return
     if (team?.approved_in_sanity === false && mySanityTeam) {
       await supabase.from('teams').update({ approved_in_sanity: true }).eq('id', team.id)
     }
-  }
+  }, [ mySanityTeam, team, loading ])
 
   useEffect(() =>
   {
     updateTeam()
-  }, [ mySanityTeam, team, loading ])
+  }, [ mySanityTeam, team, loading, updateTeam ])
 
   const toggleMenu = () =>
   {

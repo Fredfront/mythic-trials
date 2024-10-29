@@ -578,9 +578,9 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                     setClaimedWin(true)
                                   })
                               }}>Claim win</Button>}
-                              {!myMatchResultsAreClaimed && twentyFourHoursAfterGame && myMatchResultsAreConfirmed && claimedWin !== true && <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Info /> Det er gått mer enn 24t siden kampen var over og motstander har ikke lagt inn resultat for kamp. Du kan velge å "Claime" seieren.</div>}
-                              {myMatchResultsAreClaimed && !claimedWin ? <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Check /> Du har "claimet" seieren for denne kampen. Resultatene vil bli oppdatert om litt.</div> : null}
-                              {claimedWin === true && myMatchResultsAreClaimed !== true ? <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Check /> Du har "claimet" seieren for denne kampen. Resultatene vil bli oppdatert om litt.</div> : null}
+                              {!myMatchResultsAreClaimed && twentyFourHoursAfterGame && myMatchResultsAreConfirmed && claimedWin !== true && <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Info /> Det er gått mer enn 24t siden kampen var over og motstander har ikke lagt inn resultat for kamp. Du kan velge å Claime seieren.</div>}
+                              {myMatchResultsAreClaimed && !claimedWin ? <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Check /> Du har claimet seieren for denne kampen. Resultatene vil bli oppdatert om litt.</div> : null}
+                              {claimedWin === true && myMatchResultsAreClaimed !== true ? <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Check /> Du har claimet seieren for denne kampen. Resultatene vil bli oppdatert om litt.</div> : null}
                             </div>
                           </div>
                         )

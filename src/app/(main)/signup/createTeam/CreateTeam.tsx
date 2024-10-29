@@ -53,7 +53,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[], s
       setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === 0 ? { ...player, discordName: discordUsername } : player))
       )
     }
-  }, [ discordUsername ])
+  }, [ discordUsername, players ])
 
 
 
@@ -266,7 +266,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[], s
     }
   }
 
-  const createMythicPlusTeam = async () =>
+  const createMythicPlusTeam = useCallback(async () =>
   {
     setLoadingCreateTeam(true)
 
@@ -342,7 +342,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[], s
           .insert([ { name: teamName, contact_person: userEmail, team_slug: teamSlug, discord_username: discordUsername } ])
       }
     }
-  }
+  }, [ discordUsername, players, router, supabaseTeams, teamName, teamSlug, uploadedImage?.data?.document?._id, userEmail ])
 
   useEffect(() =>
   {
