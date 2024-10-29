@@ -27,35 +27,39 @@ function PickBanV2({
   pickAndBansTable: PickAndBansType[]
   contact_person: string
   sanityTeamData: MythicPlusTeam[]
-}) {
-  const homeTeam = matchData.teams[0].team_slug
-  const awayTeam = matchData.teams[1].team_slug
-  const matchUUID = `${matchData.teams?.[0].team_slug}-${matchData.teams?.[1].team_slug}-round-${matchData.teams?.[0].round}-roundDate-${matchData.teams?.[0].roundDate}`
+})
+{
+  const homeTeam = matchData.teams[ 0 ].team_slug
+  const awayTeam = matchData.teams[ 1 ].team_slug
+  const matchUUID = `${matchData.teams?.[ 0 ].team_slug}-${matchData.teams?.[ 1 ].team_slug}-round-${matchData.teams?.[ 0 ].round}`
   const { user } = useGetUserData()
   const email = user?.data.user?.email
-  const round = matchData?.teams[0]?.round
+  const round = matchData?.teams[ 0 ]?.round
   const opponentTeam = matchData.opponent
   const myPickAndBansTable = pickAndBansTable.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBansTable.find((e) => e.team_slug === opponentTeam && e.round === round)
-  const [myTeamData, setMyTeamData] = useState<PickAndBansType | undefined>(myPickAndBansTable)
-  const [opponentData, setOpponentData] = useState<PickAndBansType | undefined>(opponentPickAndBansTable)
-  const [teamReady, setTeamReady] = useState(!!myPickAndBansTable?.ready)
-  const [opponentReady, setOpponentReady] = useState(!!opponentData?.ready)
+  const [ myTeamData, setMyTeamData ] = useState<PickAndBansType | undefined>(myPickAndBansTable)
+  const [ opponentData, setOpponentData ] = useState<PickAndBansType | undefined>(opponentPickAndBansTable)
+  const [ teamReady, setTeamReady ] = useState(!!myPickAndBansTable?.ready)
+  const [ opponentReady, setOpponentReady ] = useState(!!opponentData?.ready)
   const isMyTurn = myTeamData?.my_turn === true
   const myTeamSlug = matchData.myTeam
   const isHomeTeam = myPickAndBansTable?.home === true
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     setOpponentReady(opponentData?.ready === true ? true : false)
-  }, [opponentData?.ready])
+  }, [ opponentData?.ready ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (myTeamData?.ready && teamReady === false) {
       setTeamReady(true)
     }
-  }, [myTeamData?.ready, teamReady])
+  }, [ myTeamData?.ready, teamReady ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (!email || !round || !myTeamSlug || !opponentTeam) return
     createPickBanRowIfNotExist({
       email,
@@ -65,43 +69,54 @@ function PickBanV2({
       home: isHomeTeam,
       matchUUID: matchUUID,
     })
-  }, [email, isHomeTeam, myTeamSlug, opponentTeam, round, matchUUID])
+  }, [ email, isHomeTeam, myTeamSlug, opponentTeam, round, matchUUID ])
 
-  useEffect(() => {
-    async function fetchData() {
+  useEffect(() =>
+  {
+    async function fetchData()
+    {
       if (!contact_person || !round) return
       await supabase
         .from('pick_ban')
         .select()
         .eq('contact_person', contact_person)
         .eq('round', round)
-        .then((res) => {
+        .then((res) =>
+        {
           if (res.data && res.data.length > 0) {
-            setMyTeamData(res.data[0])
+            setMyTeamData(res.data[ 0 ])
           }
         })
     }
     fetchData()
-  }, [contact_person, round])
+  }, [ contact_person, round ])
 
-  useEffect(() => {
-    async function fetchData() {
+  useEffect(() =>
+  {
+    if (!email) return
+
+    async function fetchData()
+    {
       if (!opponentTeam || !round) return
       await supabase
         .from('pick_ban')
         .select()
         .eq('team_slug', opponentTeam)
         .eq('round', round)
-        .then((res) => {
+        .then((res) =>
+        {
           if (res.data && res.data.length > 0) {
-            setOpponentData(res.data[0])
+            setOpponentData(res.data[ 0 ])
           }
         })
     }
     fetchData()
-  }, [opponentTeam, round])
+  }, [ opponentTeam, round, email ])
 
-  async function setReady() {
+  async function setReady()
+  {
+    if (!email) return
+
     if (!contact_person || !round) return
     await supabase
       .from('pick_ban')
@@ -111,7 +126,10 @@ function PickBanV2({
       .then(() => setTeamReady(!teamReady))
   }
 
-  async function setPickedDungeon(dungeon: number) {
+  async function setPickedDungeon(dungeon: number)
+  {
+    if (!email) return
+
     if (!contact_person || !round) return
     await supabase
       .from('pick_ban')
@@ -120,15 +138,17 @@ function PickBanV2({
       .eq('round', round)
   }
 
-  const setCompleted = useCallback(async () => {
+  const setCompleted = useCallback(async () =>
+  {
     if (!contact_person || !round) return
     await supabase.from('pick_ban').update({ completed: true }).eq('contact_person', contact_person).eq('round', round)
-  }, [contact_person, round])
+  }, [ contact_person, round ])
 
-  async function setBannedDungeons(dungeon: number) {
+  async function setBannedDungeons(dungeon: number)
+  {
     if (!contact_person || !round) return
     const existingBans = myTeamData?.bans || []
-    const newBans = [...existingBans, dungeon]
+    const newBans = [ ...existingBans, dungeon ]
     await supabase
       .from('pick_ban')
       .update({ bans: newBans, my_turn: false })
@@ -136,10 +156,10 @@ function PickBanV2({
       .eq('round', round)
   }
 
-  const pickedDungeons = [myTeamData?.pick, opponentData?.pick].filter(Boolean) as number[]
+  const pickedDungeons = [ myTeamData?.pick, opponentData?.pick ].filter(Boolean) as number[]
   const bannedDungeons = useMemo(
-    () => [...(myTeamData?.bans || []), ...(opponentData?.bans || [])],
-    [myTeamData?.bans, opponentData?.bans],
+    () => [ ...(myTeamData?.bans || []), ...(opponentData?.bans || []) ],
+    [ myTeamData?.bans, opponentData?.bans ],
   )
 
   const stepOrderPickAndBan = [
@@ -152,16 +172,20 @@ function PickBanV2({
     { team: awayTeam, action: 'ban', step: 7 },
   ]
 
-  const updateTurn = useCallback(async () => {
-    if (!contact_person || !round || !opponentData?.step) return
+  const updateTurn = useCallback(async () =>
+  {
+    if (!contact_person || !round || !opponentData?.step || !email) return
     await supabase
       .from('pick_ban')
       .update({ my_turn: true, step: opponentData.step + 1 })
       .eq('contact_person', contact_person)
       .eq('round', round)
-  }, [contact_person, opponentData?.step, round])
+  }, [ contact_person, opponentData?.step, round, email ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
+    if (!email) return
+
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -171,7 +195,8 @@ function PickBanV2({
           schema: 'public',
           table: 'pick_ban',
         },
-        (payload) => {
+        (payload) =>
+        {
           const updatedData = payload.new as PickAndBansType
           if (payload.new.contact_person === contact_person && round === payload.new.round) {
             setMyTeamData(updatedData)
@@ -191,17 +216,19 @@ function PickBanV2({
       )
       .subscribe()
 
-    return () => {
+    return () =>
+    {
       supabase.removeChannel(channel)
     }
-  }, [contact_person, myTeamData, opponentTeam, round, updateTurn])
+  }, [ contact_person, myTeamData, opponentTeam, round, updateTurn, email ])
 
   const completed = useMemo(
     () => myTeamData?.completed === true && opponentData?.completed === true,
-    [myTeamData?.completed, opponentData?.completed],
+    [ myTeamData?.completed, opponentData?.completed ],
   )
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (
       myTeamData?.completed === false &&
       bannedDungeons &&
@@ -211,35 +238,38 @@ function PickBanV2({
     ) {
       setCompleted()
     }
-  }, [bannedDungeons, myTeamData?.completed, pickedDungeons, setCompleted])
+  }, [ bannedDungeons, myTeamData?.completed, pickedDungeons, setCompleted ])
 
-  const getDungeonStatus = (dungeonId: number) => {
+  const getDungeonStatus = (dungeonId: number) =>
+  {
     if (pickedDungeons.includes(dungeonId)) return 'picked'
     if (bannedDungeons.includes(dungeonId)) return 'banned'
     return 'available'
   }
 
-  const getButtonLabel = (dungeonId: number) => {
+  const getButtonLabel = (dungeonId: number) =>
+  {
     if (myTeamData?.step === undefined) return
     const status = getDungeonStatus(dungeonId)
     if (status === 'picked') return 'Picked'
     if (status === 'banned') return 'Banned'
-    return stepOrderPickAndBan[myTeamData?.step - 1]?.action === 'pick' ? 'Pick' : 'Ban'
+    return stepOrderPickAndBan[ myTeamData?.step - 1 ]?.action === 'pick' ? 'Pick' : 'Ban'
   }
 
-  const getTiebreaker = () => {
+  const getTiebreaker = () =>
+  {
     return dungeonConfig.find((dungeon) => !pickedDungeons.includes(dungeon.id) && !bannedDungeons.includes(dungeon.id))
   }
 
-  if (!round || !homeTeam || !awayTeam) {
+  if (!round || !homeTeam || !awayTeam || !email) {
     return <div className="container mx-auto p-4 text-center">Loading match data...</div>
   }
 
   if (!teamReady || !opponentReady) {
     return (
       <ReadyScreen
-        homeTeam={matchData.teams[0].team_slug}
-        awayTeam={matchData.teams[1].team_slug}
+        homeTeam={matchData.teams[ 0 ].team_slug}
+        awayTeam={matchData.teams[ 1 ].team_slug}
         round={round}
         opponentReady={opponentReady}
         setReady={setReady}
@@ -257,7 +287,8 @@ function PickBanV2({
         homeTeam={homeTeam}
         matchData={matchData}
         pickedDungeons={[
-          ...pickedDungeons.map((id) => {
+          ...pickedDungeons.map((id) =>
+          {
             const dungeon = dungeonConfig.find((d) => d.id === id)
             return {
               id: dungeon?.id || 0,
@@ -289,7 +320,7 @@ function PickBanV2({
             className="mr-3 w-8 h-8 rounded-full"
           />
         )}
-        {matchData.teams[0].name} vs {matchData.teams[1].name}{' '}
+        {matchData.teams[ 0 ].name} vs {matchData.teams[ 1 ].name}{' '}
         {sanityTeamData?.find((e) => e.teamSlug === homeTeam)?.teamImage.asset._ref && (
           <Image
             src={
@@ -308,12 +339,13 @@ function PickBanV2({
             <div className="mb-4">
               <p className="text-2xl font-semibold text-center">
                 {isMyTurn
-                  ? `Din tur til å ${stepOrderPickAndBan[myTeamData.step - 1]?.action === 'pick' ? 'velge' : 'banne'}`
+                  ? `Din tur til å ${stepOrderPickAndBan[ myTeamData.step - 1 ]?.action === 'pick' ? 'velge' : 'banne'}`
                   : 'Venter på motstanderens valg'}
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {dungeonConfig.map((dungeon) => {
+              {dungeonConfig.map((dungeon) =>
+              {
                 const status = getDungeonStatus(dungeon.id)
                 return (
                   <Card
@@ -350,9 +382,10 @@ function PickBanV2({
                           {status === 'available' && isMyTurn && (
                             <Button
                               className={`${getButtonLabel(dungeon.id) === 'Pick' ? 'bg-green-500' : 'bg-red-500'}`}
-                              onClick={() => {
+                              onClick={() =>
+                              {
                                 if (isMyTurn && status === 'available') {
-                                  if (stepOrderPickAndBan[myTeamData.step - 1]?.action === 'ban') {
+                                  if (stepOrderPickAndBan[ myTeamData.step - 1 ]?.action === 'ban') {
                                     setBannedDungeons(dungeon.id)
                                   } else {
                                     setPickedDungeon(dungeon.id)
@@ -387,7 +420,8 @@ function PickBanV2({
                   </h3>
                   {pickedDungeons.length > 0 ? (
                     <ul className="list-disc pl-5">
-                      {pickedDungeons.map((id) => {
+                      {pickedDungeons.map((id) =>
+                      {
                         const dungeon = dungeonConfig.find((d) => d.id === id)
                         return <li key={id}>{dungeon ? dungeon.name : 'Unknown dungeon'}</li>
                       })}
@@ -403,7 +437,8 @@ function PickBanV2({
                   </h3>
                   {bannedDungeons.length > 0 ? (
                     <ul className="list-disc pl-5">
-                      {bannedDungeons.map((id) => {
+                      {bannedDungeons.map((id) =>
+                      {
                         const dungeon = dungeonConfig.find((d) => d.id === id)
                         return <li key={id}>{dungeon ? dungeon.name : 'Unknown dungeon'}</li>
                       })}

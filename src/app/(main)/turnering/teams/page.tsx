@@ -5,12 +5,16 @@ import Image from 'next/image'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Scroll, Users } from 'lucide-react'
+import { ServerClient } from '@/utils/supabase/server'
 
 async function Teams()
 {
   const allTeams = await getAllTeams()
+  const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as { create_team_allowed: boolean, edit_team_allowed: boolean, login_allowed: boolean, hide_teams: boolean }[]
+  const showTeams = !featureFlags[ 0 ]?.hide_teams
 
-  if (allTeams && allTeams.length === 0) {
+
+  if (allTeams && allTeams.length === 0 || !showTeams) {
     return (
       <div className="flex justify-center items-center p-4 text-white">
         <Card className="w-full max-w-md text-white">

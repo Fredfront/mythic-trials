@@ -14,10 +14,11 @@ export default async function Template({ children }: { children: React.ReactNode
   const superadmins = (await ServerClient.from('superadmins').select('*')).data as { email: string }[]
   const sanityTeams = await getAllTeams()
   const matches = (await ServerClient.from('matches').select('*')).data as MatchRecord[]
+  const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as { create_team_allowed: boolean, edit_team_allowed: boolean, login_allowed: boolean, hide_teams: boolean }[]
 
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBarV2 sanityTeams={sanityTeams} teams={teams} superadmins={superadmins} matches={matches} />
+      <NavBarV2 sanityTeams={sanityTeams} teams={teams} superadmins={superadmins} matches={matches} featureFlags={featureFlags} />
       <div className="flex-grow">{children}</div>
       <Toaster />
       <Footer />

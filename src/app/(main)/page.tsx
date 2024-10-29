@@ -33,6 +33,9 @@ const Home = async () =>
   const rounds = (await ServerClient.from('rounds').select('*').order('round_date', { ascending: true })
   ).data as RoundType[]
 
+  const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as { create_team_allowed: boolean, edit_team_allowed: boolean, login_allowed: boolean, hide_teams: boolean }[]
+  const showTeams = !featureFlags[ 0 ]?.hide_teams
+
   const showLeaderboard = showLeaderboardData?.[ 0 ]?.enabled
 
   return (
@@ -58,7 +61,7 @@ const Home = async () =>
           </div>
         </div>
         <DraggableRoundCarousel roundsFromDB={rounds ?? []} />
-        {allTeams && allTeams.some((e) => e.teamName) ? (
+        {showTeams && allTeams && allTeams.some((e) => e.teamName) ? (
           <div id="teams" className="  mt-12 bg-[#000F1A] w-full pt-20 pb-20 pr-4 pl-4  ">
             <h3 className={`${LifeCraft.className} text-5xl text-white mb-10 text-center `}>Lagene</h3>
             <div className="hidden md:grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-2 max-w-[1400px] m-auto ">
@@ -80,7 +83,6 @@ const Home = async () =>
                     </React.Fragment>
                   ))}
             </div>
-
             <div className="flex flex-wrap md:hidden  ">
               {allTeams &&
                 allTeams

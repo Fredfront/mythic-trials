@@ -21,7 +21,6 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
   const [ showRightArrow, setShowRightArrow ] = useState(true)
   const [ isDragging, setIsDragging ] = useState(false)
 
-  console.log(roundsFromDB)
 
   const rounds = mapRounds(roundsFromDB)
 

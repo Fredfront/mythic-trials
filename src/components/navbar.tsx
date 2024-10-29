@@ -17,14 +17,20 @@ const NavBar = ({
   teams,
   sanityTeams,
   superadmins,
-  matches
+  matches,
+  featureFlags
 }: {
   teams?: SupabaseTeamType[]
   sanityTeams: MythicPlusTeam[]
   superadmins: { email: string }[]
   matches: MatchRecord[]
+  featureFlags?: { create_team_allowed: boolean, edit_team_allowed: boolean, login_allowed: boolean, hide_teams: boolean }[]
 }) =>
 {
+  const showTeams = featureFlags?.find((e) => e.hide_teams === false)
+  const createTeamAllowed = featureFlags?.find((e) => e.create_team_allowed === true)
+  const editTeamAllowed = featureFlags?.find((e) => e.edit_team_allowed === true)
+  const loginAllowed = featureFlags?.find((e) => e.login_allowed === true)
 
 
   const [ isMenuOpen, setMenuOpen ] = useState(false)
@@ -164,12 +170,12 @@ const NavBar = ({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56 text-white" align="end" forceMount>
-                    {matches && matches.length > 0 && <DropdownMenuItem asChild>
+                    {showTeams && matches && matches.length > 0 && <DropdownMenuItem asChild>
                       <Link href="/my-matches">
                         <Gamepad /> Mine kamper
                       </Link>
                     </DropdownMenuItem>}
-                    {myTeam && (
+                    {editTeamAllowed && myTeam && (
                       <DropdownMenuItem asChild>
                         <Link href={`/signup/existingTeam/${myTeam.team_slug}`}>
                           <Users /> Mitt lag
@@ -196,7 +202,7 @@ const NavBar = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button
+                loginAllowed ? <Button
                   variant="outline"
                   className="hidden lg:flex bg-[#011624] text-white"
                   onClick={async () =>
@@ -209,12 +215,12 @@ const NavBar = ({
                   }
                 >
                   <User className="mr-2 h-4 w-4" /> Logg inn
-                </Button>
+                </Button> : null
               )}
             </>
           )}
 
-          {!myTeam && !loading && (
+          {createTeamAllowed && !myTeam && !loading && (
             <Link href="/signup" prefetch>
               <Button className="bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
                 Påmelding
@@ -261,14 +267,14 @@ const NavBar = ({
                 Superadmin
               </Link>
             )}
-            {!myTeam && (
+            {createTeamAllowed && !myTeam && (
               <Link href="/signup" prefetch onClick={toggleMenu}>
                 <Button className="mt-4 px-6 py-3 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold text-xl hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
                   Påmelding
                 </Button>
               </Link>
             )}
-            {!user?.data.user?.email && (
+            {!user?.data.user?.email && loginAllowed && (
               <Button
                 variant="outline"
                 className="bg-[#011624] text-white mt-4 px-6 py-3"

@@ -36,7 +36,7 @@ export async function createPickBanRow(
       ready: false,
       home,
       step: home ? 2 : 1,
-      matchUUID,
+      match_uuid: matchUUID,
     },
   ])
 }
@@ -51,7 +51,7 @@ type Match_results = {
   match_3?: number | null
   confirm?: boolean
   winner?: boolean
-  matchUUID: string
+  match_uuid: string
 }
 
 export async function create_match_results({ matchResults }: { matchResults: Match_results }) {
@@ -96,8 +96,10 @@ export type TMatchResults = {
   team_slug: string
   confirm: boolean
   winner: boolean
-  matchUUID: string
+  match_uuid: string
   warcraft_logs_report: string[]
+  confirm_unix_timestamp?: number
+  claimed_win?: boolean
 }
 
 export type TTeam = {
@@ -151,24 +153,4 @@ export async function updateMatchResults(contact_person: string, round: number, 
     console.error(error)
     return error
   }
-}
-
-export async function createMatchResultsRow(
-  round: number,
-  contact_person: string,
-  team_slug: string,
-  opponent: string,
-) {
-  await supabase.from('match_results').insert([
-    {
-      contact_person: contact_person,
-      round: round,
-      team_slug: team_slug,
-      opponent: opponent,
-      match_1: null,
-      match_2: null,
-      match_3: null,
-      confirm: false,
-    },
-  ])
 }
