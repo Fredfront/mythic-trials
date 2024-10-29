@@ -8,17 +8,27 @@ import { ServerClient } from '@/utils/supabase/server'
 import { Match, MatchRecord, SupabaseTeamType } from '../../../types'
 import { Toaster } from '@/components/ui/toaster'
 
-export default async function Template({ children }: { children: React.ReactNode })
-{
+export default async function Template({ children }: { children: React.ReactNode }) {
   const teams = (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
   const superadmins = (await ServerClient.from('superadmins').select('*')).data as { email: string }[]
   const sanityTeams = await getAllTeams()
   const matches = (await ServerClient.from('matches').select('*')).data as MatchRecord[]
-  const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as { create_team_allowed: boolean, edit_team_allowed: boolean, login_allowed: boolean, hide_teams: boolean }[]
+  const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as {
+    create_team_allowed: boolean
+    edit_team_allowed: boolean
+    login_allowed: boolean
+    hide_teams: boolean
+  }[]
 
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBarV2 sanityTeams={sanityTeams} teams={teams} superadmins={superadmins} matches={matches} featureFlags={featureFlags} />
+      <NavBarV2
+        sanityTeams={sanityTeams}
+        teams={teams}
+        superadmins={superadmins}
+        matches={matches}
+        featureFlags={featureFlags}
+      />
       <div className="flex-grow">{children}</div>
       <Toaster />
       <Footer />
@@ -26,10 +36,9 @@ export default async function Template({ children }: { children: React.ReactNode
   )
 }
 
-const Footer = async () =>
-{
+const Footer = async () => {
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData && showLeaderboardData[ 0 ] && showLeaderboardData?.[ 0 ]?.enabled
+  const showLeaderboard = showLeaderboardData && showLeaderboardData[0] && showLeaderboardData?.[0]?.enabled
 
   return (
     <footer className="  shadow bg-[#272727]">

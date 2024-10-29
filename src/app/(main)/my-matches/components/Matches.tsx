@@ -12,8 +12,7 @@ import { urlForImage } from '../../../../../sanity/lib/image'
 import PickBanV2 from './matches/PickBanV2'
 import { InfoBoxComponent } from '@/components/info-box'
 import { Match, MatchRecord, Team, TournamentSchedule } from '../../../../../types'
-import
-{
+import {
   create_match_results,
   createPickBanRow,
   PickAndBansType,
@@ -23,33 +22,30 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { createSortedRounds } from '../page'
 import { toast } from '@/hooks/use-toast'
+import { set } from 'lodash'
 
 export function Matches({
   pickAndBansData,
-  matchResults,
+  matchResultsData,
   sanityTeamData,
   schedule,
   teams,
-  rounds,
 }: {
   pickAndBansData: PickAndBansType[]
-  matchResults: TMatchResults[]
+  matchResultsData: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
   schedule: TournamentSchedule
   teams: Team[]
-  rounds: { round: number; round_date: string }[]
-})
-{
+}) {
   const { user, loading } = useGetUserData()
   const email = user?.data.user?.email
   const myTeam = sanityTeamData.find((team) => team.contactPerson === email)
-  const [ matchSchedule, setMatchSchedule ] = React.useState<TournamentSchedule>(schedule)
+  const [matchSchedule, setMatchSchedule] = React.useState<TournamentSchedule>(schedule)
   const router = useRouter()
   const detailedSchedule = matchSchedule
-  const [ claimedWin, setClaimedWin ] = React.useState<boolean>(false)
+  const [matchResults, setMatchResults] = React.useState<TMatchResults[]>(matchResultsData)
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (!teams || loading || user?.data.user?.email === undefined) return
 
     const channel = supabase
@@ -61,15 +57,14 @@ export function Matches({
           schema: 'public',
           table: 'matches',
         },
-        (payload) =>
-        {
+        (payload) => {
           const updatedData = payload.new as MatchRecord[]
           if (updatedData) {
+            console.log(updatedData)
             supabase
               .from('matches')
               .select('*')
-              .then((res) =>
-              {
+              .then((res) => {
                 setMatchSchedule(createSortedRounds(res.data as MatchRecord[], teams))
               })
           }
@@ -77,23 +72,21 @@ export function Matches({
       )
       .subscribe()
 
-    return () =>
-    {
+    return () => {
       channel.unsubscribe()
     }
-  }, [ teams, loading, user?.data.user?.email ])
+  }, [teams, loading, user?.data.user?.email])
 
   type matchDataType = Match & { myTeam: string } & { opponent: string }
 
-  const [ matchData, setMatchData ] = React.useState<matchDataType | null>(null)
+  const [matchData, setMatchData] = React.useState<matchDataType | null>(null)
 
   if (matchData && matchData.teams.length === 2 && email) {
     return (
       <>
         <div
           className="flex gap-1 cursor-pointer hover:font-bold p-2"
-          onClick={() =>
-          {
+          onClick={() => {
             setMatchData(null)
             router.push('/my-matches')
           }}
@@ -119,8 +112,7 @@ export function Matches({
           description="Vennligst vær oppmerksom på at hvis du ikke sender inn kampresultatene dine innen 24 timer etter kampen, vil motstander kunne erklære seier."
         />
 
-        {detailedSchedule.map((round, index) =>
-        {
+        {detailedSchedule.map((round, index) => {
           return (
             <div key={index + round.toString()}>
               <div className="bg-gray-800 p-4 rounded-lg">
@@ -128,13 +120,12 @@ export function Matches({
                   <h2 className="feed-header">Runde {index + 1}</h2>
                   <div className="bg-gray-800 p-4 rounded-lg">
                     <div className="grid grid-cols-1 gap-4 mt-4">
-                      {round.map((match, matchIndex) =>
-                      {
-                        const matchUUID = `${match.teams?.[ 0 ].team_slug}-${match.teams?.[ 1 ].team_slug}-round-${match.teams?.[ 0 ].round}`
-                        const homeTeam = match.teams?.[ 0 ].team_slug
-                        const awayTeam = match.teams?.[ 1 ].team_slug
-                        const homeTeamName = match.teams?.[ 0 ].name
-                        const awayTeamName = match.teams?.[ 1 ].name
+                      {round.map((match, matchIndex) => {
+                        const matchUUID = `${match.teams?.[0].team_slug}-${match.teams?.[1].team_slug}-round-${match.teams?.[0].round}`
+                        const homeTeam = match.teams?.[0].team_slug
+                        const awayTeam = match.teams?.[1].team_slug
+                        const homeTeamName = match.teams?.[0].name
+                        const awayTeamName = match.teams?.[1].name
                         const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage
                           .asset._ref
                         const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage
@@ -161,9 +152,9 @@ export function Matches({
 
                         const confirmedResult =
                           homeTeamMatchResults?.confirm &&
-                            awayTeamMatchResults?.confirm &&
-                            homeTeamMatchResults.round === index + 1 &&
-                            awayTeamMatchResults.round === index + 1
+                          awayTeamMatchResults?.confirm &&
+                          homeTeamMatchResults.round === index + 1 &&
+                          awayTeamMatchResults.round === index + 1
                             ? true
                             : false
 
@@ -188,31 +179,30 @@ export function Matches({
                           pickAndBansData?.find(
                             (e) =>
                               e.round === payloadCreateNewPickBanRow.round &&
-                              payloadCreateNewPickBanRow.contact_person === e.contact_person,
+                              payloadCreateNewPickBanRow.team_slug === myTeam?.teamSlug,
                           )?.completed === true
 
                         const myMatchResultsAreConfirmed =
                           matchResults?.find(
-                            (e) =>
-                              e.contact_person === payloadCreateNewPickBanRow.contact_person &&
-                              e.round === payloadCreateNewPickBanRow.round,
+                            (e) => e.team_slug === myTeam?.teamSlug && e.round === payloadCreateNewPickBanRow.round,
                           )?.confirm === true
 
-                        const myMatchResultsAreClaimed = matchResults?.find(
-                          (e) =>
-                            e.contact_person === payloadCreateNewPickBanRow.contact_person &&
-                            e.round === payloadCreateNewPickBanRow.round,
-                        )?.claimed_win === true
+                        const myMatchResultsAreClaimed =
+                          matchResults?.find(
+                            (e) =>
+                              e.team_slug === payloadCreateNewPickBanRow.team_slug &&
+                              e.round === payloadCreateNewPickBanRow.round,
+                          )?.claimed_win === true
 
-                        const opponentMatchResultsAreConfirmed = matchResults?.find(
-                          (e) =>
-                            e.match_uuid === matchUUID && e.contact_person !== email,
-                        )?.confirm === true
+                        const opponentMatchResultsAreConfirmed =
+                          matchResults?.find((e) => e.match_uuid === matchUUID && e.team_slug !== myTeam?.teamSlug)
+                            ?.confirm === true
+
                         const matchResultsAreConfirmed = myMatchResultsAreConfirmed && opponentMatchResultsAreConfirmed
-                        const matchDate = match.teams[ 0 ].roundDate
-                        const matchStartTime = match.teams[ 0 ].round_startTime
-                        const rescheduledDate = match.teams[ 0 ].rescheduled_round_date
-                        const rescheduledStartTime = match.teams[ 0 ].rescheduled_round_startTime
+                        const matchDate = match.teams[0].roundDate
+                        const matchStartTime = match.teams[0].round_startTime
+                        const rescheduledDate = match.teams[0].rescheduled_round_date
+                        const rescheduledStartTime = match.teams[0].rescheduled_round_startTime
 
                         //Convert to Oslo time and to a readable format
                         const matchDateTime = new Date(`${matchDate}T${matchStartTime}Z`)
@@ -228,29 +218,29 @@ export function Matches({
                           dateStyle: 'medium',
                           timeStyle: 'short',
                         })
-                        const hasRescheduled = match.teams[ 0 ].rescheduled
+                        const hasRescheduled = match.teams[0].rescheduled
 
                         const homeTeamRequestedReschedule =
-                          match.teams[ 0 ].home_team_proposed_rescheduled_round_date &&
-                            match.teams[ 0 ].home_team_proposed_rescheduled_round_startTime
+                          match.teams[0].home_team_proposed_rescheduled_round_date &&
+                          match.teams[0].home_team_proposed_rescheduled_round_startTime
                             ? true
                             : false
 
                         const awayTeamRequestedReschedule =
-                          match.teams[ 1 ].away_team_proposed_rescheduled_round_date &&
-                            match.teams[ 1 ].away_team_proposed_rescheduled_round_startTime
+                          match.teams[1].away_team_proposed_rescheduled_round_date &&
+                          match.teams[1].away_team_proposed_rescheduled_round_startTime
                             ? true
                             : false
 
                         const showNotificationAwayTeam =
-                          homeTeamRequestedReschedule && match.teams[ 0 ].contactPerson !== email
+                          homeTeamRequestedReschedule && match.teams[0].contactPerson !== email
                         const showNotificationHomeTeam =
-                          awayTeamRequestedReschedule && match.teams[ 1 ].contactPerson !== email
+                          awayTeamRequestedReschedule && match.teams[1].contactPerson !== email
 
                         const proposedRescheduledDateTime = new Date(
                           homeTeamRequestedReschedule
-                            ? `${match.teams[ 0 ].home_team_proposed_rescheduled_round_date}T${match.teams[ 0 ].home_team_proposed_rescheduled_round_startTime}Z`
-                            : `${match.teams[ 1 ].away_team_proposed_rescheduled_round_date}T${match.teams[ 1 ].away_team_proposed_rescheduled_round_startTime}Z`,
+                            ? `${match.teams[0].home_team_proposed_rescheduled_round_date}T${match.teams[0].home_team_proposed_rescheduled_round_startTime}Z`
+                            : `${match.teams[1].away_team_proposed_rescheduled_round_date}T${match.teams[1].away_team_proposed_rescheduled_round_startTime}Z`,
                         )
                         const proposedRescheduledDateTimeString = proposedRescheduledDateTime.toLocaleString('nb-NO', {
                           timeZone: 'UTC',
@@ -258,20 +248,22 @@ export function Matches({
                           timeStyle: 'short',
                         })
 
-                        const matchPlayTime = parseDateString(hasRescheduled ? rescheduledDateTimeString : matchDateTimeString);
+                        const matchPlayTime = parseDateString(
+                          hasRescheduled ? rescheduledDateTimeString : matchDateTimeString,
+                        )
 
                         // Calculate 24 hours after match time
-                        const matchPlayTimePlusTwentyFourHours = matchPlayTime.getTime() + 86400000;
-                        const twentyFourHoursAfterGame = new Date().getTime() > matchPlayTimePlusTwentyFourHours;
+                        const matchPlayTimePlusTwentyFourHours = matchPlayTime.getTime() + 86400000
+                        const twentyFourHoursAfterGame = new Date().getTime() > matchPlayTimePlusTwentyFourHours
 
-                        console.log("24 hours after game:", twentyFourHoursAfterGame);
+                        console.log('24 hours after game:', twentyFourHoursAfterGame)
 
                         const showPickBanButtonOneWeekBeforeRound =
                           new Date(matchPlayTime).getTime() - new Date().getTime() < 604800000
 
                         const showNotification = showNotificationAwayTeam || showNotificationHomeTeam
 
-                        if (match.teams?.[ 0 ].contactPerson !== email && match.teams?.[ 1 ].contactPerson !== email) {
+                        if (match.teams?.[0].contactPerson !== email && match.teams?.[1].contactPerson !== email) {
                           return null
                         }
 
@@ -283,7 +275,7 @@ export function Matches({
                                   <div className="flex gap-2">
                                     <Clock />
                                     <div className="">
-                                      <b>{homeTeamRequestedReschedule ? match.teams[ 0 ].name : match.teams[ 1 ].name} </b>{' '}
+                                      <b>{homeTeamRequestedReschedule ? match.teams[0].name : match.teams[1].name} </b>{' '}
                                       har foreslått ny tid for kampen.
                                     </div>
                                   </div>
@@ -291,32 +283,31 @@ export function Matches({
                                 </div>
                                 <div className="flex mt-4 gap-4">
                                   <Button
-                                    onClick={async () =>
-                                    {
+                                    onClick={async () => {
                                       const payload = homeTeamRequestedReschedule
                                         ? {
-                                          home_team_proposed_rescheduled_round_date: null,
-                                          home_team_proposed_rescheduled_round_startTime: null,
-                                          rescheduled_round_startTime:
-                                            match.teams[ 0 ].home_team_proposed_rescheduled_round_startTime,
-                                          rescheduled_round_date:
-                                            match.teams[ 0 ].home_team_proposed_rescheduled_round_date,
-                                          rescheduled: true,
-                                          away_team_agree_reschedule: false,
-                                          home_team_agree_reschedule: false,
-                                        }
+                                            home_team_proposed_rescheduled_round_date: null,
+                                            home_team_proposed_rescheduled_round_startTime: null,
+                                            rescheduled_round_startTime:
+                                              match.teams[0].home_team_proposed_rescheduled_round_startTime,
+                                            rescheduled_round_date:
+                                              match.teams[0].home_team_proposed_rescheduled_round_date,
+                                            rescheduled: true,
+                                            away_team_agree_reschedule: false,
+                                            home_team_agree_reschedule: false,
+                                          }
                                         : {
-                                          away_team_proposed_rescheduled_round_date: null,
-                                          away_team_proposed_rescheduled_round_startTime: null,
-                                          rescheduled_round_startTime:
-                                            match.teams[ 1 ].away_team_proposed_rescheduled_round_startTime,
-                                          rescheduled_round_date:
-                                            match.teams[ 1 ].away_team_proposed_rescheduled_round_date,
-                                          rescheduled: true,
-                                          home_team_agree_reschedule: false,
-                                          away_team_agree_reschedule: false,
-                                        }
-                                      await supabase.from('matches').update(payload).eq('id', match.teams[ 0 ].id)
+                                            away_team_proposed_rescheduled_round_date: null,
+                                            away_team_proposed_rescheduled_round_startTime: null,
+                                            rescheduled_round_startTime:
+                                              match.teams[1].away_team_proposed_rescheduled_round_startTime,
+                                            rescheduled_round_date:
+                                              match.teams[1].away_team_proposed_rescheduled_round_date,
+                                            rescheduled: true,
+                                            home_team_agree_reschedule: false,
+                                            away_team_agree_reschedule: false,
+                                          }
+                                      await supabase.from('matches').update(payload).eq('id', match.teams[0].id)
 
                                       //send discord message
                                       const channelName = `${homeTeam}-vs-${awayTeam}`
@@ -350,20 +341,19 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                     <Check /> Godta ny kampttid
                                   </Button>{' '}
                                   <Button
-                                    onClick={async () =>
-                                    {
+                                    onClick={async () => {
                                       const payload = homeTeamRequestedReschedule
                                         ? {
-                                          home_team_proposed_rescheduled_round_date: null,
-                                          home_team_proposed_rescheduled_round_startTime: null,
-                                          home_team_agree_reschedule: false,
-                                        }
+                                            home_team_proposed_rescheduled_round_date: null,
+                                            home_team_proposed_rescheduled_round_startTime: null,
+                                            home_team_agree_reschedule: false,
+                                          }
                                         : {
-                                          away_team_proposed_rescheduled_round_date: null,
-                                          away_team_proposed_rescheduled_round_startTime: null,
-                                          away_team_agree_reschedule: false,
-                                        }
-                                      await supabase.from('matches').update(payload).eq('id', match.teams[ 0 ].id)
+                                            away_team_proposed_rescheduled_round_date: null,
+                                            away_team_proposed_rescheduled_round_startTime: null,
+                                            away_team_agree_reschedule: false,
+                                          }
+                                      await supabase.from('matches').update(payload).eq('id', match.teams[0].id)
 
                                       //send discord message
                                       const channelName = `${homeTeam}-vs-${awayTeam}`
@@ -485,16 +475,14 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                               {!pickBanCompleted && showPickBanButtonOneWeekBeforeRound ? (
                                 <Button
                                   className="bg-[#011624] text-white"
-                                  onClick={async () =>
-                                  {
+                                  onClick={async () => {
                                     if (email) {
                                       await supabase
                                         .from('pick_ban')
                                         .select('*')
                                         .eq('contact_person', email)
-                                        .eq('round', match.teams?.[ 0 ].round)
-                                        .then((res) =>
-                                        {
+                                        .eq('round', match.teams?.[0].round)
+                                        .then((res) => {
                                           if (res.data && res.data.length === 0) {
                                             createPickBanRow(
                                               payloadCreateNewPickBanRow.round,
@@ -519,7 +507,7 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                 </Button>
                               ) : null}
                               {myMatchResultsAreConfirmed || opponentMatchResultsAreConfirmed ? null : (
-                                <Link href={`/my-matches/reschedule?id=${match.teams[ 0 ].id}`}>
+                                <Link href={`/my-matches/reschedule?id=${match.teams[0].id}`}>
                                   <Button className="bg-[#011624] text-white">
                                     <Clock /> Foreslå ny kamptid
                                   </Button>{' '}
@@ -528,36 +516,33 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                               {!twentyFourHoursAfterGame && pickBanCompleted && !matchResultsAreConfirmed ? (
                                 <Button
                                   className="bg-[#011624] text-white"
-                                  onClick={async () =>
-                                  {
+                                  onClick={async () => {
                                     await supabase
                                       .from('match_results')
                                       .select('*')
                                       .eq('contact_person', email)
-                                      .eq('round', match.teams[ 0 ].round)
-                                      .then((res) =>
-                                      {
+                                      .eq('round', match.teams[0].round)
+                                      .then((res) => {
                                         if (res.data && res.data.length === 0) {
                                           create_match_results({
                                             matchResults: {
                                               contact_person: email as string,
                                               opponent: myTeam?.teamSlug === homeTeam ? awayTeam : homeTeam,
-                                              round: match.teams[ 0 ].round,
+                                              round: match.teams[0].round,
                                               team_slug: myTeam?.teamSlug as string,
                                               match_uuid: matchUUID,
                                             },
                                           })
                                         }
                                       })
-                                      .then(() =>
-                                      {
+                                      .then(() => {
                                         router.push(
                                           '/my-matches/results?home=' +
-                                          match.teams[ 0 ].team_slug +
-                                          '&away=' +
-                                          match.teams[ 1 ].team_slug +
-                                          '&round=' +
-                                          match.teams[ 0 ].round,
+                                            match.teams[0].team_slug +
+                                            '&away=' +
+                                            match.teams[1].team_slug +
+                                            '&round=' +
+                                            match.teams[0].round,
                                         )
                                       })
                                   }}
@@ -565,22 +550,28 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                   {myMatchResultsAreConfirmed ? 'Endre mine resultat' : 'Legg til resultat'}
                                 </Button>
                               ) : null}
-                              {!myMatchResultsAreClaimed && twentyFourHoursAfterGame && myMatchResultsAreConfirmed && opponentMatchResultsAreConfirmed !== true && claimedWin !== true && <Button onClick={async () =>
-                              {
-                                await supabase
-                                  .from('match_results')
-                                  .update({ claimed_win: true, match_1: 1, match_2: 1, match_3: null, winner: true })
-                                  .eq('contact_person', myTeam?.contactPerson)
-                                  .eq('round', match.teams[ 0 ].round)
-                                  .eq('team_slug', myTeam?.teamSlug)
-                                  .eq('match_uuid', matchUUID).then(() =>
-                                  {
-                                    setClaimedWin(true)
-                                  })
-                              }}>Claim win</Button>}
-                              {!myMatchResultsAreClaimed && twentyFourHoursAfterGame && myMatchResultsAreConfirmed && claimedWin !== true && <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Info /> Det er gått mer enn 24t siden kampen var over og motstander har ikke lagt inn resultat for kamp. Du kan velge å Claime seieren.</div>}
-                              {myMatchResultsAreClaimed && !claimedWin ? <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Check /> Du har claimet seieren for denne kampen. Resultatene vil bli oppdatert om litt.</div> : null}
-                              {claimedWin === true && myMatchResultsAreClaimed !== true ? <div className='w-full bg-gray-700 p-4 rounded-lg flex gap-4'><Check /> Du har claimet seieren for denne kampen. Resultatene vil bli oppdatert om litt.</div> : null}
+                              {!myMatchResultsAreClaimed &&
+                                twentyFourHoursAfterGame &&
+                                myMatchResultsAreConfirmed &&
+                                opponentMatchResultsAreConfirmed !== true && (
+                                  <Button
+                                    onClick={async () => {
+                                      handleClaimWin({
+                                        contact_person: email,
+                                        round: match.teams[0].round,
+                                        match_uuid: matchUUID,
+                                        opponent: myTeam?.teamSlug === homeTeam ? awayTeam : homeTeam,
+                                        team_slug: myTeam?.teamSlug as string,
+                                      }).then((res) => {
+                                        if (res) {
+                                          setMatchResults(res)
+                                        }
+                                      })
+                                    }}
+                                  >
+                                    Claim win
+                                  </Button>
+                                )}
                             </div>
                           </div>
                         )
@@ -597,28 +588,70 @@ Ny tid: ${proposedRescheduledDateTimeString} `
   )
 }
 
+function parseDateString(dateStr: string): Date {
+  const months: { [key: string]: number } = {
+    jan: 0,
+    feb: 1,
+    mar: 2,
+    apr: 3,
+    mai: 4,
+    jun: 5,
+    jul: 6,
+    aug: 7,
+    sep: 8,
+    okt: 9,
+    nov: 10,
+    des: 11,
+  }
 
+  const [day, monthStr, year, time] = dateStr.split(/[.,\s]+/)
+  const [hour, minute] = time.split(':')
 
-function parseDateString(dateStr: string): Date
-{
-  const months: { [ key: string ]: number } = {
-    "jan": 0, "feb": 1, "mar": 2, "apr": 3, "mai": 4, "jun": 5,
-    "jul": 6, "aug": 7, "sep": 8, "okt": 9, "nov": 10, "des": 11
-  };
-
-  const [ day, monthStr, year, time ] = dateStr.split(/[.,\s]+/);
-  const [ hour, minute ] = time.split(":");
-
-  const month = months[ monthStr.toLowerCase() ];
+  const month = months[monthStr.toLowerCase()]
   if (month === undefined) {
-    throw new Error(`Invalid month string: ${monthStr}`);
+    throw new Error(`Invalid month string: ${monthStr}`)
   }
 
   // Parse strings to numbers
-  const dayNum = parseInt(day, 10);
-  const yearNum = parseInt(year, 10);
-  const hourNum = parseInt(hour, 10);
-  const minuteNum = parseInt(minute, 10);
+  const dayNum = parseInt(day, 10)
+  const yearNum = parseInt(year, 10)
+  const hourNum = parseInt(hour, 10)
+  const minuteNum = parseInt(minute, 10)
 
-  return new Date(yearNum, month, dayNum, hourNum, minuteNum);
+  return new Date(yearNum, month, dayNum, hourNum, minuteNum)
+}
+
+const handleClaimWin = async ({
+  contact_person,
+  round,
+  match_uuid,
+  opponent,
+  team_slug,
+}: {
+  contact_person: string
+  round: number
+  match_uuid: string
+  opponent: string
+  team_slug: string
+}) => {
+  try {
+    const response = await fetch('/api/supabase/claim-win', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contact_person, round, match_uuid, opponent: opponent, team_slug }),
+    })
+
+    const result = await response.json()
+
+    if (result.error) {
+      console.error('Error claiming win:', result.error)
+      return null
+    }
+
+    console.log(result.data)
+
+    return result.data
+  } catch (error) {
+    console.log('Error:', error)
+  }
 }

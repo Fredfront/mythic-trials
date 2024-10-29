@@ -10,10 +10,9 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { TracingBeam } from '@/components/ui/tracing-beam'
 
-const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; children: React.ReactNode }) =>
-{
+const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; children: React.ReactNode }) => {
   const pathname = usePathname()
-  const [ isOpen, setIsOpen ] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const menuItems = [
     { href: '/turnering', icon: Calendar, label: 'Kamper' },
@@ -28,8 +27,9 @@ const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; ch
         <li key={item.href}>
           <Link href={item.href}>
             <span
-              className={`flex items-center gap-4 hover:font-bold cursor-pointer ${pathname === item.href ? 'text-[#FDB202] font-bold' : 'text-white'
-                }`}
+              className={`flex items-center gap-4 hover:font-bold cursor-pointer ${
+                pathname === item.href ? 'text-[#FDB202] font-bold' : 'text-white'
+              }`}
             >
               <item.icon className="h-6 w-6" />
               {item.label}

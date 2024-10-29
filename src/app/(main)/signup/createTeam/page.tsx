@@ -3,10 +3,9 @@ import CreateTeam from './CreateTeam'
 import { ServerClient } from '@/utils/supabase/server'
 import { SupabaseTeamType } from '../../../../../types'
 
-const page = async () =>
-{
+const page = async () => {
   const allTeams = await getAllTeams()
-  const teams = await (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
+  const teams = (await (await ServerClient.from('teams').select('*')).data) as SupabaseTeamType[]
 
   if (!allTeams) return null
 

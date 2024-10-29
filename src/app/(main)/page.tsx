@@ -24,19 +24,23 @@ export const revalidate = 0
 
 const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
-const Home = async () =>
-{
+const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
-  const rounds = (await ServerClient.from('rounds').select('*').order('round_date', { ascending: true })
-  ).data as RoundType[]
+  const rounds = (await ServerClient.from('rounds').select('*').order('round_date', { ascending: true }))
+    .data as RoundType[]
 
-  const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as { create_team_allowed: boolean, edit_team_allowed: boolean, login_allowed: boolean, hide_teams: boolean }[]
-  const showTeams = !featureFlags[ 0 ]?.hide_teams
+  const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as {
+    create_team_allowed: boolean
+    edit_team_allowed: boolean
+    login_allowed: boolean
+    hide_teams: boolean
+  }[]
+  const showTeams = !featureFlags[0]?.hide_teams
 
-  const showLeaderboard = showLeaderboardData?.[ 0 ]?.enabled
+  const showLeaderboard = showLeaderboardData?.[0]?.enabled
 
   return (
     <main>
@@ -112,8 +116,7 @@ const Home = async () =>
           </div>
         ) : null}
         {frontpageNews &&
-          frontpageNews.map((news, index) =>
-          {
+          frontpageNews.map((news, index) => {
             const isEvenIndex = index % 2 === 0
             if (news.showOnFrontpage === false) return null
             return (

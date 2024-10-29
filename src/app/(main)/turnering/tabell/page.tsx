@@ -8,8 +8,7 @@ import { CalendarX } from 'lucide-react'
 
 export const revalidate = 0
 
-async function Page()
-{
+async function Page() {
   const matchResultsTable = await ServerClient.from('match_results').select('*')
   const sanityTeamData = await getAllTeams()
 
@@ -33,8 +32,13 @@ async function Page()
     )
   }
 
-  return <>        <h1 className='text-4xl font-bold mb-10'>Tabell</h1>
-    <ResultsTable matchResults={matchResultsTable.data ?? []} sanityTeamData={sanityTeamData} /></>
+  return (
+    <>
+      {' '}
+      <h1 className="text-4xl font-bold mb-10">Tabell</h1>
+      <ResultsTable matchResults={matchResultsTable.data ?? []} sanityTeamData={sanityTeamData} />
+    </>
+  )
 }
 
 export default Page

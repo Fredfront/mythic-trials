@@ -13,8 +13,7 @@ import Link from 'next/link'
 import { ArrowLeft, AlertCircle, CheckCircle, Twitch } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
-interface DiscordMember
-{
+interface DiscordMember {
   user: {
     id: string
     username: string
@@ -29,29 +28,26 @@ interface DiscordMember
   mute: boolean
 }
 
-interface DiscordRole
-{
+interface DiscordRole {
   id: string
   name: string
 }
 
-export default function Component()
-{
-  const [ members, setMembers ] = useState<DiscordMember[] | undefined>(undefined)
-  const [ sanityTeams, setSanityTeams ] = useState<MythicPlusTeam[] | undefined>(undefined)
-  const [ roles, setRoles ] = useState<DiscordRole[] | undefined>(undefined)
+export default function Component() {
+  const [members, setMembers] = useState<DiscordMember[] | undefined>(undefined)
+  const [sanityTeams, setSanityTeams] = useState<MythicPlusTeam[] | undefined>(undefined)
+  const [roles, setRoles] = useState<DiscordRole[] | undefined>(undefined)
   const { toast } = useToast()
-  const [ loading, setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const fetchData = useCallback(async () =>
-  {
+  const fetchData = useCallback(async () => {
     try {
-      const [ membersResponse, teamsResponse, rolesResponse ] = await Promise.all([
+      const [membersResponse, teamsResponse, rolesResponse] = await Promise.all([
         fetch('/api/discord/members'),
         getAllTeams(),
         fetch('/api/discord/roles'),
       ])
-      const [ membersData, rolesData ] = await Promise.all([ membersResponse.json(), rolesResponse.json() ])
+      const [membersData, rolesData] = await Promise.all([membersResponse.json(), rolesResponse.json()])
       setMembers(membersData)
       setSanityTeams(teamsResponse)
       setRoles(rolesData)
@@ -63,15 +59,13 @@ export default function Component()
         variant: 'destructive',
       })
     }
-  }, [ toast ])
+  }, [toast])
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     fetchData()
-  }, [ fetchData, toast ])
+  }, [fetchData, toast])
 
-  const handleAssignRoles = async (teamSlug: string, userIds: string[]) =>
-  {
+  const handleAssignRoles = async (teamSlug: string, userIds: string[]) => {
     setLoading(true)
     try {
       const response = await fetch('/api/discord/assign-roles', {
@@ -112,16 +106,14 @@ export default function Component()
     return <SkeletonLoader />
   }
 
-  const roleIdToNameMap = new Map<string, string>(roles?.map((role) => [ role.id, role.name.toLowerCase() ]))
+  const roleIdToNameMap = new Map<string, string>(roles?.map((role) => [role.id, role.name.toLowerCase()]))
 
   const discordMembersMap = new Map<string, DiscordMember>(
-    members?.map((member) => [ member.user.username.toLowerCase(), member ]),
+    members?.map((member) => [member.user.username.toLowerCase(), member]),
   )
 
-  const teamsWithMembers = sanityTeams.map((team) =>
-  {
-    const playersWithMembers = team.players.map((player) =>
-    {
+  const teamsWithMembers = sanityTeams.map((team) => {
+    const playersWithMembers = team.players.map((player) => {
       const discordName = player.discordName.toLowerCase()
       const discordMember = discordMembersMap.get(discordName)
 
@@ -171,8 +163,7 @@ export default function Component()
           </TabsList>
           <TabsContent value="teams">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {teamsWithMembers.map(({ team, playersWithMembers }) =>
-              {
+              {teamsWithMembers.map(({ team, playersWithMembers }) => {
                 const userIds = playersWithMembers
                   .map(({ discordMember }) => discordMember?.user.id)
                   .filter(Boolean) as string[]
@@ -228,7 +219,7 @@ export default function Component()
                                 Discord: {discordMember ? discordMember.user.username : 'Not found'}
                               </p>
                               {memberRoleNames.includes('deltager') &&
-                                memberRoleNames.includes(team.teamName.toLowerCase()) ? (
+                              memberRoleNames.includes(team.teamName.toLowerCase()) ? (
                                 <Badge variant="success">Roles Assigned</Badge>
                               ) : (
                                 <Badge variant="destructive">Missing Roles</Badge>
@@ -298,20 +289,19 @@ export default function Component()
   )
 }
 
-function SkeletonLoader()
-{
+function SkeletonLoader() {
   return (
     <div className="container mx-auto p-4">
       <Skeleton className="h-10 w-48 mb-6 bg-gray-700" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[ ...Array(6) ].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <Card key={i} className="bg-gray-800 border-gray-700">
             <CardHeader>
               <Skeleton className="h-6 w-32 bg-gray-700" />
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {[ ...Array(3) ].map((_, j) => (
+                {[...Array(3)].map((_, j) => (
                   <div key={j} className="flex items-center space-x-4">
                     <Skeleton className="h-10 w-10 rounded-full bg-gray-700" />
                     <div className="space-y-2">
