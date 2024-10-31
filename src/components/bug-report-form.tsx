@@ -10,17 +10,17 @@ import { AlertCircle } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 
-export default function BugReportForm() {
+export default function BugReportForm()
+{
   const { user } = useGetUserData()
   const userEmail = user?.data.user?.email
+  const username = user?.data.user?.identities?.find(identity => identity.provider === 'discord')?.identity_data?.full_name
 
-  const username = user?.data.user?.identities?.find((identity) => identity.provider === 'discord')?.identity_data
-    ?.full_name
-
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [ isSubmitting, setIsSubmitting ] = useState(false)
   const { toast } = useToast()
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: { preventDefault: () => void; currentTarget: any }) =>
+  {
     event.preventDefault()
     setIsSubmitting(true)
 
@@ -28,20 +28,26 @@ export default function BugReportForm() {
     const formData = new FormData(form)
     const bugReport = Object.fromEntries(formData.entries())
 
-    // Include the userEmail in the payload
-    const bugReportWithEmail = {
+    // Include navigator data in the payload
+    const navigatorData = {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      language: navigator.language,
+      vendor: navigator.vendor,
+    }
+
+    const bugReportWithDetails = {
       ...bugReport,
-      from: userEmail || 'Anonymous', // Fallback to 'Anonymous' if email not available
-      username: username || 'Anonymous', // Fallback to 'Anonymous' if Discord username not available
+      from: userEmail || 'Anonymous',
+      username: username || 'Anonymous',
+      navigator: navigatorData,
     }
 
     try {
       const response = await fetch('/api/discord/send-bug-report', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bugReportWithEmail),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bugReportWithDetails),
       })
 
       if (response.ok) {
@@ -67,8 +73,8 @@ export default function BugReportForm() {
   }
 
   return (
-    <div className="mt-[50px] flex items-center justify-center bg-[#011624] p-4">
-      <Card className="w-full max-w-2xl mx-auto bg-[#022338] text-white border-gray-700">
+    <div className="mt-[50px] flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl mx-auto bg-gray-800 text-white border-gray-700">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Rapporter bug</CardTitle>
           <CardDescription className="text-gray-300">Vennligst beskriv bug så detaljert som mulig</CardDescription>
@@ -76,54 +82,25 @@ export default function BugReportForm() {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-gray-200">
-                Bug tittel
-              </Label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="Brief description of the issue"
-                required
-                className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-              />
+              <Label htmlFor="title" className="text-gray-200">Bug tittel</Label>
+              <Input id="title" name="title" placeholder="Brief description of the issue" required
+                className="bg-gray-800 border-gray-600 text-white placeholder-gray-400" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-gray-200">
-                Detaljert beskrivelse
-              </Label>
-              <Textarea
-                id="description"
-                name="description"
-                placeholder="Provide a detailed explanation of the bug"
-                required
-                className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 min-h-[100px]"
-              />
+              <Label htmlFor="description" className="text-gray-200">Detaljert beskrivelse</Label>
+              <Textarea id="description" name="description" placeholder="Provide a detailed explanation of the bug" required
+                className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 min-h-[100px]" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="environment" className="text-gray-200">
-                Environment Details
-              </Label>
-              <Input
-                id="environment"
-                name="environment"
-                placeholder="OS, Browser, Version, etc."
-                required
-                className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-              />
-            </div>
-            {/* Optionally, include the userEmail as a hidden input */}
-            {/* <input type="hidden" name="from" value={userEmail || 'Anonymous'} /> */}
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button type="submit" disabled={isSubmitting} className="bg-[#B8860B] hover:bg-[#DAA520] text-white">
+            <Button type="submit" disabled={isSubmitting}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
               {isSubmitting ? (
                 <>
                   <AlertCircle className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...
                 </>
-              ) : (
-                'Submit Bug Report'
-              )}
+              ) : 'Submit Bug Report'}
             </Button>
           </CardFooter>
         </form>

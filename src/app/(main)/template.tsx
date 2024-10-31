@@ -8,7 +8,8 @@ import { ServerClient } from '@/utils/supabase/server'
 import { Match, MatchRecord, SupabaseTeamType } from '../../../types'
 import { Toaster } from '@/components/ui/toaster'
 
-export default async function Template({ children }: { children: React.ReactNode }) {
+export default async function Template({ children }: { children: React.ReactNode })
+{
   const teams = (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
   const superadmins = (await ServerClient.from('superadmins').select('*')).data as { email: string }[]
   const sanityTeams = await getAllTeams()
@@ -36,12 +37,13 @@ export default async function Template({ children }: { children: React.ReactNode
   )
 }
 
-const Footer = async () => {
+const Footer = async () =>
+{
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData && showLeaderboardData[0] && showLeaderboardData?.[0]?.enabled
+  const showLeaderboard = showLeaderboardData && showLeaderboardData[ 0 ] && showLeaderboardData?.[ 0 ]?.enabled
 
   return (
-    <footer className="  shadow bg-[#272727]">
+    <footer className="  shadow bg-gray-800 border-t-4 border-gradient">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <ul className="flex gap-4 mt-4 mb-4">

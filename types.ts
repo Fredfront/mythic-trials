@@ -16,6 +16,8 @@ export type Team = {
   name: string
   contact_person: string
   team_slug: string
+  approved_in_sanity: boolean
+  discord_username: string
 }
 
 export type MatchRecord = {

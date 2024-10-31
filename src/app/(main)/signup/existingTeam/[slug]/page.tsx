@@ -3,11 +3,19 @@ import ExistingTeam from './ExistingTeamClient'
 import { ServerClient } from '@/utils/supabase/server'
 import { SupabaseTeamType } from '../../../../../../types'
 
-async function page() {
+async function page()
+{
   const sanityTeams = await getAllTeams()
   const supabaseTeams = (await (await ServerClient.from('teams').select('*')).data) as SupabaseTeamType[]
 
-  return <ExistingTeam sanityTeams={sanityTeams ?? []} supabaseTeams={supabaseTeams ?? []} />
+  return (
+    <div className="flex flex-col">
+      <div>
+
+      </div>
+      <ExistingTeam sanityTeams={sanityTeams ?? []} supabaseTeams={supabaseTeams ?? []} />
+    </div>
+  )
 }
 
 export default page

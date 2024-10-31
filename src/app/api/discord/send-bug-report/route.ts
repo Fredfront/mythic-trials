@@ -5,14 +5,11 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
   try {
     // Parse the JSON body from the request
-    const { title, description, environment, from, username } = await request.json()
+    const { title, description, from, username, navigator } = await request.json()
 
     // Validate input fields
-    if (!title || !description || !environment || !from) {
-      return NextResponse.json(
-        { error: 'Title, description, environment details, and sender email are required.' },
-        { status: 400 },
-      )
+    if (!title || !description || !from) {
+      return NextResponse.json({ error: 'Title, description, and sender email are required.' }, { status: 400 })
     }
 
     // Optional: Validate email format if not anonymous
@@ -44,24 +41,12 @@ export async function POST(request: Request) {
         {
           title: `Bug Report: ${title}`,
           fields: [
-            {
-              name: 'Description',
-              value: description,
-            },
-            {
-              name: 'Environment',
-              value: environment,
-            },
-            {
-              name: 'From',
-              value: from,
-            },
-            {
-              name: 'Discord user',
-              value: username,
-            },
+            { name: 'Description', value: description },
+            { name: 'Navigator', value: JSON.stringify(navigator, null, 2) }, // Format navigator data
+            { name: 'From', value: from },
+            { name: 'Discord user', value: username },
           ],
-          color: 0xff0000, // Optional: Set a color for the embed (red in this case)
+          color: 0xff0000,
           timestamp: new Date().toISOString(),
         },
       ],
