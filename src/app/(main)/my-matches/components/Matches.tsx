@@ -320,7 +320,7 @@ export function Matches({
                                       //send discord message
                                       const channelName = `${homeTeam}-vs-${awayTeam}`
                                       const roleName = myTeam?.teamName
-                                      const message = `📢 **${myTeam?.teamName}** has ACCEPTED the request to reschedule! @everyone
+                                      const message = `📢 **${myTeam?.teamName}** has ACCEPTED the request to reschedule! @here
 
 Ny tid: ${proposedRescheduledDateTimeString} `
 
@@ -367,7 +367,7 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                       //send discord message
                                       const channelName = `${homeTeam}-vs-${awayTeam}`
                                       const roleName = myTeam?.teamName
-                                      const message = `📢 **${myTeam?.teamName}** has DECLINED the request to reschedule! @everyone`
+                                      const message = `📢 **${myTeam?.teamName}** has DECLINED the request to reschedule! @here`
                                       // Send message to Discord channel with role mention
                                       const response = await fetch('/api/discord/send-message', {
                                         method: 'POST',
