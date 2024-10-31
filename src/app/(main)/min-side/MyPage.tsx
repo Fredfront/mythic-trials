@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '@/components/ui/button'
 import { MessageCircle, Users } from 'lucide-react'
 import { DiscordLogoIcon } from '@radix-ui/react-icons'
-import { Team } from '../../../../types'
+import { SupabaseTeamType } from '../../../../types'
 import { useEffect, useState } from 'react'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
@@ -18,7 +18,7 @@ import { toast } from '@/hooks/use-toast'
 const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
 {
 
-  const discordLinkFromLocalStorage = JSON.parse(localStorage.getItem('discord_invite_link') || 'null') as { invite_link: string, timestamp: number } | null
+  const discordLinkFromLocalStorage = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('discord_invite_link') || 'null') as { invite_link: string, timestamp: number } | null : null
 
 
   const { user, loading } = useGetUserData()
@@ -35,13 +35,19 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
   //Clear the discord link from local storage after 7 days
   useEffect(() =>
   {
-    if (discordLinkFromLocalStorage && new Date().getTime() - discordLinkFromLocalStorage.timestamp > 604800000) {
-      localStorage.removeItem('discord_invite_link')
+    if (typeof window !== 'undefined') {
+      const discordLinkFromLocalStorage = JSON.parse(localStorage.getItem('discord_invite_link') || 'null') as { invite_link: string, timestamp: number } | null
+      setDiscordLink(discordLinkFromLocalStorage?.invite_link || undefined)
+
+      // Clear the discord link from local storage after 7 days
+      if (discordLinkFromLocalStorage && new Date().getTime() - discordLinkFromLocalStorage.timestamp > 604800000) {
+        localStorage.removeItem('discord_invite_link')
+      }
     }
-  }, [ discordLinkFromLocalStorage ])
+  }, [])
 
 
-  const [ team, setTeam ] = useState<Team | undefined>(undefined)
+  const [ team, setTeam ] = useState<SupabaseTeamType | undefined>(undefined)
 
   const name = user?.data.user?.identities?.[ 0 ].identity_data?.full_name || user?.data.user?.email
 
@@ -66,7 +72,7 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
         })
     }
     fetchTeam()
-  }, [ user ])
+  }, [ user, loading ])
 
   const createDiscordInvite = async () =>
   {

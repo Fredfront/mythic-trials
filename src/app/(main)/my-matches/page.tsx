@@ -2,16 +2,17 @@ import React from 'react'
 import { ServerClient } from '@/utils/supabase/server'
 import { getAllTeams } from '@/app/api/getAllTeams'
 import { Matches } from './components/Matches'
-import { Match, MatchRecord, Team, TeamMatch, TournamentSchedule } from '../../../../types'
+import { Match, MatchRecord, SupabaseTeamType, TeamMatch, TournamentSchedule } from '../../../../types'
 import { matches } from 'lodash'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { CalendarX } from 'lucide-react'
 
 export const revalidate = 0
 
-export default async function Page() {
+export default async function Page()
+{
   const teamsResponse = await ServerClient.from('teams').select('*')
-  const teams: Team[] = teamsResponse.data ?? []
+  const teams: SupabaseTeamType[] = teamsResponse.data ?? []
   const pickAndBansTable = await ServerClient.from('pick_ban').select('*')
   const matchResultsTable = await ServerClient.from('match_results').select('*')
   const sanityTeamData = await getAllTeams()
@@ -58,20 +59,23 @@ export default async function Page() {
   )
 }
 
-export function createSortedRounds(matchesData: MatchRecord[], teams: Team[]): TournamentSchedule {
+export function createSortedRounds(matchesData: MatchRecord[], teams: SupabaseTeamType[]): TournamentSchedule
+{
   // Create a map of team ID to team data for easy lookup
-  const teamMap = new Map<string, Team>()
-  teams.forEach((team) => {
+  const teamMap = new Map<string, SupabaseTeamType>()
+  teams.forEach((team) =>
+  {
     teamMap.set(team.id, team)
   })
 
   // Group matches by round
-  const scheduleMap: { [round: number]: Match[] } = {}
+  const scheduleMap: { [ round: number ]: Match[] } = {}
 
-  matchesData?.forEach((match) => {
+  matchesData?.forEach((match) =>
+  {
     const roundNumber = match.round
-    if (!scheduleMap[roundNumber]) {
-      scheduleMap[roundNumber] = []
+    if (!scheduleMap[ roundNumber ]) {
+      scheduleMap[ roundNumber ] = []
     }
 
     const homeTeam = teamMap.get(match.home_team_id)
@@ -127,22 +131,24 @@ export function createSortedRounds(matchesData: MatchRecord[], teams: Team[]): T
 
     // Create Match object
     const mappedMatch: Match = {
-      teams: [homeTeamMatch, awayTeamMatch],
+      teams: [ homeTeamMatch, awayTeamMatch ],
       featured: match.featured,
     }
 
-    scheduleMap[roundNumber].push(mappedMatch)
+    scheduleMap[ roundNumber ].push(mappedMatch)
   })
 
   // Convert scheduleMap to TournamentSchedule (sorted rounds)
   const sortedRounds: TournamentSchedule = Object.keys(scheduleMap)
     .map(Number)
     .sort((a, b) => a - b)
-    .map((roundNumber) => {
+    .map((roundNumber) =>
+    {
       // Optionally, sort matches within each round by start time
-      const sortedMatches = scheduleMap[roundNumber].sort((a, b) => {
-        const timeA = a.teams[0].round_startTime || '00:00:00'
-        const timeB = b.teams[0].round_startTime || '00:00:00'
+      const sortedMatches = scheduleMap[ roundNumber ].sort((a, b) =>
+      {
+        const timeA = a.teams[ 0 ].round_startTime || '00:00:00'
+        const timeB = b.teams[ 0 ].round_startTime || '00:00:00'
         return timeA.localeCompare(timeB)
       })
       return sortedMatches

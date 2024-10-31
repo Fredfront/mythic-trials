@@ -4,16 +4,17 @@ import React from 'react'
 import { ServerClient } from '@/utils/supabase/server'
 import Matches from './components/Matches'
 import { getAllTeams } from '@/app/api/getAllTeams'
-import { Team, MatchRecord } from '../../../../types'
+import { SupabaseTeamType, MatchRecord } from '../../../../types'
 import { createSortedRounds } from '../my-matches/page'
 import { getLiveStreams, getTwitchAccessToken, TeamLiveStatus } from '@/lib/twitch'
 
 export const revalidate = 1 // Disables ISR; adjust as needed
 
-async function Page() {
+async function Page()
+{
   // Fetch teams
   const teamsResponse = await ServerClient.from('teams').select('*')
-  const teams: Team[] = teamsResponse.data ?? []
+  const teams: SupabaseTeamType[] = teamsResponse.data ?? []
   // Fetch matches
   const matchesResponse = await ServerClient.from('matches')
     .select('*')
@@ -43,7 +44,8 @@ async function Page() {
   const liveChannels = await getLiveStreams(accessToken, twitchChannels)
   // Annotate teams and players with live status
   const teamsWithLiveChannels: TeamLiveStatus[] = sanityTeamData
-    .map((team) => {
+    .map((team) =>
+    {
       const liveChannelsForTeam = team.players
         .map((player) => player.twitchChannel?.toLowerCase())
         .filter((channel): channel is string => channel !== undefined && liveChannels.includes(channel))

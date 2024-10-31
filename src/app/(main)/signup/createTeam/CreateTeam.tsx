@@ -19,85 +19,92 @@ import { Input } from '@/components/ui/input'
 import { SupabaseTeamType } from '../../../../../types'
 import { toast } from '@/hooks/use-toast'
 
-function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; supabaseTeams: SupabaseTeamType[] }) {
+function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; supabaseTeams: SupabaseTeamType[] })
+{
   const { user, loading } = useGetUserData()
   const discordUsername: string | undefined =
     user?.data.user?.identities?.find((e) => e.provider === 'discord')?.identity_data?.full_name ?? undefined
-  const [teamName, setTeamName] = useState('')
-  const [teamImage, setTeamImage] = useState<any>(null)
-  const [players, setPlayers] = useState<
+  const [ teamName, setTeamName ] = useState('')
+  const [ teamImage, setTeamImage ] = useState<any>(null)
+  const [ players, setPlayers ] = useState<
     { characterName: string; realmName: string; discordName: string; twitchChannel?: string; alts?: AltPlayer[] }[]
-  >([{ characterName: '', realmName: '', discordName: '', alts: [] }])
+  >([ { characterName: '', realmName: '', discordName: '', alts: [] } ])
   const router = useRouter()
 
-  const [previewImage, setPreviewImage] = useState<any>(null)
+  const [ previewImage, setPreviewImage ] = useState<any>(null)
 
-  const teamSlug = useMemo(() => teamName?.toLowerCase().replace(/\s+/g, '-').slice(0, 200), [teamName])
+  const teamSlug = useMemo(() => teamName?.toLowerCase().replace(/\s+/g, '-').slice(0, 200), [ teamName ])
   const userEmail = user?.data.user?.email
 
   // State for input field errors
-  const [teamNameError, setTeamNameError] = useState(false)
-  const [playerErrors, setPlayerErrors] = useState<boolean[]>([])
-  const [uploadedImage, setUploadedImage] = useState<any>(null)
-  const [imageUploaded, setImageUploaded] = useState(false)
-  const [missingImageError, setMissingImageError] = useState(false)
-  const [missingPlayersError, setMissingPlayersError] = useState(false)
-  const [loadingCreateTeam, setLoadingCreateTeam] = useState(false)
-  const [teamNameAlreadyExists, setTeamNameAlreadyExists] = useState(false)
-  const [createTeamError, setCreateTeamError] = useState(false)
+  const [ teamNameError, setTeamNameError ] = useState(false)
+  const [ playerErrors, setPlayerErrors ] = useState<boolean[]>([])
+  const [ uploadedImage, setUploadedImage ] = useState<any>(null)
+  const [ imageUploaded, setImageUploaded ] = useState(false)
+  const [ missingImageError, setMissingImageError ] = useState(false)
+  const [ missingPlayersError, setMissingPlayersError ] = useState(false)
+  const [ loadingCreateTeam, setLoadingCreateTeam ] = useState(false)
+  const [ teamNameAlreadyExists, setTeamNameAlreadyExists ] = useState(false)
+  const [ createTeamError, setCreateTeamError ] = useState(false)
 
-  useEffect(() => {
-    if (players[0].discordName === '' && discordUsername) {
+  useEffect(() =>
+  {
+    if (players[ 0 ].discordName === '' && discordUsername) {
       setPlayers((prevPlayers) =>
         prevPlayers.map((player, i) => (i === 0 ? { ...player, discordName: discordUsername } : player)),
       )
     }
-  }, [discordUsername, players])
+  }, [ discordUsername, players ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)) {
       router.push('/signup/existingTeam')
     }
-  }, [allTeams, router, user?.data.user?.email])
+  }, [ allTeams, router, user?.data.user?.email ])
   // State for image preview
 
-  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handlePlayerChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  {
     const { name, value } = event.target
 
     if (index === 0 && discordUsername) {
       setPlayers((prevPlayers) =>
-        prevPlayers.map((player, i) => (i === index ? { ...player, [name]: discordUsername } : player)),
+        prevPlayers.map((player, i) => (i === index ? { ...player, [ name ]: discordUsername } : player)),
       )
     }
 
-    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [name]: value } : player)))
+    setPlayers((prevPlayers) => prevPlayers.map((player, i) => (i === index ? { ...player, [ name ]: value } : player)))
   }
-  const handleAddPlayer = () => {
-    setPlayers([...players, { characterName: '', discordName: '', realmName: '' }])
+  const handleAddPlayer = () =>
+  {
+    setPlayers([ ...players, { characterName: '', discordName: '', realmName: '' } ])
   }
 
-  const handleAddAltPlayer = (index: number) => {
+  const handleAddAltPlayer = (index: number) =>
+  {
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === index
           ? {
-              ...player,
-              alts: [...(player.alts || []), { altCharacterName: '', altRealmName: '' }],
-            }
+            ...player,
+            alts: [ ...(player.alts || []), { altCharacterName: '', altRealmName: '' } ],
+          }
           : player,
       ),
     )
   }
 
   // Function to remove an alt player for a specific main player
-  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) => {
+  const handleRemoveAltPlayer = (mainPlayerIndex: number, altIndex: number) =>
+  {
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [], // Remove the alt player at the specified index
-            }
+            ...player,
+            alts: player.alts ? player.alts.filter((_, idx) => idx !== altIndex) : [], // Remove the alt player at the specified index
+          }
           : player,
       ),
     )
@@ -107,34 +114,37 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
     mainPlayerIndex: number,
     altIndex: number,
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  ) =>
+  {
     const { name, value } = event.target
 
     setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) =>
         i === mainPlayerIndex
           ? {
-              ...player,
-              alts: player.alts?.map((alt, altIdx) =>
-                altIdx === altIndex
-                  ? {
-                      ...alt,
-                      [name]: value,
-                    }
-                  : alt,
-              ),
-            }
+            ...player,
+            alts: player.alts?.map((alt, altIdx) =>
+              altIdx === altIndex
+                ? {
+                  ...alt,
+                  [ name ]: value,
+                }
+                : alt,
+            ),
+          }
           : player,
       ),
     )
   }
 
-  const handleRemovePlayer = (index: number) => {
+  const handleRemovePlayer = (index: number) =>
+  {
     setPlayers((prevPlayers) => prevPlayers.filter((_, i) => i !== index))
   }
 
-  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files && e.target.files[0]
+  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>)
+  {
+    const file = e.target.files && e.target.files[ 0 ]
 
     if (file && !file.type.startsWith('image/')) {
       alert('Please upload a valid image file.')
@@ -149,14 +159,16 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
     if (file && file.type.startsWith('image')) {
       setTeamImage(file)
       const reader = new FileReader()
-      reader.onloadend = () => {
+      reader.onloadend = () =>
+      {
         if (reader.result === null) return
         setPreviewImage(reader.result)
       }
       reader.readAsDataURL(file)
     }
   }
-  async function addImage() {
+  async function addImage()
+  {
     setLoadingCreateTeam(true)
     try {
       const formData = new FormData()
@@ -188,13 +200,15 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
     }
   }
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (allTeams?.find((e) => e.teamName === teamName)) {
       setTeamNameAlreadyExists(true)
     }
-  }, [allTeams, teamName])
+  }, [ allTeams, teamName ])
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) =>
+  {
     event.preventDefault()
 
     let hasErrors = false
@@ -248,7 +262,8 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
     }
   }
 
-  const createMythicPlusTeam = useCallback(async () => {
+  const createMythicPlusTeam = useCallback(async () =>
+  {
     setLoadingCreateTeam(true)
 
     try {
@@ -275,7 +290,8 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
               realmName: player.realmName,
               discordName: player.discordName,
               twitchChannel: player.twitchChannel,
-              alts: player.alts?.map((alt) => {
+              alts: player.alts?.map((alt) =>
+              {
                 return {
                   _key: uuidv4(),
                   altCharacterName: alt.altCharacterName,
@@ -320,7 +336,19 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
           .from('teams')
           .insert([
             { name: teamName, contact_person: userEmail, team_slug: teamSlug, discord_username: discordUsername },
-          ])
+          ]).then(() =>
+          {
+            fetch('/api/discord/new-team-alert', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                teamName,
+                from: userEmail,
+              }),
+            })
+          })
       }
     }
   }, [
@@ -334,19 +362,22 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
     userEmail,
   ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (imageUploaded) {
       createMythicPlusTeam()
       setImageUploaded(false)
     }
-  }, [createMythicPlusTeam, imageUploaded])
+  }, [ createMythicPlusTeam, imageUploaded ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName) {
       setTeamName(allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName as string)
       allTeams
         ?.find((e) => e.contactPerson === user?.data.user?.email)
-        ?.players.map((player, index) => {
+        ?.players.map((player, index) =>
+        {
           setPlayers((prevPlayers) => [
             ...prevPlayers,
             {
@@ -364,7 +395,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
           }
         })
     }
-  }, [allTeams, user?.data.user?.email])
+  }, [ allTeams, user?.data.user?.email ])
 
   const hideCreateTeamButton =
     players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||
@@ -425,7 +456,8 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                   placeholder="Lagnavn"
                   className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                   value={teamName}
-                  onChange={(e) => {
+                  onChange={(e) =>
+                  {
                     setTeamNameError(false)
                     setTeamName(e.target.value)
                   }}
@@ -451,12 +483,13 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                   <input
                     type="file"
                     id="teamImage"
-                    onChange={(e) => {
-                      if (e.target.files?.[0]?.type?.includes('image') === false) {
+                    onChange={(e) =>
+                    {
+                      if (e.target.files?.[ 0 ]?.type?.includes('image') === false) {
                         alert('Du kan kun laste opp bilder. Prøv igjen.')
                         return
                       }
-                      if (e.target.files && e.target.files?.[0]?.size > 2000000) {
+                      if (e.target.files && e.target.files?.[ 0 ]?.size > 2000000) {
                         alert('Bildet er for stort. Maks 2MB')
                         return
                       }
@@ -543,7 +576,8 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                       isSearchable
                       name="realmName"
                       placeholder="Velg realm"
-                      onChange={(e: any) => {
+                      onChange={(e: any) =>
+                      {
                         const event = {
                           target: {
                             value: e?.name,
@@ -588,7 +622,8 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                             isSearchable
                             name="altRealmName"
                             placeholder="Velg realm"
-                            onChange={(e: any) => {
+                            onChange={(e: any) =>
+                            {
                               const event = {
                                 target: {
                                   value: e?.name,
@@ -614,7 +649,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                     </div>
                   )}
 
-                  {playerErrors[index] && (
+                  {playerErrors[ index ] && (
                     <p className="text-red-500 text-sm">Fyll inn både karakternavn og realm for spiller {index + 1}.</p>
                   )}
 

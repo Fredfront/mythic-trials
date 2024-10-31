@@ -5,19 +5,11 @@ export type SupabaseTeamType = {
   contact_person: string
   team_slug: string
   approved_in_sanity: boolean
+  discord_username: string
 }
 
 export type SupabaseTeamsType = {
   teams: SupabaseTeamType[]
-}
-
-export type Team = {
-  id: string
-  name: string
-  contact_person: string
-  team_slug: string
-  approved_in_sanity: boolean
-  discord_username: string
 }
 
 export type MatchRecord = {
@@ -47,8 +39,8 @@ export type MatchWithTeams = {
   round_date: string
   round_startTime: string
   featured: boolean
-  home_team: Team
-  away_team: Team
+  home_team: SupabaseTeamType
+  away_team: SupabaseTeamType
 }
 
 export type TeamMatch = {
