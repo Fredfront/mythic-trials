@@ -9,20 +9,23 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-export default function CreateDiscordChannels() {
-  const [round, setRound] = useState('')
-  const [message, setMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
-  const [channels, setChannels] = useState<any[]>([])
-  const [channelsLoading, setChannelsLoading] = useState(false)
-  const [channelsError, setChannelsError] = useState('')
+export default function CreateDiscordChannels()
+{
+  const [ round, setRound ] = useState('')
+  const [ message, setMessage ] = useState('')
+  const [ isLoading, setIsLoading ] = useState(false)
+  const [ status, setStatus ] = useState<'idle' | 'success' | 'error'>('idle')
+  const [ channels, setChannels ] = useState<any[]>([])
+  const [ channelsLoading, setChannelsLoading ] = useState(false)
+  const [ channelsError, setChannelsError ] = useState('')
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     fetchChannels()
   }, [])
 
-  const fetchChannels = async () => {
+  const fetchChannels = async () =>
+  {
     setChannelsLoading(true)
     setChannelsError('')
     try {
@@ -31,13 +34,15 @@ export default function CreateDiscordChannels() {
       if (response.ok) {
         const channels = result.channels
         const channelMap = new Map<string, any>()
-        channels.forEach((channel: any) => {
+        channels.forEach((channel: any) =>
+        {
           channel.children = []
           channelMap.set(channel.id, channel)
         })
 
         const rootChannels: any[] = []
-        channels.forEach((channel: any) => {
+        channels.forEach((channel: any) =>
+        {
           if (channel.parent_id) {
             const parent = channelMap.get(channel.parent_id)
             if (parent) {
@@ -50,9 +55,11 @@ export default function CreateDiscordChannels() {
           }
         })
 
-        const sortChannels = (channels: any[]) => {
+        const sortChannels = (channels: any[]) =>
+        {
           channels.sort((a, b) => a.name.localeCompare(b.name))
-          channels.forEach((channel) => {
+          channels.forEach((channel) =>
+          {
             if (channel.children && channel.children.length > 0) {
               sortChannels(channel.children)
             }
@@ -71,7 +78,8 @@ export default function CreateDiscordChannels() {
     }
   }
 
-  const handleCreateChannels = async () => {
+  const handleCreateChannels = async () =>
+  {
     setIsLoading(true)
     setMessage('Creating channels...')
     setStatus('idle')
@@ -88,7 +96,6 @@ export default function CreateDiscordChannels() {
       if (response.ok) {
         setMessage(`Channels created successfully for round ${round}.`)
         setStatus('success')
-        console.log('Result:', result)
         fetchChannels()
       } else {
         setMessage(`Error: ${result.error}`)
@@ -102,7 +109,8 @@ export default function CreateDiscordChannels() {
     }
   }
 
-  const handleDeleteChannels = async () => {
+  const handleDeleteChannels = async () =>
+  {
     setIsLoading(true)
     setMessage('Deleting channels...')
     setStatus('idle')
@@ -119,7 +127,6 @@ export default function CreateDiscordChannels() {
       if (response.ok) {
         setMessage(`Channels deleted successfully for round ${round}.`)
         setStatus('success')
-        console.log('Result:', result)
         fetchChannels()
       } else {
         setMessage(`Error: ${result.error}`)
@@ -133,7 +140,8 @@ export default function CreateDiscordChannels() {
     }
   }
 
-  const handleDeleteChannel = async (channelId: string) => {
+  const handleDeleteChannel = async (channelId: string) =>
+  {
     if (!confirm('Are you sure you want to delete this channel?')) return
 
     try {
@@ -159,7 +167,8 @@ export default function CreateDiscordChannels() {
     }
   }
 
-  const handleArchiveChannel = async (channelId: string) => {
+  const handleArchiveChannel = async (channelId: string) =>
+  {
     if (!confirm('Are you sure you want to archive this channel?')) return
 
     try {
@@ -185,7 +194,8 @@ export default function CreateDiscordChannels() {
     }
   }
 
-  const renderChannels = (channels: any[], level = 0) => {
+  const renderChannels = (channels: any[], level = 0) =>
+  {
     return channels.map((channel) => (
       <div key={channel.id} className={`pl-${level * 4} py-2`}>
         <div className="flex items-center justify-between bg-gray-700 p-2 rounded">
@@ -272,9 +282,8 @@ export default function CreateDiscordChannels() {
             {message && (
               <Alert
                 variant={status === 'error' ? 'destructive' : 'default'}
-                className={`${
-                  status === 'error' ? 'bg-red-900 border-red-800' : 'bg-green-900 border-green-800'
-                } text-white`}
+                className={`${status === 'error' ? 'bg-red-900 border-red-800' : 'bg-green-900 border-green-800'
+                  } text-white`}
               >
                 <AlertDescription>{message}</AlertDescription>
               </Alert>

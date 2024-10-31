@@ -419,7 +419,6 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
     teamName === '' ||
     teamImage === null
 
-  console.log(hideCreateTeamButton)
 
   if (loadingCreateTeam) return <Loading creatingTeam={true} />
   if (createTeamError) {

@@ -134,7 +134,6 @@ export async function POST(request: Request) {
 
       // Check if channel already exists
       if (existingChannelNames.has(channelName)) {
-        console.log(`Channel "${channelName}" already exists. Skipping creation.`)
         results.push({ matchId: match.id, success: true, message: 'Channel already exists' })
         continue
       }

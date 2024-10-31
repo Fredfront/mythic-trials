@@ -64,7 +64,6 @@ export function Matches({
         {
           const updatedData = payload.new as MatchRecord[]
           if (updatedData) {
-            console.log(updatedData)
             supabase
               .from('matches')
               .select('*')
@@ -667,10 +666,9 @@ const handleClaimWin = async ({
       return null
     }
 
-    console.log(result.data)
 
     return result.data
   } catch (error) {
-    console.log('Error:', error)
+    console.error('Error:', error)
   }
 }
