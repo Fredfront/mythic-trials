@@ -14,6 +14,7 @@ import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { AnimatedTooltip } from '@/app/components/AnimatedTooltip'
 import { Icons } from '@/components/ui/icons'
 import { toast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 
 const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
 {
@@ -103,8 +104,20 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
     })
   }
 
+  const router = useRouter()
 
-  if (!user) return null
+  useEffect(() =>
+  {
+    if (!user || loading) return
+    if (user.data.user?.email && !sanityTeam) {
+      router.push('/')
+    }
+
+  }, [ user, loading, sanityTeam ])
+
+
+  if (!user || user.data.user?.email && !sanityTeam || loading) return null
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
