@@ -54,11 +54,11 @@ export async function POST(request: Request) {
     // Handle Discord API response
     if (!sendMessageResponse.ok) {
       const errorData = await sendMessageResponse.json()
-      throw new Error(errorData.message || 'Failed to send bug report.')
+      throw new Error(errorData.message || 'Failed to notify Discord channel.')
     }
 
     // Respond with success if the message was sent successfully
-    return NextResponse.json({ message: 'Bug report sent successfully.' }, { status: 200 })
+    return NextResponse.json({ message: 'Notification sent' }, { status: 200 })
   } catch (error) {
     console.error('Error sending bug report:', error)
     return NextResponse.json(

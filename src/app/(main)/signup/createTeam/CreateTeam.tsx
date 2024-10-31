@@ -346,7 +346,22 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
               body: JSON.stringify({
                 teamName,
                 from: userEmail,
+                username: discordUsername,
               }),
+            }).then(() =>
+            {
+              //Send an email to the user 
+              fetch('/api/notify-team-creation', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  email: userEmail,
+                  subject: 'Laget ditt er opprettet og vil bli vurdert av en admin innen kort tid',
+                  message: `Hei! Laget ditt, ${teamName}, er nå opprettet. Lykke til!`,
+                }),
+              })
             })
           })
       }
