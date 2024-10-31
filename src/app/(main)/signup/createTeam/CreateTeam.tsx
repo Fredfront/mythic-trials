@@ -358,8 +358,8 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                 },
                 body: JSON.stringify({
                   email: userEmail,
-                  subject: 'Velkommen til NL Wow Mythic Trials Sesong 3!',
-                  message: `Laget ditt ${teamName} er opprettet og vil bli vurdert av en admin innen kort tid!`,
+                  subject: 'Velkommen til  Mythic Trials Sesong 3!',
+                  message: `Laget ditt ${teamName} er opprettet og vil bli vurdert av en admin innen kort tid!. Du vil motta en e-post når laget ditt er godkjent.`,
                 }),
               })
             })

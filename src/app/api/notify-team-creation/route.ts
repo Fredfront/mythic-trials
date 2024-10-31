@@ -36,34 +36,11 @@ export async function POST(request: Request) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${subject}</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-          }
-          .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          }
-          .message {
-            border-left: 3px solid #ccc;
-            padding: 10px;
-            margin-bottom: 15px;
-          }
-        </style>
       </head>
       <body>
-        <div class="container">
           <h2>${subject}</h2>
-          <div class="message">
-            <p>${message}</p>
-          </div>
-        </div>
-      </body>
+          <p>${message}</p>
+       </body>
       </html>
       `,
     })
