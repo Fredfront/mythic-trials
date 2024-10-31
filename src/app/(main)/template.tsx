@@ -11,7 +11,6 @@ import { Toaster } from '@/components/ui/toaster'
 export default async function Template({ children }: { children: React.ReactNode })
 {
   const teams = (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
-  const superadmins = (await ServerClient.from('superadmins').select('*')).data as { email: string }[]
   const sanityTeams = await getAllTeams()
   const matches = (await ServerClient.from('matches').select('*')).data as MatchRecord[]
   const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as {
@@ -26,7 +25,6 @@ export default async function Template({ children }: { children: React.ReactNode
       <NavBarV2
         sanityTeams={sanityTeams}
         teams={teams}
-        superadmins={superadmins}
         matches={matches}
         featureFlags={featureFlags}
       />

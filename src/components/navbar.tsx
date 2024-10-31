@@ -16,13 +16,11 @@ import { MythicPlusTeam } from '@/app/api/getAllTeams'
 const NavBar = ({
   teams,
   sanityTeams,
-  superadmins,
   matches,
   featureFlags,
 }: {
   teams?: SupabaseTeamType[]
   sanityTeams: MythicPlusTeam[]
-  superadmins: { email: string }[]
   matches: MatchRecord[]
   featureFlags?: {
     create_team_allowed: boolean
@@ -45,7 +43,6 @@ const NavBar = ({
   const mySanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
   const [ myTeam, setMyTeam ] = useState<SupabaseTeamType | undefined>(team)
 
-  const [ isSuperadmin, setIsSuperadmin ] = useState<boolean>(false)
 
   useEffect(() =>
   {
@@ -83,18 +80,11 @@ const NavBar = ({
   }
 
   // Check if the current user is a superadmin
-  useEffect(() =>
-  {
-    if (!user?.data.user?.email || (superadmins && superadmins.length === 0) || !superadmins) {
-      setIsSuperadmin(false)
-    } else {
-      const isAdmin = superadmins.some((admin: { email: string }) => admin.email === user.data.user?.email)
-      setIsSuperadmin(isAdmin)
-    }
-  }, [ user, superadmins ])
 
   useEffect(() =>
   {
+    if (!user?.data.user?.email) return
+
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -145,16 +135,7 @@ const NavBar = ({
               {link.label}
             </Link>
           ))}
-          {/* Add Superadmin link if the user is a superadmin */}
-          {isSuperadmin && (
-            <Link
-              href="/superadmin"
-              className={`text-gray-200 hover:text-white font-bold transition-colors duration-200 ${pathname === '/superadmin' ? 'text-yellow-500' : ''
-                }`}
-            >
-              Superadmin
-            </Link>
-          )}
+
         </div>
 
         <div className="flex items-center space-x-4">
@@ -188,14 +169,7 @@ const NavBar = ({
                         </Link>
                       </DropdownMenuItem>
                     )}
-                    {/* Add Superadmin menu item if the user is a superadmin */}
-                    {isSuperadmin && (
-                      <DropdownMenuItem asChild>
-                        <Link href="/superadmin">
-                          <Edit /> Superadmin
-                        </Link>
-                      </DropdownMenuItem>
-                    )}
+
                     <DropdownMenuItem asChild>
                       <Link href="/bug-report">
                         <Bug /> Rapporter bug
@@ -254,25 +228,15 @@ const NavBar = ({
                 key={link.href}
                 href={link.href}
                 className={`text-2xl ${pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-                    ? 'text-[#FDB202]'
-                    : 'text-gray-200'
+                  ? 'text-[#FDB202]'
+                  : 'text-gray-200'
                   } hover:text-white font-bold`}
                 onClick={toggleMenu}
               >
                 {link.label}
               </Link>
             ))}
-            {/* Add Superadmin link in mobile menu if the user is a superadmin */}
-            {isSuperadmin && (
-              <Link
-                href="/superadmin"
-                className={`text-2xl ${pathname === '/superadmin' ? 'text-[#FDB202]' : 'text-gray-200'
-                  } hover:text-white font-bold`}
-                onClick={toggleMenu}
-              >
-                Superadmin
-              </Link>
-            )}
+
             {createTeamAllowed && !myTeam && (
               <Link href="/signup" prefetch onClick={toggleMenu}>
                 <Button className="mt-4 px-6 py-3 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold text-xl hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">

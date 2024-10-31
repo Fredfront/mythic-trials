@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
   try {
     await transporter.sendMail({
-      from: username,
+      from: 'NL WoW',
       to: email,
       subject: subject,
       html: `
