@@ -17,7 +17,6 @@ import { useGetUserData } from '../../../auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
 import { Input } from '@/components/ui/input'
 import { SupabaseTeamType } from '../../../../../types'
-import { toast } from '@/hooks/use-toast'
 
 function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; supabaseTeams: SupabaseTeamType[] })
 {

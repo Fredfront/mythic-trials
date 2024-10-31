@@ -26,23 +26,10 @@ export async function POST(request: Request) {
 
   try {
     await transporter.sendMail({
-      from: 'NL WoW',
+      from: `NL WoW - Mythic Trials <${username}>`, // Ensures proper from format
       to: email,
       subject: subject,
-      html: `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${subject}</title>
-      </head>
-      <body>
-          <h2>${subject}</h2>
-          <p>${message}</p>
-       </body>
-      </html>
-      `,
+      text: message,
     })
 
     return NextResponse.json({ message: 'Email successfully sent' })
