@@ -3,7 +3,8 @@ import { getRulesData } from '../../api/rules/getRulesData'
 import { PortableText } from '@portabletext/react'
 import { Hourglass, Smile, Trophy, User } from 'lucide-react'
 
-async function page() {
+async function page()
+{
   const rulesData = await getRulesData()
   return (
     rulesData && (
@@ -28,7 +29,8 @@ async function page() {
 
 export default page
 
-const RuleIconBox = () => {
+const RuleIconBox = () =>
+{
   return (
     <div className="flex gap-4 mt-12 flex-wrap pl-4 pr-4 lg:pl-0 ">
       <div className="bg-[#021F33] md:w-52 w-full md:h-20 p-2 lg:text-left text-center rounded-md items-center flex flex-col md:flex-row justify-center">
@@ -45,8 +47,8 @@ const RuleIconBox = () => {
           <Hourglass size="32" color="white" />
         </div>
         <div className="text-lg md:text-xl  font-bold md:border-l-2 border-t-2 md:border-t-0 pt-2 md:pt-0">
-          <div className="md:pl-4 pl-0">4</div>
-          <div className="md:pl-4 pl-0 -mt-1">Uker</div>
+          <div className="md:pl-4 pl-0">19</div>
+          <div className="md:pl-4 pl-0 -mt-1">Nov</div>
         </div>
       </div>
       <div className="bg-[#021F33] md:w-52 w-full md:h-20 p-2 lg:text-left text-center rounded-md items-center flex flex-col md:flex-row justify-center">
