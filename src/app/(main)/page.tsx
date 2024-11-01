@@ -58,14 +58,14 @@ const Home = async () =>
           <p className="text-center font-medium max-w-2xl  text-lg sm:text-xl shadow-sm ">
             Vi er tilbake for sesong 3 av Mythic Trials arrangert av Nerdelandslaget WoW.
           </p>
-          <div className="flex gap-4 mt-10 pb-10 ">
+          <div className="flex gap-4 mt-10 pb-10 flex-wrap ">
             <Link href="/rules">
-              <Button className="bg-white rounded-3xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 hover:scale-105 min-w-44 md:min-w-52 h-[40px]">
+              <Button className="bg-white rounded-3xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 h-[40px] hover:opacity-80 hover:shadow-xl ">
                 Hvem kan være med?
               </Button>
             </Link>
             <Link href="/signup" prefetch>
-              <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  min-w-44 md:min-w-52 h-[40px]">
+              <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
                 Påmelding
               </Button>
             </Link>

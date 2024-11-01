@@ -118,7 +118,7 @@ const NavBar = ({
   ]
 
   return (
-    <nav className="bg-[#011624] items-center flex border-b-4 border-gradient h-[110px]">
+    <nav className="bg-[#011624] items-center flex border-b-4 border-gradient h-[110px] ">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center flex-shrink-0 text-white">
           <Image className='h-[108px] w-[78px]' width={78} height={108} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
@@ -202,7 +202,7 @@ const NavBar = ({
 
           {createTeamAllowed && !myTeam && !loading && (
             <Link href="/signup" prefetch>
-              <Button className="bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
+              <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
                 Påmelding
               </Button>
             </Link>
