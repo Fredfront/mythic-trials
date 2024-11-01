@@ -13,6 +13,7 @@ import SimplifiedLeaderboard from '../components/SimplifiedLeaderboard'
 import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
 import { DraggableRoundCarousel } from '@/components/draggable-round-carousel'
 import { ServerClient } from '@/utils/supabase/server'
+import { Button } from '@/components/ui/button'
 
 export type RoundType = {
   round_date: string
@@ -24,7 +25,8 @@ export const revalidate = 0
 
 const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
-const Home = async () => {
+const Home = async () =>
+{
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
@@ -38,9 +40,9 @@ const Home = async () => {
     login_allowed: boolean
     hide_teams: boolean
   }[]
-  const showTeams = !featureFlags[0]?.hide_teams
+  const showTeams = !featureFlags[ 0 ]?.hide_teams
 
-  const showLeaderboard = showLeaderboardData?.[0]?.enabled
+  const showLeaderboard = showLeaderboardData?.[ 0 ]?.enabled
 
   return (
     <main>
@@ -58,9 +60,14 @@ const Home = async () => {
           </p>
           <div className="flex gap-4 mt-10 pb-10 ">
             <Link href="/rules">
-              <button className="bg-white rounded-xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 hover:scale-105 min-w-44 md:min-w-52 min-h-10 ">
+              <Button className="bg-white rounded-3xl text-black border-2 border-[#FDB202] px-3 py-3  transition translate duration-500 hover:scale-105 min-w-44 md:min-w-52 h-[40px]">
                 Hvem kan være med?
-              </button>
+              </Button>
+            </Link>
+            <Link href="/signup" prefetch>
+              <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  min-w-44 md:min-w-52 h-[40px]">
+                Påmelding
+              </Button>
             </Link>
           </div>
         </div>
@@ -116,7 +123,8 @@ const Home = async () => {
           </div>
         ) : null}
         {frontpageNews &&
-          frontpageNews.map((news, index) => {
+          frontpageNews.map((news, index) =>
+          {
             const isEvenIndex = index % 2 === 0
             if (news.showOnFrontpage === false) return null
             return (
@@ -169,7 +177,7 @@ const Home = async () => {
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 2 (Ims)</div>
         <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 3 (Ims)</div>
       </div> */}
-    </main>
+    </main >
   )
 }
 

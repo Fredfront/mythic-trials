@@ -118,10 +118,10 @@ const NavBar = ({
   ]
 
   return (
-    <nav className="bg-[#011624] p-4 border-b-4 border-gradient">
+    <nav className="bg-[#011624] items-center flex border-b-4 border-gradient h-[110px]">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center flex-shrink-0 text-white">
-          <Image width={45} height={45} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
+          <Image className='h-[108px] w-[78px]' width={78} height={108} src="/MT_logo_white.webp" alt="Mythic Trials Sesong 2 Logo" />
         </Link>
 
         <div className="hidden lg:flex items-center space-x-8">
