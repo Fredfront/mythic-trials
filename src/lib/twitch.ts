@@ -13,7 +13,7 @@ export async function getTwitchAccessToken(): Promise<string> {
   })
 
   if (!response.ok) {
-    throw new Error('Failed to obtain Twitch access token')
+    console.error('Failed to fetch Twitch access token')
   }
 
   const data = await response.json()
@@ -52,11 +52,11 @@ export async function getLiveStreams(accessToken: string, channels: string[]): P
   })
 
   if (!response.ok) {
-    throw new Error('Failed to fetch Twitch streams')
+    console.error('Failed to fetch live streams')
   }
 
   const data = await response.json()
-  const liveChannels = data.data.map((stream: StreamData) => stream.user_login.toLowerCase())
+  const liveChannels = data?.data?.map((stream: StreamData) => stream.user_login.toLowerCase())
   return liveChannels
 }
 

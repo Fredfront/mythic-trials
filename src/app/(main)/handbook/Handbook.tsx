@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from "react"
 import Image from "next/image"
 import
@@ -7,6 +9,9 @@ import
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import ReactPlayer from 'react-player';
+
+
 
 export default function TournamentHandbook()
 {
@@ -27,7 +32,8 @@ export default function TournamentHandbook()
       title: "Pick ban",
       content: "Understand the pick and ban phase of the tournament matches.",
       ingress: "Learn how to pick and ban champions in the tournament matches.",
-      image: "/placeholder.svg?height=200&width=300",
+      videoSrc: "../../../../videos/pick-ban.mp4",
+
     },
     {
       title: "Legg til resultater",
@@ -60,14 +66,7 @@ export default function TournamentHandbook()
       image: "/placeholder.svg?height=200&width=300",
       ingress: "How to report technical issues or rule violations.",
     },
-    {
-      title: "Trenger du ekstra hjelp med noe?",
-      content: (
-        <div>Ikke nøl med å ta kontakt om du lurer på noe.</div>
-      ),
-      image: "/placeholder.svg?height=200&width=300",
-      ingress: "Om du trenger ekstra hjelp til noe, kontakt en av våre administratorer.",
-    },
+
   ]
 
   return (
@@ -86,13 +85,25 @@ export default function TournamentHandbook()
               <div className="mt-4 space-y-4">
                 {section.content}
                 <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                  <Image
+                  {section.image && <Image
                     src={section.image}
                     alt={`${section.title} illustration`}
                     layout="fill"
                     objectFit="cover"
                     className="transition-all duration-300 hover:scale-105"
-                  />
+                  />}
+                  {section.videoSrc ? (
+                    <div className="absolute top-0 left-0 w-full h-full">
+                      <ReactPlayer
+                        url={section.videoSrc}
+                        controls
+                        width="100%"
+                        height="100%"
+                        className="object-cover transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                  ) : section.image ? (
+                    null) : null}
                 </div>
               </div>
             </AccordionContent>

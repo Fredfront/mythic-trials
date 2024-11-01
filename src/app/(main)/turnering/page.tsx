@@ -48,7 +48,7 @@ async function Page()
     {
       const liveChannelsForTeam = team.players
         .map((player) => player.twitchChannel?.toLowerCase())
-        .filter((channel): channel is string => channel !== undefined && liveChannels.includes(channel))
+        .filter((channel): channel is string => channel !== undefined && liveChannels?.includes(channel))
 
       if (liveChannelsForTeam.length === 0) {
         return null // Exclude teams with no live channels
@@ -61,27 +61,7 @@ async function Page()
     })
     .filter((team): team is TeamLiveStatus => team !== null)
 
-  // const teamsWithLiveChannelsMockData =
-  //   [
-  //     {
-  //       "teamSlug": "live-to-win",
-  //       "twitch_channels": [
-  //         "fyfaentv"
-  //       ]
-  //     },
-  //     {
-  //       "teamSlug": "det-beste-laget",
-  //       "twitch_channels": [
-  //         "fyfaentv"
-  //       ]
-  //     },
-  //     {
-  //       "teamSlug": "test",
-  //       "twitch_channels": [
-  //         "fyfaentv"
-  //       ]
-  //     }
-  //   ]
+
 
   return (
     <Matches
