@@ -111,6 +111,14 @@ const Footer = async () =>
                 </Link>
               ) : null}
             </li>
+            <li className="transition transform hover:scale-105 duration-500 ">
+              <Link
+                href="/handbook"
+                className="hover:underline mr-4 md:mr-6 transition transform hover:scale-105 duration-500 "
+              >
+                Handbook
+              </Link>
+            </li>
           </ul>
         </div>
         <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
