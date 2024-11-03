@@ -14,14 +14,15 @@ import supabase from '@/utils/supabase/client'
 import { dungeonConfig } from '@/app/(main)/turnering/utils/dungeonConfig'
 import { PickAndBansType, TTeam, TMatchResults, create_match_results } from '../supabase/dbFunctions'
 import { Input } from './ui/input'
-import { set } from 'lodash'
-import { match } from 'assert'
+import { useMatchData } from '@/context/MatchContext'
+
 
 const MotionDiv = motion.div as any
 
 type MatchResult = 'win' | 'loss' | null
 
-interface TeamResults {
+interface TeamResults
+{
   match1: MatchResult
   match2: MatchResult
   match3: MatchResult
@@ -35,33 +36,53 @@ export function MatchResultsComponent({
   pickAndBanData: PickAndBansType[]
   teams: TTeam[]
   matchResults: TMatchResults[]
-}) {
-  const round = parseInt(useSearchParams().get('round') || '0')
-
+})
+{
   const { user, loading } = useGetUserData()
+
+
+  const { matchData } = useMatchData()
+  const router = useRouter()
+
+
+
+  useEffect(() =>
+  {
+    if (loading) return
+    if (!user) return
+    if (!matchData) {
+      router.push('/my-matches')
+    }
+  }, [ matchData, loading, user, router ])
+
+
+  const round = matchData?.teams[ 0 ].round
+  const isBestOfTwo = matchData?.bo2 ?? false
+
   const email = user?.data.user?.email
   const contact_person = user?.data.user?.email || ''
 
-  const [myMatchResults, setMyMatchResults] = useState<TMatchResults | null>(
+  const [ myMatchResults, setMyMatchResults ] = useState<TMatchResults | null>(
     matchResults.find((e) => e.contact_person === contact_person && e.round === round) || null,
   )
-  const [opponentMatchResults, setOpponentMatchResults] = useState<TMatchResults | null>(null)
+  const [ opponentMatchResults, setOpponentMatchResults ] = useState<TMatchResults | null>(null)
 
-  const [team1Results, setTeam1Results] = useState<TeamResults>({
+  const [ team1Results, setTeam1Results ] = useState<TeamResults>({
     match1: myMatchResults?.match_1 === 1 ? 'win' : myMatchResults?.match_1 === 0 ? 'loss' : null,
     match2: myMatchResults?.match_2 === 1 ? 'win' : myMatchResults?.match_2 === 0 ? 'loss' : null,
-    match3: myMatchResults?.match_3 === 1 ? 'win' : myMatchResults?.match_3 === 0 ? 'loss' : null,
+    match3: isBestOfTwo ? null : myMatchResults?.match_3 === 1 ? 'win' : myMatchResults?.match_3 === 0 ? 'loss' : null,
   })
 
-  const [team2Results, setTeam2Results] = useState<TeamResults>({
+  const [ team2Results, setTeam2Results ] = useState<TeamResults>({
     match1: opponentMatchResults?.match_1 === 1 ? 'win' : opponentMatchResults?.match_1 === 0 ? 'loss' : null,
     match2: opponentMatchResults?.match_2 === 1 ? 'win' : opponentMatchResults?.match_2 === 0 ? 'loss' : null,
-    match3: opponentMatchResults?.match_3 === 1 ? 'win' : opponentMatchResults?.match_3 === 0 ? 'loss' : null,
+    match3: isBestOfTwo ? null : opponentMatchResults?.match_3 === 1 ? 'win' : opponentMatchResults?.match_3 === 0 ? 'loss' : null,
   })
-  const [myTeamSubmitted, setMyTeamSubmitted] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [ myTeamSubmitted, setMyTeamSubmitted ] = useState(false)
+  const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (team1Results.match1 === 'win' && team2Results.match1 === 'win')
       return setErrorMessage('Match 1 conflict: Both teams cannot win the same match')
     if (team1Results.match1 === 'loss' && team2Results.match1 === 'loss')
@@ -76,9 +97,10 @@ export function MatchResultsComponent({
       return setErrorMessage('Match 3 (Tiebreaker) conflict: Both teams cannot lose the same match')
 
     setErrorMessage(null)
-  }, [team1Results, team2Results])
+  }, [ team1Results, team2Results ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (team1Results.match1 === null && myMatchResults?.match_1 !== null) {
       setTeam1Results((prev) => ({
         ...prev,
@@ -133,34 +155,37 @@ export function MatchResultsComponent({
     opponentMatchResults?.match_3,
   ])
 
-  const [logReports, setLogReports] = useState<string[]>([''])
+  const [ logReports, setLogReports ] = useState<string[]>([ '' ])
 
-  const addLogReport = () => {
-    setLogReports([...logReports, ''])
+  const addLogReport = () =>
+  {
+    setLogReports([ ...logReports, '' ])
   }
 
-  const removeLogReport = (index: number) => {
+  const removeLogReport = (index: number) =>
+  {
     const newLogReports = logReports.filter((_, i) => i !== index)
     setLogReports(newLogReports)
   }
 
-  const updateLogReport = (index: number, value: string) => {
-    const newLogReports = [...logReports]
-    newLogReports[index] = trimWarcraftLogsUrl(value)
+  const updateLogReport = (index: number, value: string) =>
+  {
+    const newLogReports = [ ...logReports ]
+    newLogReports[ index ] = trimWarcraftLogsUrl(value)
     setLogReports(newLogReports)
   }
 
-  const trimWarcraftLogsUrl = (url: string): string => {
+  const trimWarcraftLogsUrl = (url: string): string =>
+  {
     const match = url.match(/reports\/([a-zA-Z0-9]+)/)
-    return match ? match[1] : url
+    return match ? match[ 1 ] : url
   }
 
-  const router = useRouter()
-  const home_team = useSearchParams().get('home')
-  const away_team = useSearchParams().get('away')
+  const home_team = matchData?.teams?.[ 0 ].team_slug
+  const away_team = matchData?.teams?.[ 1 ].team_slug
 
   const myTeam = teams.find((e) => e.contact_person === user?.data.user?.email)
-  const homeAndAwayTeam = [home_team, away_team]
+  const homeAndAwayTeam = [ home_team, away_team ]
   const opponentTeam = homeAndAwayTeam.find((e) => e !== myTeam?.team_slug)
   const opponent_contact_person = teams.find((e) => e.team_slug === opponentTeam)?.contact_person
   const homeTeamToSlug = home_team?.toLowerCase().replace(/\s/g, '-')
@@ -168,13 +193,17 @@ export function MatchResultsComponent({
 
   const myPickAndBansTable = pickAndBanData.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBanData.find((e) => e.team_slug === opponentTeam && e.round === round)
-  const bothTeamsConfirmed =
-    myMatchResults?.confirm === true &&
-    opponentMatchResults?.confirm === true &&
+  const bothTeamsConfirmedWithAWinner = myMatchResults?.confirm === true && opponentMatchResults?.confirm === true &&
     (myMatchResults.winner === true || myMatchResults.winner === false) &&
     opponentMatchResults.winner === !myMatchResults.winner
-      ? true
-      : false
+    ? true
+    : false
+
+
+  const bothTeamConfirmedAndIsDraw = myMatchResults?.draw === true && opponentMatchResults?.draw === true
+
+  const bothTeamsConfirmed = bothTeamsConfirmedWithAWinner || bothTeamConfirmedAndIsDraw
+
 
   const myBans = myPickAndBansTable?.bans || []
   const myPickedDungeon = myPickAndBansTable?.pick || ''
@@ -183,10 +212,11 @@ export function MatchResultsComponent({
 
   const firstMatch = myPickAndBansTable?.home ? opponentPickedDungeon : myPickedDungeon
   const secondMatch = myPickAndBansTable?.home ? myPickedDungeon : opponentPickedDungeon
-  const allBans = [...myBans, ...opponentBans]
-  const allPickedDungeons = [firstMatch, secondMatch]
+  const allBans = [ ...myBans, ...opponentBans ]
+  const allPickedDungeons = [ firstMatch, secondMatch ]
 
-  const getTiebreaker = () => {
+  const getTiebreaker = () =>
+  {
     return dungeonConfig.find((dungeon) => !allPickedDungeons.includes(dungeon.id) && !allBans.includes(dungeon.id))
   }
 
@@ -196,28 +226,33 @@ export function MatchResultsComponent({
     tiebreaker: getTiebreaker()?.name,
   }
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (!email) return
 
     if (!contact_person || !round) return
-    getMatchresults(contact_person, round).then((res) => {
+    getMatchresults(contact_person, round).then((res) =>
+    {
       const response = res as TMatchResults[]
       setMyMatchResults(response.find((e) => e.contact_person === contact_person && e.round === round) || null)
     })
-  }, [round, contact_person, email])
+  }, [ round, contact_person, email ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (!email) return
     if (!opponent_contact_person || !round) return
-    getMatchresults(opponent_contact_person, round).then((res) => {
+    getMatchresults(opponent_contact_person, round).then((res) =>
+    {
       const response = res as TMatchResults[]
       setOpponentMatchResults(
         response.find((e) => e.contact_person === opponent_contact_person && e.round === round) || null,
       )
     })
-  }, [round, opponent_contact_person, email])
+  }, [ round, opponent_contact_person, email ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     //If myPickAndBansTable?.team_slug is not equal either homeTeam or awayTeam navigatge away
     if (
       myPickAndBansTable &&
@@ -227,20 +262,23 @@ export function MatchResultsComponent({
     ) {
       return router.push('/my-matches')
     }
-  }, [myPickAndBansTable, loading, homeTeamToSlug, awayTeamToSlug, router])
+  }, [ myPickAndBansTable, loading, homeTeamToSlug, awayTeamToSlug, router ])
 
-  useEffect(() => {
-    if (!awayTeamToSlug || !homeTeamToSlug || !contact_person || !round) return
+  useEffect(() =>
+  {
+    if (!awayTeamToSlug || !homeTeamToSlug || !contact_person || !round || !matchData) return
     createMatchResultsIfNotExists({
       awayTeam: awayTeamToSlug,
       email: contact_person,
       homeTeam: homeTeamToSlug,
       myTeamSlug: myTeam?.team_slug as string,
       round: round,
+      matchUUID: matchData.teams?.[ 0 ].matchUUID,
     })
-  }, [awayTeamToSlug, contact_person, homeTeamToSlug, myTeam?.team_slug, round])
+  }, [ awayTeamToSlug, contact_person, homeTeamToSlug, myTeam?.team_slug, round, matchData ])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (!email) return
 
     const channel = supabase
@@ -252,7 +290,8 @@ export function MatchResultsComponent({
           schema: 'public',
           table: 'match_results',
         },
-        (payload) => {
+        (payload) =>
+        {
           const newPayload = payload.new as TMatchResults
           if (newPayload.contact_person === contact_person && newPayload.round === round) {
             setMyMatchResults(newPayload)
@@ -263,19 +302,24 @@ export function MatchResultsComponent({
             setTeam2Results({
               match1: newPayload.match_1 === 1 ? 'win' : newPayload.match_1 === 0 ? 'loss' : null,
               match2: newPayload.match_2 === 1 ? 'win' : newPayload.match_2 === 0 ? 'loss' : null,
-              match3: newPayload.match_3 === 1 ? 'win' : newPayload.match_3 === 0 ? 'loss' : null,
+              match3: isBestOfTwo ? null : newPayload.match_3 === 1 ? 'win' : newPayload.match_3 === 0 ? 'loss' : null,
             })
           }
         },
       )
       .subscribe()
 
-    return () => {
+    return () =>
+    {
       supabase.removeChannel(channel)
     }
-  }, [contact_person, opponent_contact_person, round, email])
+  }, [ contact_person, opponent_contact_person, round, email, isBestOfTwo ])
 
-  const updateResult = (team: string, match: 'match1' | 'match2' | 'match3', result: MatchResult) => {
+  const updateResult = (team: string, match: 'match1' | 'match2' | 'match3', result: MatchResult) =>
+  {
+
+    if (!round || !contact_person) return
+
     const setResults = team === myTeam?.team_slug ? setTeam1Results : setTeam2Results
 
     if (!needsTiebreaker(team1Results, team2Results) && team1Results.match3 !== null) {
@@ -292,50 +336,65 @@ export function MatchResultsComponent({
       match === 'match1' ? 1 : match === 'match2' ? 2 : 3,
     )
 
-    setResults((prev) => {
-      const newResults = { ...prev, [match]: result }
+    setResults((prev) =>
+    {
+      const newResults = { ...prev, [ match ]: result }
       return newResults
     })
   }
 
-  const needsTiebreaker = (team1: TeamResults, team2: TeamResults) => {
+
+  const needsTiebreaker = (team1: TeamResults, team2: TeamResults) =>
+  {
+
+
     const team1Wins = Object.values(team1).filter((result) => result === 'win').length
     const team1Losses = Object.values(team1).filter((result) => result === 'loss').length
     const team2Wins = Object.values(team2).filter((result) => result === 'win').length
     const team2Losses = Object.values(team2).filter((result) => result === 'loss').length
-    return (
-      (team1Wins === 1 && team2Wins === 1) ||
-      (team1Wins === 2 && team2Wins === 2) ||
-      (team1Wins === 1 && team1Losses === 1) ||
-      (team2Wins === 1 && team2Losses === 1)
-    )
+
+
+    if (isBestOfTwo) {
+      return false
+    } else {
+      return (
+        (team1Wins === 1 && team2Wins === 1) ||
+        (team1Wins === 2 && team2Wins === 2) ||
+        (team1Wins === 1 && team1Losses === 1) ||
+        (team2Wins === 1 && team2Losses === 1)
+      )
+    }
+
   }
+
+
 
   const wonBoth = myMatchResults?.match_1 === 1 && myMatchResults?.match_2 === 1
   const lostBoth = myMatchResults?.match_1 === 0 && myMatchResults?.match_2 === 0
 
-  const hideTieBreaker = wonBoth || lostBoth || myMatchResults?.match_1 === null || myMatchResults?.match_2 === null
+  const hideTieBreaker = isBestOfTwo || wonBoth || lostBoth || myMatchResults?.match_1 === null || myMatchResults?.match_2 === null
 
-  const renderMatchResult = (team: string, match: 'match1' | 'match2' | 'match3') => {
+  const renderMatchResult = (team: string, match: 'match1' | 'match2' | 'match3') =>
+  {
     const results = team === myTeam?.team_slug ? team1Results : team2Results
     const submitted = team === myTeam?.team_slug ? myTeamSubmitted : opponentMatchResults?.confirm
 
     return (
       <div className="flex space-x-2">
         <Button
-          variant={results[match] === 'win' ? 'default' : 'outline'}
+          variant={results[ match ] === 'win' ? 'default' : 'outline'}
           onClick={() => updateResult(team, match, 'win')}
           disabled={submitted || team === opponentTeam}
-          className={`w-full py-6 ${results[match] === 'win' ? 'bg-green-600 hover:bg-green-700' : 'bg-transparent text-white border-white hover:bg-white/10'}`}
+          className={`w-full py-6 ${results[ match ] === 'win' ? 'bg-green-600 hover:bg-green-700' : 'bg-transparent text-white border-white hover:bg-white/10'}`}
         >
           <CheckCircle2 className="mr-2 h-5 w-5" />
           Win
         </Button>
         <Button
-          variant={results[match] === 'loss' ? 'default' : 'outline'}
+          variant={results[ match ] === 'loss' ? 'default' : 'outline'}
           onClick={() => updateResult(team, match, 'loss')}
           disabled={submitted || team === opponentTeam}
-          className={`w-full py-6 ${results[match] === 'loss' ? 'bg-red-600 hover:bg-red-700' : 'bg-transparent text-white border-white hover:bg-white/10'}`}
+          className={`w-full py-6 ${results[ match ] === 'loss' ? 'bg-red-600 hover:bg-red-700' : 'bg-transparent text-white border-white hover:bg-white/10'}`}
         >
           <XCircle className="mr-2 h-5 w-5" />
           Loss
@@ -344,11 +403,23 @@ export function MatchResultsComponent({
     )
   }
 
-  const renderTeamCard = (team: string) => {
+  const isDrawMyMatchResults = (myMatchResults?.match_1 ?? 0) + (myMatchResults?.match_2 ?? 0) === 1
+
+
+
+  const isDrawOpponentResults = opponentMatchResults?.match_1 && opponentMatchResults.match_2 ? opponentMatchResults?.match_1 + opponentMatchResults?.match_2 === 1 : false
+
+  const isDraw = isDrawMyMatchResults && isDrawOpponentResults
+
+  const renderTeamCard = (team: string) =>
+  {
     const results = team === myTeam?.team_slug ? team1Results : team2Results
     const submitted = team === myTeam?.team_slug ? myTeamSubmitted : opponentMatchResults?.confirm
 
-    const handleSubmit = () => {
+    const handleSubmit = () =>
+    {
+      if (!round || !contact_person) return
+
       const match1Point = results.match1 === 'win' ? 1 : 0
       const match2Point = results.match2 === 'win' ? 1 : 0
       const match3Point = results.match3 === 'win' ? 1 : 0
@@ -357,13 +428,13 @@ export function MatchResultsComponent({
 
       if (team === myTeam?.team_slug && myMatchResults?.confirm !== true) {
         setMyTeamSubmitted(true)
-        confirmResults(contact_person, round, points >= 2, true, logReports, new Date().getTime())
+        confirmResults({ contact_person: contact_person, round: round, isBo2: isBestOfTwo, winner: points >= 2, confirm: true, match_uuid: matchData.teams?.[ 0 ].matchUUID, logReports, confirm_unix_timestamp: new Date().getTime(), isDraw: isDrawMyMatchResults })
       }
 
       if (myMatchResults?.confirm === true) {
         if (team === myTeam?.team_slug) {
           setMyTeamSubmitted(false)
-          confirmResults(contact_person, round, points >= 2, false, logReports, new Date().getTime())
+          confirmResults({ contact_person: contact_person, round: round, isBo2: isBestOfTwo, winner: points >= 2, confirm: false, match_uuid: matchData.teams?.[ 0 ].matchUUID, logReports, confirm_unix_timestamp: new Date().getTime(), isDraw: isDrawMyMatchResults })
         }
       }
     }
@@ -419,7 +490,7 @@ export function MatchResultsComponent({
               {renderMatchResult(team, 'match2')}
             </div>
             <AnimatePresence>
-              {hideTieBreaker ? null : (
+              {hideTieBreaker || isBestOfTwo ? null : (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
@@ -503,17 +574,28 @@ export function MatchResultsComponent({
     )
   }
 
-  const renderMatchOverview = () => {
-    const getMatchResult = (match: 'match1' | 'match2' | 'match3') => {
-      if (team1Results[match] === 'win' && team2Results[match] === 'loss') return `${myTeam?.name} wins`
-      if (team2Results[match] === 'win' && team1Results[match] === 'loss')
+  const renderMatchOverview = () =>
+  {
+    const getMatchResult = (match: 'match1' | 'match2' | 'match3') =>
+    {
+      if (team1Results[ match ] === 'win' && team2Results[ match ] === 'loss') return `${myTeam?.name} wins`
+      if (team2Results[ match ] === 'win' && team1Results[ match ] === 'loss')
         return `${teams.find((e) => e.team_slug === opponentTeam)?.name} wins`
-      if (team1Results[match] && team2Results[match] && team1Results[match] !== team2Results[match]) return 'Conflict'
-      if (team1Results[match] === null && team2Results[match] === null) return ''
+      if (team1Results[ match ] && team2Results[ match ] && team1Results[ match ] !== team2Results[ match ]) return 'Conflict'
+      if (team1Results[ match ] === null && team2Results[ match ] === null) return ''
       return ''
     }
 
-    const calculatePoints = (results: TeamResults) => {
+    const calculatePoints = (results: TeamResults) =>
+    {
+      //If best of two you get 3 points for winning both, and 0 points for losing both, and 1 point each for winning 1 map each
+
+      if (isBestOfTwo) {
+        if (results.match1 === 'win' && results.match2 === 'win') return 3
+        if (results.match1 === 'loss' && results.match2 === 'loss') return 0
+        return 1
+      }
+
       return Object.values(results).filter((result) => result === 'win').length
     }
 
@@ -544,7 +626,7 @@ export function MatchResultsComponent({
                 </Badge>
               )}
             </div>
-            {(needsTiebreaker(team1Results, team2Results) || team1Results.match3 !== null) && (
+            {(needsTiebreaker(team1Results, team2Results) === true || team1Results.match3 !== null) && (
               <>
                 <Separator className="bg-gray-600" />
                 <div className="flex justify-between items-center">
@@ -563,7 +645,7 @@ export function MatchResultsComponent({
                 <div className="mt-6 space-y-2">
                   <h3 className="text-xl font-bold flex items-center">
                     <Trophy className="mr-2 h-6 w-6 text-fdb202" />
-                    Final Score
+                    Resultat
                   </h3>
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{myTeam?.name}:</span>
@@ -653,7 +735,8 @@ export function MatchResultsComponent({
             {renderMatchOverview()}{' '}
             {bothTeamsConfirmed && (
               <Button
-                onClick={() => {
+                onClick={() =>
+                {
                   router.push('/my-matches')
                 }}
                 className="mt-4 flex gap-2 underline"
@@ -668,7 +751,8 @@ export function MatchResultsComponent({
   )
 }
 
-async function updateMatchResults(contact_person: string, round: number, result: number | null, match: number) {
+async function updateMatchResults(contact_person: string, round: number, result: number | null, match: number)
+{
   let payload = {}
   if (match === 1) {
     payload = {
@@ -700,21 +784,41 @@ async function updateMatchResults(contact_person: string, round: number, result:
   }
 }
 
-async function confirmResults(
-  contact_person: string,
-  round: number,
-  winner: boolean,
-  confirm: boolean,
-  logReports: string[],
-  confirm_unix_timestamp: number,
-) {
+type confirmResultsProps = {
+  contact_person: string
+  round: number
+  winner: boolean
+  confirm: boolean
+  logReports: string[]
+  confirm_unix_timestamp: number
+  isDraw: boolean
+  isBo2: boolean
+  match_uuid: string
+}
+
+async function confirmResults({
+  contact_person,
+  round,
+  winner,
+  confirm,
+  logReports,
+  confirm_unix_timestamp,
+  isDraw,
+  isBo2,
+  match_uuid,
+}: confirmResultsProps) 
+{
   const { error } = await supabase
     .from('match_results')
     .update({
       confirm: confirm,
       winner: winner,
+      match_uuid: match_uuid,
       warcraft_logs_report: logReports,
       confirm_unix_timestamp: confirm ? confirm_unix_timestamp : null,
+      draw: !isBo2 ? false : isDraw,
+      bo2: isBo2,
+      bo3: !isBo2
     })
     .eq('contact_person', contact_person)
     .eq('round', round)
@@ -731,25 +835,27 @@ async function createMatchResultsIfNotExists({
   homeTeam,
   awayTeam,
   myTeamSlug,
+  matchUUID,
 }: {
   email: string
   round: number
   homeTeam: string
   awayTeam: string
-  myTeamSlug: string
-}) {
+  myTeamSlug: string,
+  matchUUID: string
+})
+{
   await supabase
     .from('pick_ban')
     .select('*')
     .eq('contact_person', email)
     .eq('round', round)
-    .then((res) => {
+    .then((res) =>
+    {
       const pickBanCompletedForRound =
         res.data?.find((e) => e.team_slug === homeTeam || (e.team_slug === awayTeam && e.round === round))
           ?.completed === true
-      const matchUUID = res.data?.find(
-        (e) => e.team_slug === homeTeam || (e.team_slug === awayTeam && e.round === round),
-      ).matchUUID
+
 
       if (res.data && res.data.length > 0 && pickBanCompletedForRound) {
         supabase
@@ -757,7 +863,8 @@ async function createMatchResultsIfNotExists({
           .select('*')
           .eq('contact_person', email)
           .eq('round', round)
-          .then((res) => {
+          .then((res) =>
+          {
             if (res.data && res.data.length === 0) {
               create_match_results({
                 matchResults: {
@@ -774,7 +881,8 @@ async function createMatchResultsIfNotExists({
     })
 }
 
-async function getMatchresults(contact_person: string, round: number) {
+async function getMatchresults(contact_person: string, round: number)
+{
   const { data, error } = await supabase
     .from('match_results')
     .select('*')
@@ -789,6 +897,3 @@ async function getMatchresults(contact_person: string, round: number) {
   return data
 }
 
-async function fixMatch3(contact_person: string, round: number) {
-  await supabase.from('match_results').update({ match_3: null }).eq('contact_person', contact_person).eq('round', round)
-}

@@ -7,6 +7,7 @@ import NavBarV2 from '@/components/navbar'
 import { ServerClient } from '@/utils/supabase/server'
 import { Match, MatchRecord, SupabaseTeamType } from '../../../types'
 import { Toaster } from '@/components/ui/toaster'
+import MatchDataProvider from '@/context/MatchContext'
 
 export default async function Template({ children }: { children: React.ReactNode })
 {
@@ -28,7 +29,7 @@ export default async function Template({ children }: { children: React.ReactNode
         matches={matches}
         featureFlags={featureFlags}
       />
-      <div className="flex-grow">{children}</div>
+      <MatchDataProvider><div className="flex-grow">{children}</div></MatchDataProvider>
       <Toaster />
       <Footer />
     </div>

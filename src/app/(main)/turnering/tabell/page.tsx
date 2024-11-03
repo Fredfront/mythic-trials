@@ -1,18 +1,25 @@
 import SimplifiedLeaderboard from '@/app/components/SimplifiedLeaderboard'
 import { ServerClient } from '@/utils/supabase/server'
 import React from 'react'
-import ResultsTable from './ResultsTable'
+import ResultsTable from './ResultsTableBo3'
 import { getAllTeams } from '@/app/api/getAllTeams'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { CalendarX } from 'lucide-react'
+import ResultsTableBo3 from './ResultsTableBo3'
+import ResultsTableBo2 from './ResultsTableBo2'
+import { MatchResult } from '../../../../../types'
 
 export const revalidate = 0
 
-async function Page() {
-  const matchResultsTable = await ServerClient.from('match_results').select('*')
+async function Page()
+{
+  const matchResultsTable = (await ServerClient.from('match_results').select('*')).data as MatchResult[] | undefined
   const sanityTeamData = await getAllTeams()
 
-  if (matchResultsTable.data && matchResultsTable.data.length === 0) {
+  const isBestOfThree = matchResultsTable?.find((e) => e.bo3 === true) ? true : false
+  const isBestOfTwo = matchResultsTable?.find((e) => e.bo2 === true) ? true : false
+
+  if (matchResultsTable && matchResultsTable.length === 0) {
     return (
       <div className="flex justify-center items-center p-4 text-white">
         <Card className="w-full max-w-md text-white">
@@ -36,7 +43,8 @@ async function Page() {
     <>
       {' '}
       <h1 className="text-4xl font-bold mb-10">Tabell</h1>
-      <ResultsTable matchResults={matchResultsTable.data ?? []} sanityTeamData={sanityTeamData} />
+      {matchResultsTable && isBestOfTwo && <ResultsTableBo2 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />}
+      {matchResultsTable && isBestOfThree && <ResultsTableBo3 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />}
     </>
   )
 }

@@ -65,6 +65,9 @@ async function Page()
       rescheduled_round_date: match.rescheduled_round_date,
       rescheduled_round_startTime: match.rescheduled_round_startTime,
       id: match.id,
+      bo2: match.bo2,
+      bo3: match.bo3,
+      tournament_name: match.tournament_name,
     }
 
     const awayTeamMatch: TeamMatch = {
@@ -86,12 +89,18 @@ async function Page()
       rescheduled_round_date: match.rescheduled_round_date,
       rescheduled_round_startTime: match.rescheduled_round_startTime,
       id: match.id,
+      bo2: match.bo2,
+      bo3: match.bo3,
+      tournament_name: match.tournament_name,
     }
 
     // Create Match object
     const mappedMatch: Match = {
       teams: [ homeTeamMatch, awayTeamMatch ],
       featured: match.featured,
+      bo2: match.bo2,
+      bo3: match.bo3,
+      tournament_name: match.tournament_name,
     }
 
     scheduleMap[ roundNumber ].push(mappedMatch)
@@ -118,10 +127,9 @@ async function Page()
       <Link className="p-2 flex gap-2 hover:underline hover:font-semibold" href="/superadmin">
         <ArrowLeft /> Gå tilbake
       </Link>
-      <div className="text-center p-4 text-4xl font-bold items-center justify-center flex flex-col gap-20">
-        Dashbord
-        <CreateMatches schedule={sortedRounds} teams={teams ?? []} roundDates={roundDates} email="" />
-      </div>
+
+      <CreateMatches schedule={sortedRounds} teams={teams ?? []} roundDates={roundDates} email="" />
+
     </>
   )
 }

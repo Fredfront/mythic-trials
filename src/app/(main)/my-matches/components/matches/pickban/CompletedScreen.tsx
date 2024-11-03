@@ -9,13 +9,15 @@ import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { Match } from '../../../../../../../types'
 
-interface CompletedScreenProps {
+interface CompletedScreenProps
+{
   homeTeam: string
   awayTeam: string
   pickedDungeons: Array<{ id: number; name: string; image: string }>
   tiebreakerDungeon: { id: number; name: string; image: string } | null
   round: number
   matchData: Match & { myTeam: string } & { opponent: string }
+  isBestOfTwo: boolean
 }
 
 export default function CompletedScreen({
@@ -25,7 +27,9 @@ export default function CompletedScreen({
   tiebreakerDungeon,
   round,
   matchData,
-}: CompletedScreenProps) {
+  isBestOfTwo
+}: CompletedScreenProps)
+{
   const router = useRouter()
 
   return (
@@ -41,12 +45,12 @@ export default function CompletedScreen({
         <CardContent className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">
-              {matchData.teams?.[0].name} vs {matchData.teams?.[1].name}
+              {matchData.teams?.[ 0 ].name} vs {matchData.teams?.[ 1 ].name}
             </h2>
             <p className="text-lg text-white">Følgende dungeons er valgt:</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className={`grid grid-cols-1 ${isBestOfTwo ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4`}>
             {pickedDungeons.map((dungeon, index) => (
               <Card className="text-white bg-gray-700" key={dungeon.id}>
                 <CardContent className="p-4">
@@ -67,7 +71,7 @@ export default function CompletedScreen({
               </Card>
             ))}
 
-            {tiebreakerDungeon && (
+            {!isBestOfTwo && tiebreakerDungeon && (
               <Card className="text-white bg-gray-700">
                 <CardContent className="p-4">
                   <div className="relative h-48 mb-2">

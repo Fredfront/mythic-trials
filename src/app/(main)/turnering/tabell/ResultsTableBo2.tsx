@@ -4,82 +4,82 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import Image from 'next/image'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { urlForImage } from '../../../../../sanity/lib/image'
+import { MatchResult } from '../../../../../types'
 
-type MatchResult = {
-  id: number
-  match_1: number
-  match_2: number
-  match_3: number | null
-  opponent: string
-  round: number
-  team_slug: string
-  confirm: boolean
-  contact_person: string
-  winner: boolean
-  matchUUID: string
-}
+
 
 type TeamStats = {
   team_slug: string
   team_name: string
   wins: number
   losses: number
+  draws: number // Added draws property
   points: number
   image: string
 }
 
-interface ResultsTableProps {
+interface ResultsTableProps
+{
   matchResults: MatchResult[]
   sanityTeamData: MythicPlusTeam[]
 }
 
-const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamData }) => {
+const ResultsTableBo2: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamData }) =>
+{
+
   // Calculate team stats based on match results
-  const calculateTeamStats = (results: MatchResult[]): TeamStats[] => {
+  const calculateTeamStats = (results: MatchResult[]): TeamStats[] =>
+  {
     const teamStatsMap: Record<string, TeamStats> = {}
 
     // Preprocess sanityTeamData for faster lookup
     const teamDataMap: Record<string, MythicPlusTeam> = {}
-    sanityTeamData.forEach((team) => {
-      teamDataMap[team.teamSlug] = team
+    sanityTeamData.forEach((team) =>
+    {
+      teamDataMap[ team.teamSlug ] = team
     })
 
-    results.forEach((result) => {
+    results.forEach((result) =>
+    {
       const teamSlug = result.team_slug
 
       // Initialize team stats if not present
-      if (!teamStatsMap[teamSlug]) {
-        const teamData = teamDataMap[teamSlug]
-        teamStatsMap[teamSlug] = {
+      if (!teamStatsMap[ teamSlug ]) {
+        const teamData = teamDataMap[ teamSlug ]
+        teamStatsMap[ teamSlug ] = {
           team_slug: teamSlug,
           team_name: teamData?.teamName ?? '',
           wins: 0,
           losses: 0,
+          draws: 0, // Initialize draws to 0
           points: 0,
           image: teamData?.teamImage.asset._ref ?? '',
         }
       }
 
-      const teamStats = teamStatsMap[teamSlug]
+      const teamStats = teamStatsMap[ teamSlug ]
 
-      // Calculate the number of matches won by the team
-      const matchesWon = [result.match_1, result.match_2, result.match_3].filter((match) => match === 1).length
-
-      // Determine if match_3 was played
-      const match3Played = result.match_3 === 0 || result.match_3 === 1
-
-      if (matchesWon >= 2) {
-        // Team wins overall
-        teamStats.points += 2
-        teamStats.wins += 1
-      } else if (match3Played) {
-        // Team loses overall but match_3 was played
+      if (result.draw) {
+        // If the match is a draw
+        teamStats.draws += 1
         teamStats.points += 1
-        teamStats.losses += 1
       } else {
-        // Team loses overall and match_3 was not played
-        teamStats.points += 0
-        teamStats.losses += 1
+        // Calculate the number of matches won by the team
+        const matchesWon = [ result.match_1, result.match_2 ].filter((match) => match === 1).length
+
+        if (matchesWon >= 2) {
+          // Team wins overall
+          teamStats.wins += 1
+          teamStats.points += 3
+        } else if (matchesWon === 1) {
+          // If the team won one submatch and lost the other
+          teamStats.losses += 1
+          // No additional points for this scenario
+        } else {
+          // Team loses overall
+          teamStats.losses += 1
+          // No points awarded
+        }
       }
     })
 
@@ -88,7 +88,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
 
   const teamStats = calculateTeamStats(matchResults)
 
-  const sortedTeamStats = [...teamStats].sort((a, b) => b.points - a.points)
+  const sortedTeamStats = [ ...teamStats ].sort((a, b) => b.points - a.points)
 
   return (
     <div className="p-4 mt-4">
@@ -98,6 +98,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
             <TableHead className="text-white font-extrabold min-w-48">Team</TableHead>
             <TableHead className="text-white font-extrabold text-center">Wins</TableHead>
             <TableHead className="text-white font-extrabold text-center">Losses</TableHead>
+            <TableHead className="text-white font-extrabold text-center">Draws</TableHead> {/* New Draws Column */}
             <TableHead className="text-white font-extrabold text-center">Points</TableHead>
           </TableRow>
         </TableHeader>
@@ -120,6 +121,9 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
               <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-black">
                 {team.losses}
               </TableCell>
+              <TableCell className="font-bold text-[#FCD20A] text-lg text-center border-r-[1px] border-black">
+                {team.draws}
+              </TableCell>
               <TableCell className="font-bold text-[#FCD20A] text-lg text-center">{team.points}</TableCell>
             </TableRow>
           ))}
@@ -129,4 +133,4 @@ const ResultsTable: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamDat
   )
 }
 
-export default ResultsTable
+export default ResultsTableBo2

@@ -11,7 +11,7 @@ import Image from 'next/image'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import PickBanV2 from './matches/PickBanV2'
 import { InfoBoxComponent } from '@/components/info-box'
-import { Match, MatchRecord, SupabaseTeamType, TournamentSchedule } from '../../../../../types'
+import { MatchRecord, SupabaseTeamType, TournamentSchedule } from '../../../../../types'
 import
 {
   create_match_results,
@@ -23,7 +23,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { createSortedRounds } from '../page'
 import { toast } from '@/hooks/use-toast'
-import { set } from 'lodash'
+import { useMatchData, useMatchDataOperations } from '@/context/MatchContext'
 
 export function Matches({
   pickAndBansData,
@@ -46,6 +46,7 @@ export function Matches({
   const router = useRouter()
   const detailedSchedule = matchSchedule
   const [ matchResults, setMatchResults ] = React.useState<TMatchResults[]>(matchResultsData)
+
 
   useEffect(() =>
   {
@@ -82,11 +83,14 @@ export function Matches({
     }
   }, [ teams, loading, user?.data.user?.email ])
 
-  type matchDataType = Match & { myTeam: string } & { opponent: string }
+  const { matchData } = useMatchData()
+  const { setMatchData } = useMatchDataOperations()
 
-  const [ matchData, setMatchData ] = React.useState<matchDataType | null>(null)
 
-  if (matchData && matchData.teams.length === 2 && email) {
+  const hasMatchResultsData = matchResultsData?.find((e) => e.match_uuid === matchData?.teams?.[ 0 ].matchUUID)?.confirm === true
+
+
+  if (!hasMatchResultsData && matchData && matchData.teams.length === 2 && email) {
     return (
       <>
         <div
@@ -143,6 +147,7 @@ export function Matches({
                         const awayTeamMatchResults = matchResults?.find((result) => result.team_slug === awayTeam)
 
                         const homeTeamWins = homeTeamMatchResults?.winner
+                        const isDraw = homeTeamMatchResults?.draw || awayTeamMatchResults?.draw
 
                         const homeTeamScoreMatchOne = homeTeamMatchResults?.match_1 || 0
                         const awayTeamScoreMatchOne = awayTeamMatchResults?.match_1 || 0
@@ -195,6 +200,7 @@ export function Matches({
                             (e) => e.team_slug === myTeam?.teamSlug && e.round === payloadCreateNewPickBanRow.round,
                           )?.confirm === true
 
+
                         const myMatchResultsAreClaimed =
                           matchResults?.find(
                             (e) =>
@@ -203,7 +209,7 @@ export function Matches({
                           )?.claimed_win === true
 
                         const opponentMatchResultsAreConfirmed =
-                          matchResults?.find((e) => e.match_uuid === matchUUID && e.team_slug !== myTeam?.teamSlug)
+                          matchResults?.find((e) => e.round === match.teams[ 0 ].round && e.team_slug !== myTeam?.teamSlug && e.opponent === myTeam?.teamSlug)
                             ?.confirm === true
 
                         const matchResultsAreConfirmed = myMatchResultsAreConfirmed && opponentMatchResultsAreConfirmed
@@ -411,8 +417,8 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                   <div className="flex w-2/5 md:w-[40%] text-right justify-end">
                                     <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                                       {confirmedResult ? (
-                                        <div className={`text-sm ${homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
-                                          {homeTeamWins ? 'Vinner' : 'Taper'}
+                                        <div className={`text-sm ${isDraw ? 'text-orange-400' : homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
+                                          {isDraw ? 'Uavgjort' : homeTeamWins ? 'Vinner' : 'Taper'}
                                         </div>
                                       ) : null}
                                       <div
@@ -461,9 +467,9 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                     <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                                       {confirmedResult ? (
                                         <div
-                                          className={`text-sm ${!homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}
+                                          className={`text-sm ${isDraw ? 'text-orange-400' : !homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}
                                         >
-                                          {!homeTeamWins ? 'Vinner' : 'Taper'}
+                                          {isDraw ? 'Uavgjort' : !homeTeamWins ? 'Vinner' : 'Taper'}
                                         </div>
                                       ) : null}
                                       <div
@@ -529,6 +535,13 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                   className="bg-[#011624] text-white"
                                   onClick={async () =>
                                   {
+
+                                    setMatchData({
+                                      ...match,
+                                      myTeam: findMatch?.team_slug as string,
+                                      opponent: opponent as string,
+                                    })
+
                                     await supabase
                                       .from('match_results')
                                       .select('*')

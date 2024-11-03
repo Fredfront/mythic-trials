@@ -31,6 +31,9 @@ export type MatchRecord = {
   featured: boolean
   home_team_agree_reschedule: boolean
   away_team_agree_reschedule: boolean
+  bo2: boolean
+  bo3: boolean
+  tournament_name: string
 }
 
 export type MatchWithTeams = {
@@ -62,13 +65,38 @@ export type TeamMatch = {
   home_team_agree_reschedule: boolean
   away_team_agree_reschedule: boolean
   id: string
+  bo3: boolean
+  bo2: boolean
+  tournament_name: string
 }
 
 export type Match = {
   teams: [TeamMatch, TeamMatch]
   featured: boolean
+  bo2: boolean
+  bo3: boolean
+  tournament_name: string
 }
 
 export type Round = Match[]
 
 export type TournamentSchedule = Round[]
+
+export type matchDataType = Match & { myTeam: string } & { opponent: string }
+
+export type MatchResult = {
+  id: number
+  match_1: number
+  match_2: number
+  match_3: number | null
+  opponent: string
+  round: number
+  team_slug: string
+  confirm: boolean
+  contact_person: string
+  winner: boolean
+  matchUUID: string
+  draw: boolean
+  bo2: boolean
+  bo3: boolean
+}

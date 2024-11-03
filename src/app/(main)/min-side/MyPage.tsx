@@ -113,7 +113,7 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
       router.push('/')
     }
 
-  }, [ user, loading, sanityTeam ])
+  }, [ user, loading, sanityTeam, router ])
 
 
   if (!user || user.data.user?.email && !sanityTeam || loading) return null

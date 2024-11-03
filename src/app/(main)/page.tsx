@@ -34,6 +34,7 @@ const Home = async () =>
   const rounds = (await ServerClient.from('rounds').select('*').order('round_date', { ascending: true }))
     .data as RoundType[]
 
+
   const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as {
     create_team_allowed: boolean
     edit_team_allowed: boolean
@@ -55,7 +56,7 @@ const Home = async () =>
         >
           <Image src={logo} alt="Nerdelandslaget" width={250} height={250} priority />
           <h2 className={`${LifeCraft.className} text-8xl text-white `}>sesong 3</h2>
-          <p className="text-center font-medium max-w-2xl  text-lg sm:text-xl shadow-sm ">
+          <p className="text-center font-bold max-w-2xl  text-lg sm:text-xl  ">
             Vi er tilbake for sesong 3 av Mythic Trials arrangert av Nerdelandslaget WoW.
           </p>
           <div className="flex gap-4 mt-10 pb-10 flex-wrap ">
@@ -172,78 +173,9 @@ const Home = async () =>
           </div>
         ) : null}{' '}
       </div>
-      {/* <div className="flex items-center w-7xl justify-center gap-4 mt-10 p-20">
-        <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 1 (Ims)</div>
-        <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 2 (Ims)</div>
-        <div className="bg-[#D9D9D9] h-16 w-48 grid place-items-center text-black font-bold">Sponsor 3 (Ims)</div>
-      </div> */}
+
     </main >
   )
 }
 
 export default Home
-
-const rounds = [
-  {
-    day: '15',
-    month: 'NOV',
-    round: 'Runde 1',
-    date: new Date('2024-11-15').getTime(),
-  },
-
-  {
-    day: '22',
-    month: 'NOV',
-    round: 'Runde 2',
-    date: new Date('2024-11-22').getTime(),
-  },
-  {
-    day: '29',
-    month: 'NOV',
-    round: 'Runde 3',
-    date: new Date('2024-11-29').getTime(),
-  },
-  {
-    day: '6',
-    month: 'DEC',
-    round: 'Runde 4',
-    date: new Date('2024-12-06').getTime(),
-  },
-  {
-    day: '13',
-    month: 'DEC',
-    round: 'Runde 5',
-    date: new Date('2024-12-13').getTime(),
-  },
-
-  {
-    day: '20',
-    month: 'DEC',
-    round: 'Runde 6',
-    date: new Date('2024-12-20').getTime(),
-  },
-  {
-    day: '03',
-    month: 'JAN',
-    round: 'Runde 7',
-    date: new Date('2025-01-03').getTime(),
-  },
-  {
-    day: '10',
-    month: 'JAN',
-    round: 'Runde 8',
-    date: new Date('2025-01-10').getTime(),
-  },
-  {
-    day: '17',
-    month: 'JAN',
-    round: 'Runde 9',
-    date: new Date('2025-01-17').getTime(),
-  },
-  {
-    day: '24',
-    month: 'JAN',
-    round: 'Runde 10',
-    date: new Date('2025-01-24').getTime(),
-  },
-]

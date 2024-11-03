@@ -100,6 +100,7 @@ export type TMatchResults = {
   warcraft_logs_report: string[]
   confirm_unix_timestamp?: number
   claimed_win?: boolean
+  draw: boolean
 }
 
 export type TTeam = {

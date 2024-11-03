@@ -106,6 +106,9 @@ export function createSortedRounds(matchesData: MatchRecord[], teams: SupabaseTe
       away_team_proposed_rescheduled_round_date: match.away_team_proposed_rescheduled_round_date,
       away_team_proposed_rescheduled_round_startTime: match.away_team_proposed_rescheduled_round_startTime,
       id: match.id,
+      bo2: match.bo2,
+      bo3: match.bo3,
+      tournament_name: match.tournament_name,
     }
 
     const awayTeamMatch: TeamMatch = {
@@ -127,12 +130,18 @@ export function createSortedRounds(matchesData: MatchRecord[], teams: SupabaseTe
       away_team_proposed_rescheduled_round_date: match.away_team_proposed_rescheduled_round_date,
       away_team_proposed_rescheduled_round_startTime: match.away_team_proposed_rescheduled_round_startTime,
       id: match.id,
+      bo2: match.bo2,
+      bo3: match.bo3,
+      tournament_name: match.tournament_name,
     }
 
     // Create Match object
     const mappedMatch: Match = {
       teams: [ homeTeamMatch, awayTeamMatch ],
       featured: match.featured,
+      bo2: match.bo2,
+      bo3: match.bo3,
+      tournament_name: match.tournament_name,
     }
 
     scheduleMap[ roundNumber ].push(mappedMatch)

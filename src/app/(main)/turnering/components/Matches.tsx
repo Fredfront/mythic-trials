@@ -14,6 +14,7 @@ import { TeamLiveStatus } from '@/lib/twitch'
 import { dungeonConfig, dungeonConfigType } from '../utils/dungeonConfig'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
+import { InfoBoxComponent } from '@/components/info-box'
 
 export default function Matches({
   matchResults,
@@ -55,7 +56,14 @@ export default function Matches({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-10 w-full m-auto max-w-7xl p-4">
-        <h1 className="text-4xl font-bold mb-10">Kamper</h1>
+        <h1 className="text-4xl font-bold mb-6 ">Kamper</h1>
+        <InfoBoxComponent
+
+          title="Featured"
+          description="Kamper merket med 'Featured' er kamper som vil bli streamet på Nerdelandslaget WoW sin Twitch kanal."
+        />
+        <div className="flex justify-center items-center p-4">
+        </div>
         {detailedSchedule.map((round, index: number) => (
           <Accordion key={index} type="single" collapsible>
             <h2 className="feed-header">Runde {index + 1}</h2>
@@ -159,6 +167,15 @@ export default function Matches({
                     ? dungeonConfig.find((e) => e.id === findMissingIds(dungeonConfig, combinedPickAndBans))
                     : null
 
+                  const isDraw = homeTeamMatchResults?.draw || awayTeamMatchResults?.draw
+
+
+                  const homeTeamHasLogs = matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                    ?.warcraft_logs_report.some((e) => e.length > 0)
+
+                  const awayTeamHasLogs = matchResults.find((e) => e.round === index + 1 && awayTeam === e.team_slug)
+                    ?.warcraft_logs_report.some((e) => e.length > 0)
+
                   const allBansmapped = allBans.map((ban) =>
                   {
                     return {
@@ -190,8 +207,8 @@ export default function Matches({
                           <div className="flex w-2/5 md:w-[40%] text-right justify-end">
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                               {confirmedResult ? (
-                                <div className={`text-sm ${homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
-                                  {homeTeamWins ? 'Vinner' : 'Taper'}
+                                <div className={`text-sm ${isDraw ? 'text-orange-400' : homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
+                                  {isDraw ? 'Uavgjort' : homeTeamWins ? 'Vinner' : 'Taper'}
                                 </div>
                               ) : null}
                               <div className={!confirmedResult ? 'mt-3 text-xs md:text-lg' : 'text-xs md:text-lg'}>
@@ -239,8 +256,9 @@ export default function Matches({
                             </div>
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                               {confirmedResult ? (
-                                <div className={`text-sm ${!homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
-                                  {!homeTeamWins ? 'Vinner' : 'Taper'}
+                                <div className={`text-sm ${isDraw ? 'text-orange-400' : !homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
+                                  {isDraw ? 'Uavgjort' : !homeTeamWins ? 'Vinner' : 'Taper'}
+
                                 </div>
                               ) : null}
                               <div className={!confirmedResult ? 'mt-3 text-xs md:text-lg' : 'text-xs md:text-lg'}>
@@ -335,66 +353,70 @@ export default function Matches({
                                 )}
                               </div>
                               <Separator className="mb-2" />
-                              <CardTitle className="text-lg font-semibold">Warcraft logs</CardTitle>
-                              <div className="flex gap-4 flex-col ">
-                                {matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
-                                  ?.warcraft_logs_report && (
-                                    <div>
-                                      <h3 className="text-sm font-medium mb-2">{match.teams[ 0 ].name} logs</h3>
-                                      <div className="bg-gray-600 p-4 rounded-lg">
-                                        <div className="flex  gap-2">
-                                          {matchResults
-                                            .find((e) => e.round === index + 1 && homeTeam === e.team_slug)
-                                            ?.warcraft_logs_report.map((link, index) => (
-                                              <Button
-                                                key={index}
-                                                variant="secondary"
-                                                className="bg-gray-800 hover:bg-gray-700 text-white"
-                                              >
-                                                <a
-                                                  className="flex items-center gap-2"
-                                                  href={`https://warcraftlogs.com/reports/${link}`}
-                                                  target="_blank"
-                                                  rel="noreferrer"
-                                                >
-                                                  Log {index + 1} <ExternalLink />{' '}
-                                                </a>
-                                              </Button>
-                                            ))}
+                              {homeTeamHasLogs || awayTeamHasLogs ?
+                                <>
+                                  <CardTitle className="text-lg font-semibold">Warcraft logs</CardTitle>
+                                  <div className="flex gap-4 flex-col ">
+                                    {homeTeamHasLogs && matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                      ?.warcraft_logs_report && (
+                                        <div>
+                                          <h3 className="text-sm font-medium mb-2">{match.teams[ 0 ].name} logs</h3>
+                                          <div className="bg-gray-600 p-4 rounded-lg">
+                                            <div className="flex  gap-2">
+                                              {matchResults
+                                                .find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                                ?.warcraft_logs_report.map((link, index) => (
+                                                  <Button
+                                                    key={index}
+                                                    variant="secondary"
+                                                    className="bg-gray-800 hover:bg-gray-700 text-white"
+                                                  >
+                                                    <a
+                                                      className="flex items-center gap-2"
+                                                      href={`https://warcraftlogs.com/reports/${link}`}
+                                                      target="_blank"
+                                                      rel="noreferrer"
+                                                    >
+                                                      Log {index + 1} <ExternalLink />{' '}
+                                                    </a>
+                                                  </Button>
+                                                ))}
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                {matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
-                                  ?.warcraft_logs_report && (
-                                    <div>
-                                      <h3 className="text-sm font-medium mb-2">{match.teams[ 1 ].name} logs</h3>
+                                      )}
+                                    {awayTeamHasLogs && matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                      ?.warcraft_logs_report && (
+                                        <div>
+                                          <h3 className="text-sm font-medium mb-2">{match.teams[ 1 ].name} logs</h3>
 
-                                      <div className="bg-gray-600  p-4 rounded-lg">
-                                        <div className="flex  gap-2">
-                                          {matchResults
-                                            .find((e) => e.round === index + 1 && awayTeam === e.team_slug)
-                                            ?.warcraft_logs_report?.map((link, index) => (
-                                              <Button
-                                                key={index}
-                                                variant="secondary"
-                                                className="bg-gray-800 hover:bg-gray-700 text-white "
-                                              >
-                                                <a
-                                                  className="flex items-center gap-2"
-                                                  href={`https://warcraftlogs.com/reports/${link}`}
-                                                  target="_blank"
-                                                  rel="noreferrer"
-                                                >
-                                                  Log {index + 1} <ExternalLink />{' '}
-                                                </a>
-                                              </Button>
-                                            ))}
+                                          <div className="bg-gray-600  p-4 rounded-lg">
+                                            <div className="flex  gap-2">
+                                              {matchResults
+                                                .find((e) => e.round === index + 1 && awayTeam === e.team_slug)
+                                                ?.warcraft_logs_report?.map((link, index) => (
+                                                  <Button
+                                                    key={index}
+                                                    variant="secondary"
+                                                    className="bg-gray-800 hover:bg-gray-700 text-white "
+                                                  >
+                                                    <a
+                                                      className="flex items-center gap-2"
+                                                      href={`https://warcraftlogs.com/reports/${link}`}
+                                                      target="_blank"
+                                                      rel="noreferrer"
+                                                    >
+                                                      Log {index + 1} <ExternalLink />{' '}
+                                                    </a>
+                                                  </Button>
+                                                ))}
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                  )}
-                              </div>
+                                      )}
+                                  </div>
+                                </>
+                                : null}
                             </CardContent>
                           </Card>
                         )}
