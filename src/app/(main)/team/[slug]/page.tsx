@@ -5,11 +5,11 @@ import { getToken } from '@/app/api/blizzard/getWoWToken'
 import { getTyrannicalLeaderboardData } from '@/app/api/leaderboard/tyrannical'
 import { Player, getAllTeams } from '@/app/api/getAllTeams'
 import { Suspense } from 'react'
-import { getDungeonInfo } from '@/utils/dungeonHelpers'
 import { Skeleton } from '@/components/ui/skeleton'
 import { notFound } from 'next/navigation'
 
-export default async function Page(props: { params: Promise<{ slug: string }> }) {
+export default async function Page(props: { params: Promise<{ slug: string }> })
+{
   const params = await props.params
   const token = await getToken()
   const tyrannical = await getTyrannicalLeaderboardData()
@@ -18,8 +18,10 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
   const idForRef = allTeams.find((e) => e.teamName === data?.teamName)?._id
 
   const alts = data?.players
-    .map((player) => {
-      return player.alts?.map((alt) => {
+    .map((player) =>
+    {
+      return player.alts?.map((alt) =>
+      {
         return {
           id: alt.altCharacterName,
           characterName: alt.altCharacterName,
@@ -33,7 +35,6 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
 
   const hasAltCharacters = data?.players.some((player) => player.alts && player.alts.length > 0)
 
-  const { timeForTeam: timeForTeamTyrannical } = getDungeonInfo(tyrannical, idForRef)
 
   if (allTeams.find((e) => e.teamSlug === params.slug) === undefined) return notFound()
 
@@ -67,7 +68,8 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
               </div>
             }
           >
-            {data?.players.map((player, index) => {
+            {data?.players.map((player, index) =>
+            {
               if (data.players === null || data.players === undefined) return
               return <PlayerInfoFromRaiderIo key={index} player={player} token={token} isCaptain={index === 0} />
             })}
@@ -86,8 +88,10 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
             }
           >
             {hasAltCharacters &&
-              alts?.map((alt, index) => {
-                return alt?.map((e) => {
+              alts?.map((alt, index) =>
+              {
+                return alt?.map((e) =>
+                {
                   return <PlayerInfoFromRaiderIo key={index} player={e as unknown as Player} token={token} />
                 })
               })}
