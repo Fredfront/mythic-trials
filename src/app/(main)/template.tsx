@@ -5,7 +5,7 @@ import { getShowLeaderboard } from '../api/featureToggle/getShowLeaderboard'
 import { getAllTeams } from '../api/getAllTeams'
 import NavBarV2 from '@/components/navbar'
 import { ServerClient } from '@/utils/supabase/server'
-import { Match, MatchRecord, SupabaseTeamType } from '../../../types'
+import { MatchRecord, SupabaseTeamType } from '../../../types'
 import { Toaster } from '@/components/ui/toaster'
 import MatchDataProvider from '@/context/MatchContext'
 
