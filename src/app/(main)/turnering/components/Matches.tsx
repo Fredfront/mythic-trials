@@ -187,7 +187,7 @@ export default function Matches({
                   return (
                     <AccordionItem key={matchIndex} value={matchIndex.toString()}>
                       <AccordionTrigger className="bg-gray-700 p-4 w-full min-h-[120px] !no-underline rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
-                        <div className="flex w-full relative  ">
+                        <div className="flex w-full relative justify-center flex-wrap ">
                           {match.featured ? (
                             <div className="hidden md:flex absolute top-0 left-0  -mt-4 ">
                               <Badge>Featured</Badge>
@@ -204,7 +204,7 @@ export default function Matches({
                               Live <Circle width={10} height={10} fill="red" />
                             </div>
                           ) : null}
-                          <div className="flex w-2/5 md:w-[40%] text-right justify-end">
+                          <div className="flex sm:w-auto w-full  md:text-right justify-start text-left md:justify-end">
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                               {confirmedResult ? (
                                 <div className={`text-sm ${isDraw ? 'text-orange-400' : homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
@@ -221,11 +221,11 @@ export default function Matches({
                                 alt={`${homeTeam} logo`}
                                 width={45}
                                 height={45}
-                                className="hidden md:block  mr-0 md:w-12 md:h-12 w-10 h-10 border-[#FDB202] border-2 rounded-full"
+                                className=" mr-0 md:w-12 md:h-12 w-10 h-10 border-[#FDB202] border-2 rounded-full"
                               />
                             </div>
                           </div>
-                          <div className=" w-2/5 md:w-[25%] ">
+                          <div className=' pt-4 pb-4 w-full sm:w-auto' >
                             <div className=" text-xs flex flex-col">
                               <div className=" text-xs flex flex-col">
                                 <span
@@ -244,14 +244,14 @@ export default function Matches({
                               <div className="mt-1">TBD </div>
                             )}
                           </div>
-                          <div className="flex w-2/5 md:w-[40%] text-left">
+                          <div className="flex text-left sm:w-auto  w-full justify-end">
                             <div className="ml-4 mr-4">
                               <Image
                                 src={awayTeamImageUrl ? urlForImage(awayTeamImageUrl) : '/Logo.png'}
                                 alt={`${homeTeam} logo`}
                                 width={45}
                                 height={45}
-                                className="hidden md:block md:w-12 md:h-12  w-10 h-10  border-[#ff5a00] border-2 rounded-full"
+                                className="md:w-12 md:h-12  w-10 h-10  border-[#ff5a00] border-2 rounded-full"
                               />
                             </div>
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
