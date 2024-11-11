@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Users } from 'lucide-react'
+import { Gamepad, MessageCircle, Users } from 'lucide-react'
 import { DiscordLogoIcon } from '@radix-ui/react-icons'
 import { SupabaseTeamType } from '../../../../types'
 import { useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ import { AnimatedTooltip } from '@/app/components/AnimatedTooltip'
 import { Icons } from '@/components/ui/icons'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
+import { InfoBoxComponent } from '@/components/info-box'
 
 const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
 {
@@ -122,6 +123,7 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <div className="container mx-auto px-4 py-12">
+
         <header className="mb-12 text-center">
           <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
           <p className="text-xl">
@@ -191,6 +193,27 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
               <Link href={`/signup/editTeam/${team?.team_slug}`} className="w-full">
                 <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
                   Legg til eller fjern spillere
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="flex items-center text-2xl">
+                <Gamepad className="mr-2 h-6 w-6" />
+                Mine kamper
+              </CardTitle>
+              <CardDescription className="text-gray-400">
+                Oversikt over mine kommende kamper. Her vil du også finne Pick/Ban, Legg inn resultat, og foreslå ny kampdato.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+
+            </CardContent>
+            <CardFooter>
+              <Link href={'/my-matches'} className="w-full">
+                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
+                  Mine kamper
                 </Button>
               </Link>
             </CardFooter>

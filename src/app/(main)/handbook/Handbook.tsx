@@ -29,46 +29,46 @@ export default function TournamentHandbook()
     },
     {
       title: "Pick ban",
-      content: "Bortelaget starter med å banne et map, følgt av hjemmelaget. Deretter velger bortelaget et map de ønsker å spille, og deretter velger hjemmelaget et map. Etter begge lag har bannet 1 map, og valgt 1 map, vil de fortsette med å banne maps til 1 er igjen som blir Tie-Breaker i en Bo3.",
+      content: "Pick/Ban åpner 1 uke før kampstart. Hvert lag må gjennomføre en pick ban-fase før kampen starter. Vi anbefaler å starte pick ban så tidlig som mulig, og kommuniser gjerne med motstander lag i deres kamp discord kanal. Rekkefølge på Pick/Ban kommer an på om det er Bo2 eller Bo3, men bortelaget starter alltid.",
       ingress: "Hvert lag som spiller mot hverandre må gjennomføre en pick ban-fase før kampen starter.",
       videoSrc: "/videos/pick-ban.mp4",
 
     },
     {
       title: "Legg til resultater",
-      content: "",
+      content: "Det er viktig at begge lag legger til resultatet av kampen etter kampen er ferdig. Begge lag må godkjenne resultatet. Om et lag ikke legger til resultatet, vil laget som har lagt inn resultat kunne erklære seier 24t etter kampen.",
       ingress: "Etter kampen er ferdig, legg til resultatet av kampen. Begge lag må godkjenne resultatet.",
       videoSrc: "/videos/adding-results.mp4",
     },
     {
       title: "Foreslå å endre kampplan",
-      content: "",
+      content: "Det er mulig å foreslå en ny tid for kampen om den oppsatte tiden ikke passer. Foreslå en ny tid for kampen og vent på svar fra motstander.",
       ingress: "Passer kampen dårlig? Foreslå en ny tid for kampen.",
       videoSrc: "/videos/propose-reschedule.mp4",
     },
     {
       title: "Motta forespørsler om å endre kampplan",
-      content: "",
+      content: "Har du mottatt en forespørsel om å endre kampplan? Godta eller avslå forespørselen. Motstander vil bli varslet om du godtar eller avslår forespørselen.",
       ingress: "Har motstanderen foreslått en ny tid for kampen? Godta eller avslå forespørselen.",
       videoSrc: "/videos/receive-reschedule-accept.mp4",
     },
     {
       title: "Erklære seier om motstander ikke møter opp",
-      content: "",
+      content: "Om motstander ikke møter opp til kampen, kan du erklære seier 24t etter kampen og vinne på walkover.",
       ingress: "Har ikke mostanderen møtt opp til kampen? Erklær seier 24t etter kamp og vin på walkover.",
       videoSrc: "/videos/receive-reschedule-accept.mp4",
     },
 
     {
       title: "Turneringsplatform",
-      content: "",
+      content: "Her finner du oversikt over kommende kamper, resultater, lag og spillere.",
       ingress: "Turneringsplattformen gir en oversikt over kommende kamper, resultater, lag og spillere.",
       videoSrc: "/videos/tournament-overview.mp4",
     },
 
     {
       title: "Discord",
-      content: "",
+      content: "Meste parten av kommunikasjonen vil foregå på Discord. Her kan du kommunisere med motstandere og arrangører, og få notifaksjoner om motstander har foreslått en ny tid for kampen.",
       ingress: "Turneringen har en egen Discord server for påmeldte lag. Her kan du kommunisere med motstandere og arrangører, og få notifaksjoner om motstander har foreslått en ny tid for kampen.",
     },
     {
@@ -80,7 +80,7 @@ export default function TournamentHandbook()
     },
     {
       title: "Rapportering av problemer",
-      content: "",
+      content: "Har du oppdaget et problem med turneringen eller andre ting på nettsiden? Rapporter det her.",
       ingress: "Har du problemer med turneringen? Rapporter det her.",
       link: "/bug-report",
       buttonLabel: "Rapporter problem",
