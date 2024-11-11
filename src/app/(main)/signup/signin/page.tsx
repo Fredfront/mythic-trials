@@ -7,24 +7,39 @@ import { MythicPlusTeam, getAllTeams } from '@/app/api/getAllTeams'
 import { useRouter } from 'next/navigation'
 import supabase from '@/utils/supabase/client'
 import { useGetUserData } from '../../../auth/useGetUserData'
+import { ServerClient } from '@/utils/supabase/server'
 
-function Signin() {
+function Signin()
+{
   const { user, loading } = useGetUserData()
   const router = useRouter()
-  const [loadingTeams, setLoadingTeams] = useState<boolean>(true)
-  const [signupData, setSignupData] = useState<SignupPage | null>(null)
-  useEffect(() => {
-    async function fetchSignupData() {
+  const [ loadingTeams, setLoadingTeams ] = useState<boolean>(true)
+  const [ signupData, setSignupData ] = useState<SignupPage | null>(null)
+  const [ featureFlags, setFeatureFlags ] = useState<{ create_team_allowed: boolean; } | null>(null)
+
+
+  useEffect(() =>
+  {
+    async function fetchSignupData()
+    {
       const data = await getSignupData()
+      const featureFlags = (await ServerClient.from('feature_flags').select('create_team_allowed')).data as {
+        create_team_allowed: boolean
+
+      }[]
+
       setSignupData(data)
+      setFeatureFlags(featureFlags[ 0 ])
     }
     fetchSignupData()
   }, [])
 
-  const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
+  const [ allTeams, setAllTeams ] = useState<MythicPlusTeam[] | null>(null)
 
-  useEffect(() => {
-    async function fetchAllTeams() {
+  useEffect(() =>
+  {
+    async function fetchAllTeams()
+    {
       const data = await getAllTeams()
       setAllTeams(data)
       setLoadingTeams(false)
@@ -32,7 +47,8 @@ function Signin() {
     fetchAllTeams()
   }, [])
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (loadingTeams || loading) return
 
     if (!loading && user?.data.user?.email && allTeams?.find((e) => e.contactPerson === user.data.user?.email)) {
@@ -46,15 +62,38 @@ function Signin() {
       router.prefetch('/signup/createTeam')
       router.push('/signup/createTeam')
     }
-  }, [allTeams, loading, loadingTeams, router, user])
+  }, [ allTeams, loading, loadingTeams, router, user ])
 
-  function SignIn() {
+  function SignIn()
+  {
     supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
         redirectTo: `${window.location.origin}/signup/createTeam`,
       },
     })
+  }
+
+
+  if (featureFlags?.create_team_allowed === false) {
+    return (
+      <div className="w-full flex justify-center lg:mt-20 md:mt-20 mt-5">
+        <div className="w-full lg:w-11/12 xl:w-10/12">
+          <div className="flex flex-col lg:flex-row md:flex-row">
+            <div className="p-4 w-full lg:w-1/2">
+              <h1 className="text-4xl font-bold  mb-6 lg:mb-10">Opprett lag</h1>
+              <p className="mb-4 lg:mb-6">Det er dessverre ikke mulig å opprette lag akkurat nå</p>
+            </div>
+            <div className="w-full lg:w-1/2 lg:ml-4 p-4 lg:p-0 ">
+              <div
+                className="bg-cover bg-center bg-no-repeat h-80 lg:h-auto lg:min-h-96 rounded-md"
+                style={{ backgroundImage: `url(${urlForImage(signupData?.mainImage.asset._ref as string) as string})` }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

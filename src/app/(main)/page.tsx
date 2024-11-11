@@ -41,6 +41,9 @@ const Home = async () =>
     login_allowed: boolean
     hide_teams: boolean
   }[]
+
+  const createTeamAllowed = featureFlags?.[ 0 ]?.create_team_allowed
+
   const showTeams = !featureFlags[ 0 ]?.hide_teams
 
   const showLeaderboard = showLeaderboardData?.[ 0 ]?.enabled
@@ -65,11 +68,11 @@ const Home = async () =>
                 Hvem kan være med?
               </Button>
             </Link>
-            <Link href="/signup" prefetch>
+            {createTeamAllowed && <Link href="/signup" prefetch>
               <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
                 Påmelding
               </Button>
-            </Link>
+            </Link>}
           </div>
         </div>
         <DraggableRoundCarousel roundsFromDB={rounds ?? []} />
