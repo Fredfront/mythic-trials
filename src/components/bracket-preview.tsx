@@ -193,10 +193,10 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
         </CardContent>
       </Card>
       <DragDropContext onDragEnd={onDragEnd}>
-        <ScrollArea className="w-full h-[calc(100vh-300px)]">
-          <div className="flex space-x-6 pb-4">
+        <ScrollArea >
+          <div className='flex gap-4 flex-wrap' >
             {localSchedule.map((round, roundIndex) => (
-              <div key={roundIndex} className="min-w-[300px]">
+              <div key={roundIndex} className="w-auto">
                 <Card className="mb-4 bg-gray-800 border-gray-700">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-xl font-semibold text-center text-blue-400">
