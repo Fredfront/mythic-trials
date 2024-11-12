@@ -187,7 +187,7 @@ export default function Matches({
                   return (
                     <AccordionItem key={matchIndex} value={matchIndex.toString()}>
                       <AccordionTrigger className="bg-gray-700 p-4 w-full min-h-[120px] !no-underline rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
-                        <div className="flex w-full relative justify-center flex-wrap ">
+                        <div className="flex w-full relative  flex-wrap ">
                           {match.featured ? (
                             <div className="hidden md:flex absolute top-0 left-0  -mt-4 ">
                               <Badge>Featured</Badge>
@@ -204,7 +204,7 @@ export default function Matches({
                               Live <Circle width={10} height={10} fill="red" />
                             </div>
                           ) : null}
-                          <div className="flex sm:w-auto w-full  md:text-right justify-start text-left md:justify-end">
+                          <div className="flex  md:w-2/5 md:justify-end justify-start w-auto">
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                               {confirmedResult ? (
                                 <div className={`text-sm ${isDraw ? 'text-orange-400' : homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
@@ -225,7 +225,7 @@ export default function Matches({
                               />
                             </div>
                           </div>
-                          <div className=' pt-4 pb-4 w-full sm:w-auto' >
+                          <div className='md:w-1/5 w-auto m-4 md:m-0 ' >
                             <div className=" text-xs flex flex-col">
                               <div className=" text-xs flex flex-col">
                                 <span
@@ -244,7 +244,7 @@ export default function Matches({
                               <div className="mt-1">TBD </div>
                             )}
                           </div>
-                          <div className="flex text-left sm:w-auto  w-full justify-end">
+                          <div className="flex md:w-2/5 w-auto">
                             <div className="ml-4 mr-4">
                               <Image
                                 src={awayTeamImageUrl ? urlForImage(awayTeamImageUrl) : '/Logo.png'}
