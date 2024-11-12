@@ -204,7 +204,7 @@ export default function Matches({
                               Live <Circle width={10} height={10} fill="red" />
                             </div>
                           ) : null}
-                          <div className="flex  md:w-2/5 md:justify-end justify-start w-auto">
+                          <div className="flex  md:w-2/5 m-auto justify-end w-auto">
                             <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                               {confirmedResult ? (
                                 <div className={`text-sm ${isDraw ? 'text-orange-400' : homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
@@ -225,7 +225,7 @@ export default function Matches({
                               />
                             </div>
                           </div>
-                          <div className='md:w-1/5 w-auto m-4 md:m-0 ' >
+                          <div className='md:w-1/5 w-full m-4 md:m-0 ' >
                             <div className=" text-xs flex flex-col">
                               <div className=" text-xs flex flex-col">
                                 <span
@@ -244,7 +244,7 @@ export default function Matches({
                               <div className="mt-1">TBD </div>
                             )}
                           </div>
-                          <div className="flex md:w-2/5 w-auto">
+                          <div className="flex md:w-2/5 w-auto m-auto">
                             <div className="ml-4 mr-4">
                               <Image
                                 src={awayTeamImageUrl ? urlForImage(awayTeamImageUrl) : '/Logo.png'}
