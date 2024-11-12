@@ -155,7 +155,7 @@ const NavBar = ({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56 text-white" align="end" forceMount>
-                    {showTeams && matches && matches.length > 0 && (
+                    {mySanityTeam && showTeams && matches && matches.length > 0 && (
                       <DropdownMenuItem asChild>
                         <Link href="/my-matches">
                           <Gamepad /> Mine kamper
