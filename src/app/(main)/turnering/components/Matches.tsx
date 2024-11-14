@@ -173,8 +173,7 @@ export default function Matches({
                   const homeTeamHasLogs = matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
                     ?.warcraft_logs_report.some((e) => e.length > 0)
 
-                  const awayTeamHasLogs = matchResults.find((e) => e.round === index + 1 && awayTeam === e.team_slug)
-                    ?.warcraft_logs_report.some((e) => e.length > 0)
+                  const awayTeamHasLogs = false
 
                   const allBansmapped = allBans.map((ban) =>
                   {
