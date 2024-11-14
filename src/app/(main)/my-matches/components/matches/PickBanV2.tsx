@@ -15,6 +15,7 @@ import { useGetUserData } from '@/app/auth/useGetUserData'
 import { Match } from '../../../../../../types'
 import { createPickBanRowIfNotExist, PickAndBansType } from '../../../../../supabase/dbFunctions'
 import { urlForImage } from '../../../../../../sanity/lib/image'
+import { toast } from '@/hooks/use-toast'
 
 function PickBanV2({
   matchData,
@@ -124,7 +125,31 @@ function PickBanV2({
       .update({ ready: !teamReady })
       .eq('contact_person', contact_person)
       .eq('round', round)
-      .then(() => setTeamReady(!teamReady))
+      .then(() =>
+      {
+        setTeamReady(!teamReady)
+        if (teamReady) {
+          //send discord message
+          const channelName = `${homeTeam}-vs-${awayTeam}`
+          const roleName = sanityTeamData.find((e) => e.contactPerson === contact_person)?.teamName
+          const message = `📢 **${sanityTeamData.find((e) => e.contactPerson === contact_person)?.teamName || myTeamData?.team_slug}** is READY to start pick/ban! @here`
+          // Send message to Discord channel with role mention
+          fetch('/api/discord/send-message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ channelName, message, roleName }),
+          }).then((res) =>
+          {
+            if (res.ok) {
+              toast({
+                title: 'Success',
+                description: 'Message sent to Discord',
+              })
+            }
+          })
+        }
+      }
+      )
   }
 
   async function setPickedDungeon(dungeon: number)
