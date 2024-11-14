@@ -15,6 +15,7 @@ import { dungeonConfig } from '@/app/(main)/turnering/utils/dungeonConfig'
 import { PickAndBansType, TTeam, TMatchResults, create_match_results } from '../supabase/dbFunctions'
 import { Input } from './ui/input'
 import { useMatchData } from '@/context/MatchContext'
+import { toast } from '@/hooks/use-toast'
 
 
 const MotionDiv = motion.div as any
@@ -429,6 +430,25 @@ export function MatchResultsComponent({
       if (team === myTeam?.team_slug && myMatchResults?.confirm !== true) {
         setMyTeamSubmitted(true)
         confirmResults({ contact_person: contact_person, round: round, isBo2: isBestOfTwo, winner: points >= 2, confirm: true, match_uuid: matchData.teams?.[ 0 ].matchUUID, logReports, confirm_unix_timestamp: new Date().getTime(), isDraw: isDrawMyMatchResults })
+
+        //send discord message
+        const channelName = `${home_team}-vs-${awayTeamToSlug}`
+        const roleName = myTeam.name
+        const message = `📢 **${myTeam.name}** confirmed their results! @here`
+        // Send message to Discord channel with role mention
+        fetch('/api/discord/send-message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelName, message, roleName }),
+        }).then((res) =>
+        {
+          if (res.ok) {
+            toast({
+              title: 'Success',
+              description: 'Message sent to Discord',
+            })
+          }
+        })
       }
 
       if (myMatchResults?.confirm === true) {
