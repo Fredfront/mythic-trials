@@ -192,7 +192,7 @@ export function Matches({
                           pickAndBansData?.find(
                             (e) =>
                               e.round === payloadCreateNewPickBanRow.round &&
-                              payloadCreateNewPickBanRow.team_slug === myTeam?.teamSlug,
+                              payloadCreateNewPickBanRow.team_slug === myTeam?.teamSlug && e.contact_person === email,
                           )?.completed === true
 
                         const myMatchResultsAreConfirmed =
