@@ -117,7 +117,15 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
   }, [ user, loading, sanityTeam, router ])
 
 
-  if (!user || user.data.user?.email && !sanityTeam || loading) return null
+  if (!user?.data.user?.email || user.data.user?.email && !sanityTeam || loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+        <div className="container mx-auto px-4 py-12">
+          <InfoBoxComponent title="Du har ikke laget noe lag enda" description="Du må ha et lag for å kunne bruke denne siden. Opprett et lag for å fortsette." />
+        </div>
+      </div>
+    )
+  }
 
 
   return (
