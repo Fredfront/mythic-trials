@@ -19,55 +19,51 @@ type Props = {
   schedule: TournamentSchedule
 }
 
-const Matches: React.FC<Props> = ({ intitalSchedule }) =>
-{
-  const [ localSchedule, setLocalSchedule ] = useState<TournamentSchedule>(intitalSchedule)
-  const [ bracketsCreated, setBracketsCreated ] = useState(false)
-  const [ isBo2, setIsBo2 ] = React.useState(true)
-  const [ isBo3, setIsBo3 ] = React.useState(false)
-  const [ tournamentName, setTournamentName ] = React.useState('')
+const Matches: React.FC<Props> = ({ intitalSchedule }) => {
+  const [localSchedule, setLocalSchedule] = useState<TournamentSchedule>(intitalSchedule)
+  const [bracketsCreated, setBracketsCreated] = useState(false)
+  const [isBo2, setIsBo2] = React.useState(true)
+  const [isBo3, setIsBo3] = React.useState(false)
+  const [tournamentName, setTournamentName] = React.useState('')
 
   // Handle drag and drop
-  const onDragEnd = (result: DropResult) =>
-  {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination } = result
     if (!destination) return
     if (source.droppableId === destination.droppableId && source.index === destination.index) return
 
     const parseDroppableId = (id: string) => id.split('-').map(Number)
-    const [ sourceRound, sourceMatch ] = parseDroppableId(source.droppableId)
-    const [ destRound, destMatch ] = parseDroppableId(destination.droppableId)
+    const [sourceRound, sourceMatch] = parseDroppableId(source.droppableId)
+    const [destRound, destMatch] = parseDroppableId(destination.droppableId)
 
     // Deep copy schedule ensuring teams remain tuples
     const newSchedule: TournamentSchedule = localSchedule.map((round) =>
-      round.map((match) =>
-      {
+      round.map((match) => {
         // Clone the teams as a tuple
-        const clonedTeams: [ TeamMatch, TeamMatch ] = [ { ...match.teams[ 0 ] }, { ...match.teams[ 1 ] } ]
+        const clonedTeams: [TeamMatch, TeamMatch] = [{ ...match.teams[0] }, { ...match.teams[1] }]
         return { ...match, teams: clonedTeams }
       }),
     )
 
     // Swap the teams between source and destination
-    const draggedTeam = newSchedule[ sourceRound ][ sourceMatch ].teams[ source.index ]
-    const targetTeam = newSchedule[ destRound ][ destMatch ].teams[ destination.index ]
+    const draggedTeam = newSchedule[sourceRound][sourceMatch].teams[source.index]
+    const targetTeam = newSchedule[destRound][destMatch].teams[destination.index]
 
-    newSchedule[ destRound ][ destMatch ].teams[ destination.index ] = {
+    newSchedule[destRound][destMatch].teams[destination.index] = {
       ...draggedTeam,
       home: destination.index === 0,
     }
 
-    newSchedule[ sourceRound ][ sourceMatch ].teams[ source.index ] = {
+    newSchedule[sourceRound][sourceMatch].teams[source.index] = {
       ...targetTeam,
       home: source.index === 0,
     }
 
-    const updateMatchUUID = (round: number, match: number) =>
-    {
-      const teams = newSchedule[ round ][ match ].teams
-      const newMatchUUID = `${teams[ 0 ].team_slug}-${teams[ 1 ].team_slug}-round-${teams[ 0 ].round}`
-      newSchedule[ round ][ match ].teams[ 0 ].matchUUID = newMatchUUID
-      newSchedule[ round ][ match ].teams[ 1 ].matchUUID = newMatchUUID
+    const updateMatchUUID = (round: number, match: number) => {
+      const teams = newSchedule[round][match].teams
+      const newMatchUUID = `${teams[0].team_slug}-${teams[1].team_slug}-round-${teams[0].round}`
+      newSchedule[round][match].teams[0].matchUUID = newMatchUUID
+      newSchedule[round][match].teams[1].matchUUID = newMatchUUID
     }
 
     updateMatchUUID(sourceRound, sourceMatch)
@@ -77,12 +73,10 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
   }
 
   // Handler to feature a match
-  const handleFeatureMatch = (roundIndex: number, matchIndex: number) =>
-  {
+  const handleFeatureMatch = (roundIndex: number, matchIndex: number) => {
     setLocalSchedule((prevSchedule) =>
       prevSchedule.map((round, rIndex) =>
-        round.map((match, mIndex) =>
-        {
+        round.map((match, mIndex) => {
           if (rIndex === roundIndex) {
             return {
               ...match,
@@ -95,10 +89,8 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
     )
   }
 
-  const handleGenerateRoundRobin = async () =>
-  {
-    await createRoundRobin(localSchedule, isBo2, isBo3, tournamentName).then((res) =>
-    {
+  const handleGenerateRoundRobin = async () => {
+    await createRoundRobin(localSchedule, isBo2, isBo3, tournamentName).then((res) => {
       if (res.status === 200) setBracketsCreated(true)
     })
   }
@@ -164,8 +156,7 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
                 <Checkbox
                   id="bo2"
                   checked={isBo2}
-                  onCheckedChange={() =>
-                  {
+                  onCheckedChange={() => {
                     setIsBo2(!isBo2)
                     setIsBo3(false)
                   }}
@@ -178,8 +169,7 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
                 <Checkbox
                   id="bo3"
                   checked={isBo3}
-                  onCheckedChange={() =>
-                  {
+                  onCheckedChange={() => {
                     setIsBo3(!isBo3)
                     setIsBo2(false)
                   }}
@@ -193,8 +183,8 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
         </CardContent>
       </Card>
       <DragDropContext onDragEnd={onDragEnd}>
-        <ScrollArea >
-          <div className='flex gap-4 flex-wrap' >
+        <ScrollArea>
+          <div className="flex gap-4 flex-wrap">
             {localSchedule.map((round, roundIndex) => (
               <div key={roundIndex} className="w-auto">
                 <Card className="mb-4 bg-gray-800 border-gray-700">
@@ -204,21 +194,25 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4 pt-0">
-                    {round.map((match, matchIndex) =>
-                    {
+                    {round.map((match, matchIndex) => {
                       const isFeatured = match.featured
                       return (
-                        <Droppable key={`${roundIndex}-${matchIndex}`} droppableId={`${roundIndex}-${matchIndex}`} direction="vertical">
+                        <Droppable
+                          key={`${roundIndex}-${matchIndex}`}
+                          droppableId={`${roundIndex}-${matchIndex}`}
+                          direction="vertical"
+                        >
                           {(provided, snapshot) => (
                             <Card
                               ref={provided.innerRef}
                               {...provided.droppableProps}
-                              className={`relative transition-all duration-200 ${isFeatured
-                                ? 'bg-gradient-to-r from-yellow-600 to-yellow-700 border-2 border-yellow-400 shadow-lg'
-                                : snapshot.isDraggingOver
-                                  ? 'bg-blue-700 shadow-lg'
-                                  : 'bg-gray-700'
-                                }`}
+                              className={`relative transition-all duration-200 ${
+                                isFeatured
+                                  ? 'bg-gradient-to-r from-yellow-600 to-yellow-700 border-2 border-yellow-400 shadow-lg'
+                                  : snapshot.isDraggingOver
+                                    ? 'bg-blue-700 shadow-lg'
+                                    : 'bg-gray-700'
+                              }`}
                             >
                               {isFeatured && (
                                 <div className="absolute top-2 right-2">
@@ -237,12 +231,13 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
-                                        className={`p-3 rounded-md shadow-sm text-sm cursor-move flex items-center justify-between ${snapshot.isDragging
-                                          ? 'bg-blue-500 text-white'
-                                          : team.home
-                                            ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
-                                            : 'bg-gradient-to-r from-red-600 to-red-700 text-white'
-                                          }`}
+                                        className={`p-3 rounded-md shadow-sm text-sm cursor-move flex items-center justify-between ${
+                                          snapshot.isDragging
+                                            ? 'bg-blue-500 text-white'
+                                            : team.home
+                                              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
+                                              : 'bg-gradient-to-r from-red-600 to-red-700 text-white'
+                                        }`}
                                       >
                                         <span className="font-medium">{team.name}</span>
                                         <span>
@@ -260,10 +255,11 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) =>
                                 <Button
                                   size="sm"
                                   onClick={() => handleFeatureMatch(roundIndex, matchIndex)}
-                                  className={`mt-2 w-full flex items-center justify-center space-x-1 ${isFeatured
-                                    ? 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'
-                                    : 'bg-gray-600 hover:bg-gray-500 text-white'
-                                    }`}
+                                  className={`mt-2 w-full flex items-center justify-center space-x-1 ${
+                                    isFeatured
+                                      ? 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'
+                                      : 'bg-gray-600 hover:bg-gray-500 text-white'
+                                  }`}
                                 >
                                   <Star className={`w-4 h-4 ${isFeatured ? 'text-gray-900' : 'text-gray-300'}`} />
                                   <span>{isFeatured ? 'Featured' : 'Feature'}</span>

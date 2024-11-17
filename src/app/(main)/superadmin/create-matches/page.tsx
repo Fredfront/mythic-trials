@@ -5,8 +5,7 @@ import { Match, MatchRecord, SupabaseTeamType, TeamMatch, TournamentSchedule } f
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
-async function Page()
-{
+async function Page() {
   const teams = (await (await ServerClient.from('teams').select('*')).data) as SupabaseTeamType[]
   const roundDates = (await (
     await ServerClient.from('group_stage_rounds').select('*')
@@ -22,19 +21,17 @@ async function Page()
 
   // Create a map of team ID to team data for easy lookup
   const teamMap = new Map<string, SupabaseTeamType>()
-  teams.forEach((team) =>
-  {
+  teams.forEach((team) => {
     teamMap.set(team.id, team)
   })
 
   // Group matches by round
-  const scheduleMap: { [ round: number ]: Match[] } = {}
+  const scheduleMap: { [round: number]: Match[] } = {}
 
-  matchesData.forEach((match) =>
-  {
+  matchesData.forEach((match) => {
     const roundNumber = match.round
-    if (!scheduleMap[ roundNumber ]) {
-      scheduleMap[ roundNumber ] = []
+    if (!scheduleMap[roundNumber]) {
+      scheduleMap[roundNumber] = []
     }
 
     const homeTeam = teamMap.get(match.home_team_id)
@@ -96,27 +93,25 @@ async function Page()
 
     // Create Match object
     const mappedMatch: Match = {
-      teams: [ homeTeamMatch, awayTeamMatch ],
+      teams: [homeTeamMatch, awayTeamMatch],
       featured: match.featured,
       bo2: match.bo2,
       bo3: match.bo3,
       tournament_name: match.tournament_name,
     }
 
-    scheduleMap[ roundNumber ].push(mappedMatch)
+    scheduleMap[roundNumber].push(mappedMatch)
   })
 
   // Convert scheduleMap to TournamentSchedule (sorted rounds)
   const sortedRounds: TournamentSchedule = Object.keys(scheduleMap)
     .map(Number)
     .sort((a, b) => a - b)
-    .map((roundNumber) =>
-    {
+    .map((roundNumber) => {
       // Optionally, sort matches within each round by start time
-      const sortedMatches = scheduleMap[ roundNumber ].sort((a, b) =>
-      {
-        const timeA = a.teams[ 0 ].round_startTime || '00:00:00'
-        const timeB = b.teams[ 0 ].round_startTime || '00:00:00'
+      const sortedMatches = scheduleMap[roundNumber].sort((a, b) => {
+        const timeA = a.teams[0].round_startTime || '00:00:00'
+        const timeB = b.teams[0].round_startTime || '00:00:00'
         return timeA.localeCompare(timeB)
       })
       return sortedMatches
@@ -129,7 +124,6 @@ async function Page()
       </Link>
 
       <CreateMatches schedule={sortedRounds} teams={teams ?? []} roundDates={roundDates} email="" />
-
     </>
   )
 }

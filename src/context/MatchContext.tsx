@@ -25,15 +25,14 @@ export type MatchDataOperationsType = {
 
 const MatchDataProvider: React.FunctionComponent<React.PropsWithChildren<ContextChildren>> = ({
   children,
-}: React.PropsWithChildren<ContextChildren>) =>
-{
-  const [ matchData, setMatchData ] = useState<matchDataType | null>(null)
+}: React.PropsWithChildren<ContextChildren>) => {
+  const [matchData, setMatchData] = useState<matchDataType | null>(null)
 
   const MatchDataValues: MatchDataContextType = useMemo(
     () => ({
       matchData,
     }),
-    [ matchData ],
+    [matchData],
   )
   const MatchDataOperations: MatchDataOperationsType = useMemo(
     () => ({

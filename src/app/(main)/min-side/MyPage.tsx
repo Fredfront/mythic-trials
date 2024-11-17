@@ -17,16 +17,21 @@ import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { InfoBoxComponent } from '@/components/info-box'
 
-const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
-{
-
-  const discordLinkFromLocalStorage = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('discord_invite_link') || 'null') as { invite_link: string, timestamp: number } | null : null
-
+const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) => {
+  const discordLinkFromLocalStorage =
+    typeof window !== 'undefined'
+      ? (JSON.parse(localStorage.getItem('discord_invite_link') || 'null') as {
+          invite_link: string
+          timestamp: number
+        } | null)
+      : null
 
   const { user, loading } = useGetUserData()
-  const [ discordLink, setDiscordLink ] = useState<string | undefined>(discordLinkFromLocalStorage?.invite_link || undefined)
+  const [discordLink, setDiscordLink] = useState<string | undefined>(
+    discordLinkFromLocalStorage?.invite_link || undefined,
+  )
   const sanityTeam = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
-  const [ loadingCreateInvite, setLoadingCreateInvite ] = useState(false)
+  const [loadingCreateInvite, setLoadingCreateInvite] = useState(false)
 
   const mappedTeam = sanityTeam?.players.map((player) => ({
     id: player.characterName,
@@ -35,10 +40,12 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
   }))
 
   //Clear the discord link from local storage after 7 days
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      const discordLinkFromLocalStorage = JSON.parse(localStorage.getItem('discord_invite_link') || 'null') as { invite_link: string, timestamp: number } | null
+      const discordLinkFromLocalStorage = JSON.parse(localStorage.getItem('discord_invite_link') || 'null') as {
+        invite_link: string
+        timestamp: number
+      } | null
       setDiscordLink(discordLinkFromLocalStorage?.invite_link || undefined)
 
       // Clear the discord link from local storage after 7 days
@@ -48,46 +55,44 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
     }
   }, [])
 
+  const [team, setTeam] = useState<SupabaseTeamType | undefined>(undefined)
 
-  const [ team, setTeam ] = useState<SupabaseTeamType | undefined>(undefined)
+  const name = user?.data.user?.identities?.[0].identity_data?.full_name || user?.data.user?.email
 
-  const name = user?.data.user?.identities?.[ 0 ].identity_data?.full_name || user?.data.user?.email
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (!user || loading) return
-    async function fetchTeam()
-    {
+    async function fetchTeam() {
       await supabase
         .from('teams')
         .select('*')
         .eq('contact_person', user?.data.user?.email)
-        .then(({ data, error }) =>
-        {
+        .then(({ data, error }) => {
           if (error) {
             console.error(error)
             return
           }
           if (data) {
-            setTeam(data[ 0 ])
+            setTeam(data[0])
           }
         })
     }
     fetchTeam()
-  }, [ user, loading ])
+  }, [user, loading])
 
-  const createDiscordInvite = async () =>
-  {
+  const createDiscordInvite = async () => {
     setLoadingCreateInvite(true)
     try {
       const response = await fetch('/api/discord/create-invite-link')
       const data = await response.json()
       if (data.invite_link) {
         setDiscordLink(data.invite_link)
-        localStorage.setItem('discord_invite_link', JSON.stringify({
-          invite_link: data.invite_link,
-          timestamp: new Date().getTime(),
-        }))
+        localStorage.setItem(
+          'discord_invite_link',
+          JSON.stringify({
+            invite_link: data.invite_link,
+            timestamp: new Date().getTime(),
+          }),
+        )
       }
     } catch (error) {
       console.error('Error:', error)
@@ -96,8 +101,7 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
     }
   }
 
-  const copyToClipboard = () =>
-  {
+  const copyToClipboard = () => {
     navigator.clipboard.writeText(discordLink!)
     toast({
       title: 'Kopiert til utklippstavlen',
@@ -107,31 +111,29 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
 
   const router = useRouter()
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (!user || loading) return
     if (user.data.user?.email && !sanityTeam) {
       router.push('/')
     }
+  }, [user, loading, sanityTeam, router])
 
-  }, [ user, loading, sanityTeam, router ])
-
-
-  if (!user?.data.user?.email || user.data.user?.email && !sanityTeam || loading) {
+  if (!user?.data.user?.email || (user.data.user?.email && !sanityTeam) || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
         <div className="container mx-auto px-4 py-12">
-          <InfoBoxComponent title="Du har ikke laget noe lag enda" description="Du må ha et lag for å kunne bruke denne siden. Opprett et lag for å fortsette." />
+          <InfoBoxComponent
+            title="Du har ikke laget noe lag enda"
+            description="Du må ha et lag for å kunne bruke denne siden. Opprett et lag for å fortsette."
+          />
         </div>
       </div>
     )
   }
 
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <div className="container mx-auto px-4 py-12">
-
         <header className="mb-12 text-center">
           <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
           <p className="text-xl">
@@ -163,15 +165,8 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
             {discordLink && (
               <CardFooter className="flex flex-col items-start">
                 <div className="flex w-full">
-                  <Input
-                    readOnly
-                    value={discordLink}
-                    className="bg-gray-700 text-white cursor-copy rounded-r-none"
-                  />
-                  <Button
-                    onClick={copyToClipboard}
-                    className="bg-indigo-600 hover:bg-indigo-700 rounded-l-none"
-                  >
+                  <Input readOnly value={discordLink} className="bg-gray-700 text-white cursor-copy rounded-r-none" />
+                  <Button onClick={copyToClipboard} className="bg-indigo-600 hover:bg-indigo-700 rounded-l-none">
                     Kopier
                   </Button>
                 </div>
@@ -188,9 +183,7 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                 <Users className="mr-2 h-6 w-6" />
                 Endre på laget mitt
               </CardTitle>
-              <CardDescription className="text-gray-400">
-                Du kan endre på spillere på laget
-              </CardDescription>
+              <CardDescription className="text-gray-400">Du kan endre på spillere på laget</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap justify-center gap-4 mb-6">
@@ -212,12 +205,11 @@ const MyPage = ({ sanityTeams }: { sanityTeams: MythicPlusTeam[] }) =>
                 Mine kamper
               </CardTitle>
               <CardDescription className="text-gray-400">
-                Oversikt over mine kommende kamper. Her vil du også finne Pick/Ban, Legg inn resultat, og foreslå ny kampdato.
+                Oversikt over mine kommende kamper. Her vil du også finne Pick/Ban, Legg inn resultat, og foreslå ny
+                kampdato.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-
-            </CardContent>
+            <CardContent></CardContent>
             <CardFooter>
               <Link href={'/my-matches'} className="w-full">
                 <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">

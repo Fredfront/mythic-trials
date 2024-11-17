@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, CalendarX, Check, CheckCircle, Clock, Info, X } from 'lucide-react'
+import { ArrowLeft, CalendarX, Check, CheckCircle, Clock, Hourglass, Info, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/badge'
 import { createSortedRounds } from '../page'
 import { toast } from '@/hooks/use-toast'
 import { useMatchData, useMatchDataOperations } from '@/context/MatchContext'
+import Loading from '../../signup/components/Loading'
 
 export function Matches({
   pickAndBansData,
@@ -46,7 +47,6 @@ export function Matches({
   const router = useRouter()
   const detailedSchedule = matchSchedule
   const [ matchResults, setMatchResults ] = React.useState<TMatchResults[]>(matchResultsData)
-
 
   useEffect(() =>
   {
@@ -86,9 +86,24 @@ export function Matches({
   const { matchData } = useMatchData()
   const { setMatchData } = useMatchDataOperations()
 
+  const hasMatchResultsData =
+    matchResultsData?.find((e) => e.match_uuid === matchData?.teams?.[ 0 ].matchUUID)?.confirm === true
 
-  const hasMatchResultsData = matchResultsData?.find((e) => e.match_uuid === matchData?.teams?.[ 0 ].matchUUID)?.confirm === true
 
+
+
+  if (loading) return <div><Loading /></div>
+
+  if (!myTeam) {
+    return (
+      <div className='mt-[100px] p-4'>
+        <InfoBoxComponent
+          title="Viktig info"
+          description="Du har ikke registrert et lag. Registrer et lag for å se dine kamper."
+        />
+      </div>
+    )
+  }
 
   if (!hasMatchResultsData && matchData && matchData.teams.length === 2 && email) {
     return (
@@ -192,14 +207,14 @@ export function Matches({
                           pickAndBansData?.find(
                             (e) =>
                               e.round === payloadCreateNewPickBanRow.round &&
-                              payloadCreateNewPickBanRow.team_slug === myTeam?.teamSlug && e.contact_person === email,
+                              payloadCreateNewPickBanRow.team_slug === myTeam?.teamSlug &&
+                              e.contact_person === email,
                           )?.completed === true
 
                         const myMatchResultsAreConfirmed =
                           matchResults?.find(
                             (e) => e.team_slug === myTeam?.teamSlug && e.round === payloadCreateNewPickBanRow.round,
                           )?.confirm === true
-
 
                         const myMatchResultsAreClaimed =
                           matchResults?.find(
@@ -209,8 +224,24 @@ export function Matches({
                           )?.claimed_win === true
 
                         const opponentMatchResultsAreConfirmed =
-                          matchResults?.find((e) => e.round === match.teams[ 0 ].round && e.team_slug !== myTeam?.teamSlug && e.opponent === myTeam?.teamSlug)
-                            ?.confirm === true
+                          matchResults?.find(
+                            (e) =>
+                              e.round === match.teams[ 0 ].round &&
+                              e.team_slug !== myTeam?.teamSlug &&
+                              e.opponent === myTeam?.teamSlug,
+                          )?.confirm === true
+
+                        const opponentIsReadyToStartPickAndBan =
+                          pickAndBansData?.find(
+                            (e) =>
+                              e.round === match.teams[ 0 ].round && e.team_slug !== myTeam?.teamSlug && e.ready === true,
+                          )?.ready === true
+
+                        const myTeamIsReadyToStartPickAndBan =
+                          pickAndBansData?.find(
+                            (e) =>
+                              e.round === match.teams[ 0 ].round && e.team_slug === myTeam?.teamSlug && e.ready === true,
+                          )?.ready === true
 
                         const matchResultsAreConfirmed = myMatchResultsAreConfirmed && opponentMatchResultsAreConfirmed
                         const matchDate = match.teams[ 0 ].roundDate
@@ -270,18 +301,17 @@ export function Matches({
                         const matchPlayTimePlusTwentyFourHours = matchPlayTime.getTime() + 86400000
                         const twentyFourHoursAfterGame = new Date().getTime() > matchPlayTimePlusTwentyFourHours
 
-
                         const showPickBanButtonOneWeekBeforeRound =
                           new Date(matchPlayTime).getTime() - new Date().getTime() < 604800000
 
                         const showNotification = showNotificationAwayTeam || showNotificationHomeTeam
 
                         if (match.teams?.[ 0 ].contactPerson !== email && match.teams?.[ 1 ].contactPerson !== email) {
-                          return null
+                          return <b key={index}>Du har ingen kamp denne runden </b>
                         }
 
                         return (
-                          <div key={index}>
+                          <div key={index + matchIndex + match.teams[ 0 ].matchUUID}>
                             {showNotification && (
                               <div className="flex flex-col bg-[#011624] p-4 rounded-lg mb-2">
                                 <div className="flex flex-col">
@@ -417,7 +447,9 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                   <div className="flex w-2/5 md:w-[40%] text-right justify-end">
                                     <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                                       {confirmedResult ? (
-                                        <div className={`text-sm ${isDraw ? 'text-orange-400' : homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}>
+                                        <div
+                                          className={`text-sm ${isDraw ? 'text-orange-400' : homeTeamWins ? 'text-[#40b3a1]' : ' text-red-600'}`}
+                                        >
                                           {isDraw ? 'Uavgjort' : homeTeamWins ? 'Vinner' : 'Taper'}
                                         </div>
                                       ) : null}
@@ -488,42 +520,52 @@ Ny tid: ${proposedRescheduledDateTimeString} `
 
                             <div className="flex gap-2 mt-4 flex-wrap">
                               {!pickBanCompleted && showPickBanButtonOneWeekBeforeRound ? (
-                                <Button
-                                  className="bg-[#011624] text-white"
-                                  onClick={async () =>
-                                  {
-                                    if (email) {
-                                      await supabase
-                                        .from('pick_ban')
-                                        .select('*')
-                                        .eq('contact_person', email)
-                                        .eq('round', match.teams?.[ 0 ].round)
-                                        .then((res) =>
-                                        {
-                                          if (res.data && res.data.length === 0) {
-                                            createPickBanRow(
-                                              payloadCreateNewPickBanRow.round,
-                                              email,
-                                              payloadCreateNewPickBanRow.team_slug,
-                                              payloadCreateNewPickBanRow.opponent,
-                                              payloadCreateNewPickBanRow.home,
-                                              matchUUID,
-                                            )
-                                          }
-                                        })
-                                    }
-                                    setMatchData({
-                                      ...match,
-                                      myTeam: findMatch?.team_slug as string,
-                                      opponent: opponent as string,
-                                    })
-                                  }}
-                                >
-                                  <CheckCircle />
-                                  Gå til Pick/Ban
-                                </Button>
+                                <>
+                                  {opponentIsReadyToStartPickAndBan && !myTeamIsReadyToStartPickAndBan && (
+                                    <div className="w-full flex gap-2 pb-4 pt-4">
+                                      <Hourglass className="animate-ping		" width={20} height={20} />
+                                      Motstander er klar til å starte pick/ban
+                                    </div>
+                                  )}
+                                  <Button
+                                    className="bg-[#011624] text-white"
+                                    onClick={async () =>
+                                    {
+                                      if (email) {
+                                        await supabase
+                                          .from('pick_ban')
+                                          .select('*')
+                                          .eq('contact_person', email)
+                                          .eq('round', match.teams?.[ 0 ].round)
+                                          .then((res) =>
+                                          {
+                                            if (res.data && res.data.length === 0) {
+                                              createPickBanRow(
+                                                payloadCreateNewPickBanRow.round,
+                                                email,
+                                                payloadCreateNewPickBanRow.team_slug,
+                                                payloadCreateNewPickBanRow.opponent,
+                                                payloadCreateNewPickBanRow.home,
+                                                matchUUID,
+                                              )
+                                            }
+                                          })
+                                      }
+                                      setMatchData({
+                                        ...match,
+                                        myTeam: findMatch?.team_slug as string,
+                                        opponent: opponent as string,
+                                      })
+                                    }}
+                                  >
+                                    <CheckCircle />
+                                    Gå til Pick/Ban
+                                  </Button>
+                                </>
                               ) : null}
-                              {myMatchResultsAreConfirmed || opponentMatchResultsAreConfirmed || matchPlayTime.getTime() < new Date().getTime() ? null : (
+                              {myMatchResultsAreConfirmed ||
+                                opponentMatchResultsAreConfirmed ||
+                                matchPlayTime.getTime() < new Date().getTime() ? null : (
                                 <Link href={`/my-matches/reschedule?id=${match.teams[ 0 ].id}`}>
                                   <Button className="bg-[#011624] text-white">
                                     <Clock /> Foreslå ny kamptid
@@ -535,7 +577,6 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                                   className="bg-[#011624] text-white"
                                   onClick={async () =>
                                   {
-
                                     setMatchData({
                                       ...match,
                                       myTeam: findMatch?.team_slug as string,
@@ -678,7 +719,6 @@ const handleClaimWin = async ({
       console.error('Error claiming win:', result.error)
       return null
     }
-
 
     return result.data
   } catch (error) {

@@ -6,8 +6,6 @@ import { MythicPlusTeam } from '@/app/api/getAllTeams'
 import { urlForImage } from '../../../../../sanity/lib/image'
 import { MatchResult } from '../../../../../types'
 
-
-
 type TeamStats = {
   team_slug: string
   team_name: string
@@ -18,35 +16,29 @@ type TeamStats = {
   image: string
 }
 
-interface ResultsTableProps
-{
+interface ResultsTableProps {
   matchResults: MatchResult[]
   sanityTeamData: MythicPlusTeam[]
 }
 
-const ResultsTableBo2: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamData }) =>
-{
-
+const ResultsTableBo2: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamData }) => {
   // Calculate team stats based on match results
-  const calculateTeamStats = (results: MatchResult[]): TeamStats[] =>
-  {
+  const calculateTeamStats = (results: MatchResult[]): TeamStats[] => {
     const teamStatsMap: Record<string, TeamStats> = {}
 
     // Preprocess sanityTeamData for faster lookup
     const teamDataMap: Record<string, MythicPlusTeam> = {}
-    sanityTeamData.forEach((team) =>
-    {
-      teamDataMap[ team.teamSlug ] = team
+    sanityTeamData.forEach((team) => {
+      teamDataMap[team.teamSlug] = team
     })
 
-    results.forEach((result) =>
-    {
+    results.forEach((result) => {
       const teamSlug = result.team_slug
 
       // Initialize team stats if not present
-      if (!teamStatsMap[ teamSlug ]) {
-        const teamData = teamDataMap[ teamSlug ]
-        teamStatsMap[ teamSlug ] = {
+      if (!teamStatsMap[teamSlug]) {
+        const teamData = teamDataMap[teamSlug]
+        teamStatsMap[teamSlug] = {
           team_slug: teamSlug,
           team_name: teamData?.teamName ?? '',
           wins: 0,
@@ -57,7 +49,7 @@ const ResultsTableBo2: React.FC<ResultsTableProps> = ({ matchResults, sanityTeam
         }
       }
 
-      const teamStats = teamStatsMap[ teamSlug ]
+      const teamStats = teamStatsMap[teamSlug]
 
       if (result.draw) {
         // If the match is a draw
@@ -65,7 +57,7 @@ const ResultsTableBo2: React.FC<ResultsTableProps> = ({ matchResults, sanityTeam
         teamStats.points += 1
       } else {
         // Calculate the number of matches won by the team
-        const matchesWon = [ result.match_1, result.match_2 ].filter((match) => match === 1).length
+        const matchesWon = [result.match_1, result.match_2].filter((match) => match === 1).length
 
         if (matchesWon >= 2) {
           // Team wins overall
@@ -88,7 +80,7 @@ const ResultsTableBo2: React.FC<ResultsTableProps> = ({ matchResults, sanityTeam
 
   const teamStats = calculateTeamStats(matchResults)
 
-  const sortedTeamStats = [ ...teamStats ].sort((a, b) => b.points - a.points)
+  const sortedTeamStats = [...teamStats].sort((a, b) => b.points - a.points)
 
   return (
     <div className="p-4 mt-4">

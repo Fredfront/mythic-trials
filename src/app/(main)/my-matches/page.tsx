@@ -25,6 +25,8 @@ export default async function Page()
 
   const matchesData = matchesResponse.data as MatchRecord[]
 
+
+
   if (!matchesData || matchesData.length === 0) {
     return (
       <div className="flex justify-center items-center p-4 mt-20">

@@ -9,8 +9,7 @@ import { MatchRecord, SupabaseTeamType } from '../../../types'
 import { Toaster } from '@/components/ui/toaster'
 import MatchDataProvider from '@/context/MatchContext'
 
-export default async function Template({ children }: { children: React.ReactNode })
-{
+export default async function Template({ children }: { children: React.ReactNode }) {
   const teams = (await ServerClient.from('teams').select('*')).data as SupabaseTeamType[]
   const sanityTeams = await getAllTeams()
   const matches = (await ServerClient.from('matches').select('*')).data as MatchRecord[]
@@ -23,23 +22,19 @@ export default async function Template({ children }: { children: React.ReactNode
 
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBarV2
-        sanityTeams={sanityTeams}
-        teams={teams}
-        matches={matches}
-        featureFlags={featureFlags}
-      />
-      <MatchDataProvider><div className="flex-grow">{children}</div></MatchDataProvider>
+      <NavBarV2 sanityTeams={sanityTeams} teams={teams} matches={matches} featureFlags={featureFlags} />
+      <MatchDataProvider>
+        <div className="flex-grow">{children}</div>
+      </MatchDataProvider>
       <Toaster />
       <Footer />
     </div>
   )
 }
 
-const Footer = async () =>
-{
+const Footer = async () => {
   const showLeaderboardData = await getShowLeaderboard()
-  const showLeaderboard = showLeaderboardData && showLeaderboardData[ 0 ] && showLeaderboardData?.[ 0 ]?.enabled
+  const showLeaderboard = showLeaderboardData && showLeaderboardData[0] && showLeaderboardData?.[0]?.enabled
 
   return (
     <footer className="  shadow bg-gray-800 border-t-4 border-gradient">

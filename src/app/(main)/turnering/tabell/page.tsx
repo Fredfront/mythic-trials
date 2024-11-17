@@ -11,8 +11,7 @@ import { MatchResult } from '../../../../../types'
 
 export const revalidate = 0
 
-async function Page()
-{
+async function Page() {
   const matchResultsTable = (await ServerClient.from('match_results').select('*')).data as MatchResult[] | undefined
   const sanityTeamData = await getAllTeams()
 
@@ -43,8 +42,12 @@ async function Page()
     <>
       {' '}
       <h1 className="text-4xl font-bold mb-10">Tabell</h1>
-      {matchResultsTable && isBestOfTwo && <ResultsTableBo2 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />}
-      {matchResultsTable && isBestOfThree && <ResultsTableBo3 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />}
+      {matchResultsTable && isBestOfTwo && (
+        <ResultsTableBo2 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />
+      )}
+      {matchResultsTable && isBestOfThree && (
+        <ResultsTableBo3 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />
+      )}
     </>
   )
 }

@@ -10,8 +10,7 @@ import { getLiveStreams, getTwitchAccessToken, TeamLiveStatus } from '@/lib/twit
 
 export const revalidate = 1 // Disables ISR; adjust as needed
 
-async function Page()
-{
+async function Page() {
   // Fetch teams
   const teamsResponse = await ServerClient.from('teams').select('*')
   const teams: SupabaseTeamType[] = teamsResponse.data ?? []
@@ -44,8 +43,7 @@ async function Page()
   const liveChannels = await getLiveStreams(accessToken, twitchChannels)
   // Annotate teams and players with live status
   const teamsWithLiveChannels: TeamLiveStatus[] = sanityTeamData
-    .map((team) =>
-    {
+    .map((team) => {
       const liveChannelsForTeam = team.players
         .map((player) => player.twitchChannel?.toLowerCase())
         .filter((channel): channel is string => channel !== undefined && liveChannels?.includes(channel))
@@ -60,8 +58,6 @@ async function Page()
       }
     })
     .filter((team): team is TeamLiveStatus => team !== null)
-
-
 
   return (
     <Matches

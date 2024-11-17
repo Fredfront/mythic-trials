@@ -9,37 +9,30 @@ import supabase from '@/utils/supabase/client'
 import { useGetUserData } from '../../../auth/useGetUserData'
 import { ServerClient } from '@/utils/supabase/server'
 
-function Signin()
-{
+function Signin() {
   const { user, loading } = useGetUserData()
   const router = useRouter()
-  const [ loadingTeams, setLoadingTeams ] = useState<boolean>(true)
-  const [ signupData, setSignupData ] = useState<SignupPage | null>(null)
-  const [ featureFlags, setFeatureFlags ] = useState<{ create_team_allowed: boolean; } | null>(null)
+  const [loadingTeams, setLoadingTeams] = useState<boolean>(true)
+  const [signupData, setSignupData] = useState<SignupPage | null>(null)
+  const [featureFlags, setFeatureFlags] = useState<{ create_team_allowed: boolean } | null>(null)
 
-
-  useEffect(() =>
-  {
-    async function fetchSignupData()
-    {
+  useEffect(() => {
+    async function fetchSignupData() {
       const data = await getSignupData()
       const featureFlags = (await ServerClient.from('feature_flags').select('create_team_allowed')).data as {
         create_team_allowed: boolean
-
       }[]
 
       setSignupData(data)
-      setFeatureFlags(featureFlags[ 0 ])
+      setFeatureFlags(featureFlags[0])
     }
     fetchSignupData()
   }, [])
 
-  const [ allTeams, setAllTeams ] = useState<MythicPlusTeam[] | null>(null)
+  const [allTeams, setAllTeams] = useState<MythicPlusTeam[] | null>(null)
 
-  useEffect(() =>
-  {
-    async function fetchAllTeams()
-    {
+  useEffect(() => {
+    async function fetchAllTeams() {
       const data = await getAllTeams()
       setAllTeams(data)
       setLoadingTeams(false)
@@ -47,8 +40,7 @@ function Signin()
     fetchAllTeams()
   }, [])
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (loadingTeams || loading) return
 
     if (!loading && user?.data.user?.email && allTeams?.find((e) => e.contactPerson === user.data.user?.email)) {
@@ -62,10 +54,9 @@ function Signin()
       router.prefetch('/signup/createTeam')
       router.push('/signup/createTeam')
     }
-  }, [ allTeams, loading, loadingTeams, router, user ])
+  }, [allTeams, loading, loadingTeams, router, user])
 
-  function SignIn()
-  {
+  function SignIn() {
     supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
@@ -73,7 +64,6 @@ function Signin()
       },
     })
   }
-
 
   if (featureFlags?.create_team_allowed === false) {
     return (

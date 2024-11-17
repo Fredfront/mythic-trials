@@ -27,7 +27,7 @@ export default function CompletedScreen({
   tiebreakerDungeon,
   round,
   matchData,
-  isBestOfTwo
+  isBestOfTwo,
 }: CompletedScreenProps)
 {
   const router = useRouter()
@@ -59,7 +59,6 @@ export default function CompletedScreen({
                       src={dungeon.image}
                       alt={dungeon.name}
                       layout="fill"
-                      objectFit="cover"
                       className="rounded-lg"
                     />
                     <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">
@@ -79,7 +78,6 @@ export default function CompletedScreen({
                       src={tiebreakerDungeon.image}
                       alt={tiebreakerDungeon.name}
                       layout="fill"
-                      objectFit="cover"
                       className="rounded-lg"
                     />
                     <Badge className="absolute top-2 left-2 bg-secondary text-secondary-foreground">Tiebreaker</Badge>

@@ -1,8 +1,6 @@
-import TournamentHandbook from "./Handbook"
+import TournamentHandbook from './Handbook'
 
-
-const page = async () =>
-{
+const page = async () => {
   return <TournamentHandbook />
 }
 

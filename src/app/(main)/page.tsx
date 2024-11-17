@@ -25,15 +25,13 @@ export const revalidate = 0
 
 const LifeCraft = localFont({ src: '../../../public/fonts/LifeCraft_Font.woff2' })
 
-const Home = async () =>
-{
+const Home = async () => {
   const allTeams = await getAllTeams()
   const frontpageData = await getFrontpageData()
   const showLeaderboardData = await getShowLeaderboard()
   const frontpageNews = await getFrontpageNews()
   const rounds = (await ServerClient.from('rounds').select('*').order('round_date', { ascending: true }))
     .data as RoundType[]
-
 
   const featureFlags = (await ServerClient.from('feature_flags').select('*')).data as {
     create_team_allowed: boolean
@@ -42,11 +40,11 @@ const Home = async () =>
     hide_teams: boolean
   }[]
 
-  const createTeamAllowed = featureFlags?.[ 0 ]?.create_team_allowed
+  const createTeamAllowed = featureFlags?.[0]?.create_team_allowed
 
-  const showTeams = !featureFlags[ 0 ]?.hide_teams
+  const showTeams = !featureFlags[0]?.hide_teams
 
-  const showLeaderboard = showLeaderboardData?.[ 0 ]?.enabled
+  const showLeaderboard = showLeaderboardData?.[0]?.enabled
 
   return (
     <main>
@@ -68,11 +66,13 @@ const Home = async () =>
                 Hvem kan være med?
               </Button>
             </Link>
-            {createTeamAllowed && <Link href="/signup" prefetch>
-              <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
-                Påmelding
-              </Button>
-            </Link>}
+            {createTeamAllowed && (
+              <Link href="/signup" prefetch>
+                <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
+                  Påmelding
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
         <DraggableRoundCarousel roundsFromDB={rounds ?? []} />
@@ -127,8 +127,7 @@ const Home = async () =>
           </div>
         ) : null}
         {frontpageNews &&
-          frontpageNews.map((news, index) =>
-          {
+          frontpageNews.map((news, index) => {
             const isEvenIndex = index % 2 === 0
             if (news.showOnFrontpage === false) return null
             return (
@@ -176,8 +175,7 @@ const Home = async () =>
           </div>
         ) : null}{' '}
       </div>
-
-    </main >
+    </main>
   )
 }
 

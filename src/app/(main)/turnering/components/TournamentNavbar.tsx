@@ -9,10 +9,9 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { TracingBeam } from '@/components/ui/tracing-beam'
 
-const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; children: React.ReactNode }) =>
-{
+const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; children: React.ReactNode }) => {
   const pathname = usePathname()
-  const [ isOpen, setIsOpen ] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const menuItems = [
     { href: '/turnering', icon: Calendar, label: 'Kamper' },
@@ -27,8 +26,9 @@ const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; ch
         <li key={item.href}>
           <Link href={item.href}>
             <span
-              className={`flex items-center gap-4 hover:font-bold cursor-pointer ${pathname === item.href ? 'text-[#FDB202] font-bold' : 'text-white'
-                }`}
+              className={`flex items-center gap-4 hover:font-bold cursor-pointer ${
+                pathname === item.href ? 'text-[#FDB202] font-bold' : 'text-white'
+              }`}
             >
               <item.icon className="h-6 w-6" />
               {item.label}
@@ -45,16 +45,18 @@ const TournamentNavbar = ({ signupData, children }: { signupData: SignupPage; ch
         <div className="lg:w-1/5 lg:max-w-[250px] mb-4 lg:mb-0">
           <div className="lg:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild >
+              <SheetTrigger asChild>
                 <Button size="icon" className="ml-12 bg-[#011624]">
-                  <div className='  flex gap-2 items-center'><Menu className="h-12 w-12" color="white" />
-                    <span className="text-white">Turnernings meny </span></div>
+                  <div className="  flex gap-2 items-center">
+                    <Menu className="h-12 w-12" color="white" />
+                    <span className="text-white">Turnernings meny </span>
+                  </div>
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[240px] sm:w-[280px]">
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between mb-6">
-                    <SheetTitle className='text-white'>Turnering</SheetTitle>
+                    <SheetTitle className="text-white">Turnering</SheetTitle>
                   </div>
                   <NavList />
                 </div>

@@ -14,11 +14,10 @@ function ExistingTeam({
 }: {
   sanityTeams: MythicPlusTeam[]
   supabaseTeams: SupabaseTeamType[]
-})
-{
+}) {
   const { user, loading: userLoading } = useGetUserData()
 
-  const [ loading, setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false)
   const team = sanityTeams?.find((e) => e.contactPerson === user?.data.user?.email)
 
   const mappedTeam = team?.players.map((player) => ({
@@ -89,15 +88,14 @@ function ExistingTeam({
             <>
               <h2>Alt characters</h2>
               <div className="flex flex-row items-center justify-center mb-10 w-full">
-                <AnimatedTooltip items={mappedAlts?.[ 0 ] as any} />
+                <AnimatedTooltip items={mappedAlts?.[0] as any} />
               </div>
             </>
           )}
 
           <Link href={`/signup/editTeam/${team?.teamSlug}`}>
             <Button
-              onClick={() =>
-              {
+              onClick={() => {
                 setLoading(true)
               }}
               className="mt-10 mb-8 inline-block text-xs px-2 py-2 leading-none rounded-xl bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
@@ -105,7 +103,6 @@ function ExistingTeam({
               Legg til eller fjern spillere
             </Button>
           </Link>
-
         </div>
       </div>
     </>

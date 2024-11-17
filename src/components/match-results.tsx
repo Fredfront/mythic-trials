@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, CheckCircle2, XCircle, Trophy, ArrowLeft, Plus, Trash2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Separator } from '@/components/ui/separator'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useGetUserData } from '@/app/auth/useGetUserData'
 import supabase from '@/utils/supabase/client'
 import { dungeonConfig } from '@/app/(main)/turnering/utils/dungeonConfig'
@@ -16,7 +16,6 @@ import { PickAndBansType, TTeam, TMatchResults, create_match_results } from '../
 import { Input } from './ui/input'
 import { useMatchData } from '@/context/MatchContext'
 import { toast } from '@/hooks/use-toast'
-
 
 const MotionDiv = motion.div as any
 
@@ -41,11 +40,8 @@ export function MatchResultsComponent({
 {
   const { user, loading } = useGetUserData()
 
-
   const { matchData } = useMatchData()
   const router = useRouter()
-
-
 
   useEffect(() =>
   {
@@ -56,9 +52,10 @@ export function MatchResultsComponent({
     }
   }, [ matchData, loading, user, router ])
 
-
   const round = matchData?.teams[ 0 ].round
   const isBestOfTwo = matchData?.bo2 ?? false
+
+  const opponentTeamName = matchData?.teams.find((e) => e.team_slug !== user?.data.user?.email)?.name
 
   const email = user?.data.user?.email
   const contact_person = user?.data.user?.email || ''
@@ -77,7 +74,13 @@ export function MatchResultsComponent({
   const [ team2Results, setTeam2Results ] = useState<TeamResults>({
     match1: opponentMatchResults?.match_1 === 1 ? 'win' : opponentMatchResults?.match_1 === 0 ? 'loss' : null,
     match2: opponentMatchResults?.match_2 === 1 ? 'win' : opponentMatchResults?.match_2 === 0 ? 'loss' : null,
-    match3: isBestOfTwo ? null : opponentMatchResults?.match_3 === 1 ? 'win' : opponentMatchResults?.match_3 === 0 ? 'loss' : null,
+    match3: isBestOfTwo
+      ? null
+      : opponentMatchResults?.match_3 === 1
+        ? 'win'
+        : opponentMatchResults?.match_3 === 0
+          ? 'loss'
+          : null,
   })
   const [ myTeamSubmitted, setMyTeamSubmitted ] = useState(false)
   const [ errorMessage, setErrorMessage ] = useState<string | null>(null)
@@ -194,17 +197,17 @@ export function MatchResultsComponent({
 
   const myPickAndBansTable = pickAndBanData.find((e) => e.contact_person === email && e.round === round)
   const opponentPickAndBansTable = pickAndBanData.find((e) => e.team_slug === opponentTeam && e.round === round)
-  const bothTeamsConfirmedWithAWinner = myMatchResults?.confirm === true && opponentMatchResults?.confirm === true &&
-    (myMatchResults.winner === true || myMatchResults.winner === false) &&
-    opponentMatchResults.winner === !myMatchResults.winner
-    ? true
-    : false
-
+  const bothTeamsConfirmedWithAWinner =
+    myMatchResults?.confirm === true &&
+      opponentMatchResults?.confirm === true &&
+      (myMatchResults.winner === true || myMatchResults.winner === false) &&
+      opponentMatchResults.winner === !myMatchResults.winner
+      ? true
+      : false
 
   const bothTeamConfirmedAndIsDraw = myMatchResults?.draw === true && opponentMatchResults?.draw === true
 
   const bothTeamsConfirmed = bothTeamsConfirmedWithAWinner || bothTeamConfirmedAndIsDraw
-
 
   const myBans = myPickAndBansTable?.bans || []
   const myPickedDungeon = myPickAndBansTable?.pick || ''
@@ -318,7 +321,6 @@ export function MatchResultsComponent({
 
   const updateResult = (team: string, match: 'match1' | 'match2' | 'match3', result: MatchResult) =>
   {
-
     if (!round || !contact_person) return
 
     const setResults = team === myTeam?.team_slug ? setTeam1Results : setTeam2Results
@@ -344,16 +346,12 @@ export function MatchResultsComponent({
     })
   }
 
-
   const needsTiebreaker = (team1: TeamResults, team2: TeamResults) =>
   {
-
-
     const team1Wins = Object.values(team1).filter((result) => result === 'win').length
     const team1Losses = Object.values(team1).filter((result) => result === 'loss').length
     const team2Wins = Object.values(team2).filter((result) => result === 'win').length
     const team2Losses = Object.values(team2).filter((result) => result === 'loss').length
-
 
     if (isBestOfTwo) {
       return false
@@ -365,15 +363,13 @@ export function MatchResultsComponent({
         (team2Wins === 1 && team2Losses === 1)
       )
     }
-
   }
-
-
 
   const wonBoth = myMatchResults?.match_1 === 1 && myMatchResults?.match_2 === 1
   const lostBoth = myMatchResults?.match_1 === 0 && myMatchResults?.match_2 === 0
 
-  const hideTieBreaker = isBestOfTwo || wonBoth || lostBoth || myMatchResults?.match_1 === null || myMatchResults?.match_2 === null
+  const hideTieBreaker =
+    isBestOfTwo || wonBoth || lostBoth || myMatchResults?.match_1 === null || myMatchResults?.match_2 === null
 
   const renderMatchResult = (team: string, match: 'match1' | 'match2' | 'match3') =>
   {
@@ -406,9 +402,10 @@ export function MatchResultsComponent({
 
   const isDrawMyMatchResults = (myMatchResults?.match_1 ?? 0) + (myMatchResults?.match_2 ?? 0) === 1
 
-
-
-  const isDrawOpponentResults = opponentMatchResults?.match_1 && opponentMatchResults.match_2 ? opponentMatchResults?.match_1 + opponentMatchResults?.match_2 === 1 : false
+  const isDrawOpponentResults =
+    opponentMatchResults?.match_1 && opponentMatchResults.match_2
+      ? opponentMatchResults?.match_1 + opponentMatchResults?.match_2 === 1
+      : false
 
   const isDraw = isDrawMyMatchResults && isDrawOpponentResults
 
@@ -429,12 +426,28 @@ export function MatchResultsComponent({
 
       if (team === myTeam?.team_slug && myMatchResults?.confirm !== true) {
         setMyTeamSubmitted(true)
-        confirmResults({ contact_person: contact_person, round: round, isBo2: isBestOfTwo, winner: points >= 2, confirm: true, match_uuid: matchData.teams?.[ 0 ].matchUUID, logReports, confirm_unix_timestamp: new Date().getTime(), isDraw: isDrawMyMatchResults })
+        confirmResults({
+          contact_person: contact_person,
+          round: round,
+          isBo2: isBestOfTwo,
+          winner: points >= 2,
+          confirm: true,
+          match_uuid: matchData.teams?.[ 0 ].matchUUID,
+          logReports,
+          confirm_unix_timestamp: new Date().getTime(),
+          isDraw: isDrawMyMatchResults,
+        })
 
         //send discord message
         const channelName = `${home_team}-vs-${awayTeamToSlug}`
         const roleName = myTeam.name
-        const message = `📢 **${myTeam.name}** confirmed their results! @here`
+        const message = `@here 📢 **${myTeam.name}** added their results!
+
+Match 1: ${dungeonsNames.match1} - ${results.match1}
+Match 2: ${dungeonsNames.match2} - ${results.match2}
+
+**${opponentTeamName || opponentTeam}** please confirm your results!
+https://trials.nl-wow.no/my-matches`
         // Send message to Discord channel with role mention
         fetch('/api/discord/send-message', {
           method: 'POST',
@@ -444,8 +457,8 @@ export function MatchResultsComponent({
         {
           if (res.ok) {
             toast({
-              title: 'Success',
-              description: 'Message sent to Discord',
+              title: '',
+              description: `Result confirmation has been posted to discord channel: ${channelName}`,
             })
           }
         })
@@ -454,7 +467,17 @@ export function MatchResultsComponent({
       if (myMatchResults?.confirm === true) {
         if (team === myTeam?.team_slug) {
           setMyTeamSubmitted(false)
-          confirmResults({ contact_person: contact_person, round: round, isBo2: isBestOfTwo, winner: points >= 2, confirm: false, match_uuid: matchData.teams?.[ 0 ].matchUUID, logReports, confirm_unix_timestamp: new Date().getTime(), isDraw: isDrawMyMatchResults })
+          confirmResults({
+            contact_person: contact_person,
+            round: round,
+            isBo2: isBestOfTwo,
+            winner: points >= 2,
+            confirm: false,
+            match_uuid: matchData.teams?.[ 0 ].matchUUID,
+            logReports,
+            confirm_unix_timestamp: new Date().getTime(),
+            isDraw: isDrawMyMatchResults,
+          })
         }
       }
     }
@@ -826,7 +849,7 @@ async function confirmResults({
   isDraw,
   isBo2,
   match_uuid,
-}: confirmResultsProps) 
+}: confirmResultsProps)
 {
   const { error } = await supabase
     .from('match_results')
@@ -838,7 +861,7 @@ async function confirmResults({
       confirm_unix_timestamp: confirm ? confirm_unix_timestamp : null,
       draw: !isBo2 ? false : isDraw,
       bo2: isBo2,
-      bo3: !isBo2
+      bo3: !isBo2,
     })
     .eq('contact_person', contact_person)
     .eq('round', round)
@@ -861,7 +884,7 @@ async function createMatchResultsIfNotExists({
   round: number
   homeTeam: string
   awayTeam: string
-  myTeamSlug: string,
+  myTeamSlug: string
   matchUUID: string
 })
 {
@@ -875,7 +898,6 @@ async function createMatchResultsIfNotExists({
       const pickBanCompletedForRound =
         res.data?.find((e) => e.team_slug === homeTeam || (e.team_slug === awayTeam && e.round === round))
           ?.completed === true
-
 
       if (res.data && res.data.length > 0 && pickBanCompletedForRound) {
         supabase
@@ -916,4 +938,3 @@ async function getMatchresults(contact_person: string, round: number)
 
   return data
 }
-

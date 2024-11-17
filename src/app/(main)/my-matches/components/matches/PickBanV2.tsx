@@ -15,7 +15,8 @@ import { useGetUserData } from '@/app/auth/useGetUserData'
 import { Match } from '../../../../../../types'
 import { createPickBanRowIfNotExist, PickAndBansType } from '../../../../../supabase/dbFunctions'
 import { urlForImage } from '../../../../../../sanity/lib/image'
-import { toast } from '@/hooks/use-toast'
+import { stepOrderPickAndBan } from './pickban/config'
+import { setBannedDungeons, setPickedDungeon, setReady } from './pickban/functions'
 
 function PickBanV2({
   matchData,
@@ -45,8 +46,28 @@ function PickBanV2({
   const isMyTurn = myTeamData?.my_turn === true
   const myTeamSlug = matchData.myTeam
   const isHomeTeam = myPickAndBansTable?.home === true
-
   const isBestOfTwo = matchData.bo2
+  const isBestOfThree = matchData.bo3
+
+  //To do: Add a check for best of 3
+  const isCompleted = isBestOfTwo && myTeamData?.pick && myTeamData.bans && myTeamData.bans.length === 1
+
+  useEffect(() =>
+  {
+    async function updateConfirmStatus()
+    {
+      await supabase
+        .from('pick_ban')
+        .update({ completed: true })
+        .eq('contact_person', contact_person)
+        .eq('round', round)
+    }
+
+    if (isCompleted && myTeamData?.completed === false) {
+      updateConfirmStatus()
+    }
+
+  }, [ isCompleted, myTeamData?.completed, contact_person, round ])
 
   useEffect(() =>
   {
@@ -115,112 +136,16 @@ function PickBanV2({
     fetchData()
   }, [ opponentTeam, round, email ])
 
-  async function setReady()
-  {
-    if (!email) return
-
-    if (!contact_person || !round) return
-    await supabase
-      .from('pick_ban')
-      .update({ ready: !teamReady })
-      .eq('contact_person', contact_person)
-      .eq('round', round)
-      .then(() =>
-      {
-        setTeamReady(!teamReady)
-        if (teamReady) {
-          //send discord message
-          const channelName = `${homeTeam}-vs-${awayTeam}`
-          const roleName = sanityTeamData.find((e) => e.contactPerson === contact_person)?.teamName
-          const message = `📢 **${sanityTeamData.find((e) => e.contactPerson === contact_person)?.teamName || myTeamData?.team_slug}** is READY to start pick/ban! @here`
-          // Send message to Discord channel with role mention
-          fetch('/api/discord/send-message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ channelName, message, roleName }),
-          }).then((res) =>
-          {
-            if (res.ok) {
-              toast({
-                title: 'Success',
-                description: 'Message sent to Discord',
-              })
-            }
-          })
-        }
-      }
-      )
-  }
-
-  async function setPickedDungeon(dungeon: number)
-  {
-    if (!email) return
-
-    if (!contact_person || !round) return
-    await supabase
-      .from('pick_ban')
-      .update({ pick: dungeon, my_turn: false })
-      .eq('contact_person', contact_person)
-      .eq('round', round)
-  }
-
-  const setCompleted = useCallback(async () =>
-  {
-    if (!contact_person || !round) return
-    await supabase.from('pick_ban').update({ completed: true }).eq('contact_person', contact_person).eq('round', round)
-  }, [ contact_person, round ])
-
-  async function setBannedDungeons(dungeon: number)
-  {
-    if (!contact_person || !round) return
-    const existingBans = myTeamData?.bans || []
-    const newBans = [ ...existingBans, dungeon ]
-    await supabase
-      .from('pick_ban')
-      .update({ bans: newBans, my_turn: false })
-      .eq('contact_person', contact_person)
-      .eq('round', round)
-  }
-
   const pickedDungeons = [ myTeamData?.pick, opponentData?.pick ].filter(Boolean) as number[]
   const bannedDungeons = useMemo(
     () => [ ...(myTeamData?.bans || []), ...(opponentData?.bans || []) ],
     [ myTeamData?.bans, opponentData?.bans ],
   )
 
-  const stepOrderPickAndBan = isBestOfTwo ? [
-    { team: awayTeam, action: 'ban', step: 1 },
-    { team: homeTeam, action: 'ban', step: 2 },
-    { team: awayTeam, action: 'ban', step: 3 },
-    { team: homeTeam, action: 'ban', step: 4 },
-    { team: awayTeam, action: 'ban', step: 5 },
-    { team: homeTeam, action: 'ban', step: 6 },
-    { team: awayTeam, action: 'pick', step: 7 },
-    { team: awayTeam, action: 'pick', step: 7 },
-  ] : [
-    { team: awayTeam, action: 'ban', step: 1 },
-    { team: homeTeam, action: 'ban', step: 2 },
-    { team: awayTeam, action: 'pick', step: 3 },
-    { team: homeTeam, action: 'pick', step: 4 },
-    { team: awayTeam, action: 'ban', step: 5 },
-    { team: homeTeam, action: 'ban', step: 6 },
-    { team: awayTeam, action: 'ban', step: 7 },
-  ]
-
-  const updateTurn = useCallback(async () =>
-  {
-    if (!contact_person || !round || !opponentData?.step || !email) return
-    await supabase
-      .from('pick_ban')
-      .update({ my_turn: true, step: opponentData.step + 1 })
-      .eq('contact_person', contact_person)
-      .eq('round', round)
-  }, [ contact_person, opponentData?.step, round, email ])
 
   useEffect(() =>
   {
     if (!email) return
-
     const channel = supabase
       .channel('pick_ban')
       .on(
@@ -237,15 +162,9 @@ function PickBanV2({
             setMyTeamData(updatedData)
             setTeamReady(updatedData.ready)
           }
-
           if (payload.new.team_slug === opponentTeam && round === payload.new.round) {
             setOpponentData(updatedData)
             setOpponentReady(updatedData.ready)
-          }
-          if (payload.new.team_slug === opponentTeam && payload.new.ready === true) {
-            if (myTeamData?.my_turn === false && payload.new.my_turn === false) {
-              updateTurn()
-            }
           }
         },
       )
@@ -255,27 +174,12 @@ function PickBanV2({
     {
       supabase.removeChannel(channel)
     }
-  }, [ contact_person, myTeamData, opponentTeam, round, updateTurn, email ])
+  }, [ contact_person, myTeamData, opponentTeam, round, email ])
 
   const completed = useMemo(
     () => myTeamData?.completed === true && opponentData?.completed === true,
     [ myTeamData?.completed, opponentData?.completed ],
   )
-
-  const banLength = isBestOfTwo ? 6 : 5
-
-  useEffect(() =>
-  {
-    if (
-      myTeamData?.completed === false &&
-      bannedDungeons &&
-      pickedDungeons &&
-      pickedDungeons.length === 2 &&
-      bannedDungeons.length === banLength
-    ) {
-      setCompleted()
-    }
-  }, [ bannedDungeons, myTeamData?.completed, pickedDungeons, setCompleted, banLength ])
 
   const getDungeonStatus = (dungeonId: number) =>
   {
@@ -290,7 +194,9 @@ function PickBanV2({
     const status = getDungeonStatus(dungeonId)
     if (status === 'picked') return 'Picked'
     if (status === 'banned') return 'Banned'
-    return stepOrderPickAndBan[ myTeamData?.step - 1 ]?.action === 'pick' ? 'Pick' : 'Ban'
+    return stepOrderPickAndBan({ isBestOfTwo, homeTeam, awayTeam })[ myTeamData?.step - 1 ]?.action === 'pick'
+      ? 'Pick'
+      : 'Ban'
   }
 
   const getTiebreaker = () =>
@@ -309,9 +215,13 @@ function PickBanV2({
         awayTeam={matchData.teams[ 1 ].team_slug}
         round={round}
         opponentReady={opponentReady}
-        setReady={setReady}
+        setReady={() =>
+          setReady({ sanityTeamData, email, contact_person, round, teamReady, homeTeam, awayTeam, opponentReady })
+        }
         teamReady={teamReady}
         sanityTeamData={sanityTeamData}
+        email={email}
+        contact_person={contact_person}
       />
     )
   }
@@ -371,13 +281,14 @@ function PickBanV2({
           />
         )}
       </h1>
+
       <div className={`grid grid-cols-1 ${completed ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} gap-8`}>
         {!completed && (
           <div className="lg:col-span-2">
             <div className="mb-4">
-              <p className="text-2xl font-semibold text-center">
+              <p className="text-4xl font-bold ">
                 {isMyTurn
-                  ? `Din tur til å ${stepOrderPickAndBan[ myTeamData.step - 1 ]?.action === 'pick' ? 'velge' : 'banne'}`
+                  ? `Din tur til å ${stepOrderPickAndBan({ isBestOfTwo, homeTeam, awayTeam })[ myTeamData.step - 1 ]?.action === 'pick' ? 'velge' : 'banne'}`
                   : 'Venter på motstanderens valg'}
               </p>
             </div>
@@ -398,7 +309,6 @@ function PickBanV2({
                           alt={dungeon.name}
                           height={500}
                           width={300}
-                          objectFit="contain"
                         />
                         {status !== 'available' && (
                           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -423,10 +333,30 @@ function PickBanV2({
                               onClick={() =>
                               {
                                 if (isMyTurn && status === 'available') {
-                                  if (stepOrderPickAndBan[ myTeamData.step - 1 ]?.action === 'ban') {
-                                    setBannedDungeons(dungeon.id)
+                                  if (
+                                    stepOrderPickAndBan({ isBestOfTwo, homeTeam, awayTeam })[ myTeamData.step - 1 ]
+                                      ?.action === 'ban'
+                                  ) {
+                                    setBannedDungeons({
+                                      dungeon: dungeon.id,
+                                      round,
+                                      contact_person,
+                                      myTeamData,
+                                      homeTeam,
+                                      awayTeam,
+                                      sanityTeamData,
+                                    })
                                   } else {
-                                    setPickedDungeon(dungeon.id)
+                                    setPickedDungeon({
+                                      dungeon: dungeon.id,
+                                      round,
+                                      contact_person,
+                                      homeTeam,
+                                      awayTeam,
+                                      sanityTeamData,
+                                      myTeamData,
+                                      isBestOfTwo,
+                                    })
                                   }
                                 }
                               }}
@@ -447,7 +377,7 @@ function PickBanV2({
           </div>
         )}
         <div>
-          <Card className="bg-gray-800">
+          <Card className="bg-gray-800 mb-4">
             <CardContent className="p-4 text-white">
               <h2 className="text-xl font-semibold mb-4 text-white">Pick/ban resultat</h2>
               <div className="space-y-4">
@@ -485,18 +415,38 @@ function PickBanV2({
                     <p className="text-muted-foreground">Ingen dungeons banned enda</p>
                   )}
                 </div>
-                {isBestOfTwo ? null : <div>
-                  <h3 className="text-lg font-semibold mb-2 flex items-center">
-                    <Shield className="text-blue-500 w-5 h-5 mr-2" />
-                    Tiebreaker
-                  </h3>
-                  {completed ? (
-                    <p>{getTiebreaker()?.name || 'No tiebreaker available'}</p>
-                  ) : (
-                    <p className="text-muted-foreground">TBD</p>
-                  )}
-                </div>}
+                {isBestOfTwo ? null : (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 flex items-center">
+                      <Shield className="text-blue-500 w-5 h-5 mr-2" />
+                      Tiebreaker
+                    </h3>
+                    {completed ? (
+                      <p>{getTiebreaker()?.name || 'No tiebreaker available'}</p>
+                    ) : (
+                      <p className="text-muted-foreground">TBD</p>
+                    )}
+                  </div>
+                )}
               </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-gray-800 mb-4">
+            <CardContent className="p-4 text-white">
+              <h3 className="text-2xl">Pick and ban order:</h3>
+              {stepOrderPickAndBan({ isBestOfTwo, homeTeam, awayTeam }).map((e) =>
+              {
+                return (
+                  <div key={e.step} className="flex">
+                    {e.action === 'ban' ? (
+                      <X className="text-red-500 w-5 h-5 mr-2" />
+                    ) : (
+                      <Check className="text-green-500 w-5 h-5 mr-2" />
+                    )}{' '}
+                    {e.action.toUpperCase()}: {sanityTeamData.find((a) => a.teamSlug === e.team)?.teamName}{' '}
+                  </div>
+                )
+              })}
             </CardContent>
           </Card>
         </div>
