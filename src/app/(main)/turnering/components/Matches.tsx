@@ -73,7 +73,6 @@ export default function Matches({
                   const awayTeamName = match.teams?.[1].name
                   const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage.asset._ref
                   const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage.asset._ref
-
                   const homeTeamMatchResults = matchResults.find((result) => result.team_slug === homeTeam)
                   const awayTeamMatchResults = matchResults.find((result) => result.team_slug === awayTeam)
 
@@ -165,9 +164,11 @@ export default function Matches({
 
                   const isDraw = homeTeamMatchResults?.draw || awayTeamMatchResults?.draw
 
-                  const homeTeamHasLogs = false
+                  const homeTeamHasLogs =
+                    homeTeamMatchResults?.warcraft_logs_report && homeTeamMatchResults?.warcraft_logs_report.length > 0
 
-                  const awayTeamHasLogs = false
+                  const awayTeamHasLogs =
+                    awayTeamMatchResults?.warcraft_logs_report && awayTeamMatchResults?.warcraft_logs_report.length > 0
 
                   const allBansmapped = allBans.map((ban) => {
                     return {
@@ -293,7 +294,7 @@ export default function Matches({
                             </CardContent>
                           </Card>
                         )}
-                        {hasMatchResults !== undefined && (
+                        {
                           <Card className="bg-gray-700 border-none mt-2">
                             <CardHeader>
                               <CardTitle className="text-lg font-semibold">Kamp oversikt</CardTitle>
@@ -328,18 +329,21 @@ export default function Matches({
                               <div className="grid gap-2">
                                 <MatchResult
                                   title="Kamp 1"
+                                  hasMatchResults={hasMatchResults}
                                   matchName={matchOneName || ''}
                                   homeScore={homeTeamScoreMatchOne}
                                   awayScore={awayTeamScoreMatchOne}
                                 />
                                 <MatchResult
+                                  hasMatchResults={hasMatchResults}
                                   title="Kamp 2"
                                   matchName={matchTwoName || ''}
                                   homeScore={homeTeamScoreMatchTwo}
                                   awayScore={awayTeamScoreMatchTwo}
                                 />
-                                {hasTieBreaker && (
+                                {match.bo3 && hasTieBreaker && (
                                   <MatchResult
+                                    hasMatchResults={hasMatchResults}
                                     title="Tiebreaker"
                                     matchName={tieBreaker?.name || ''}
                                     homeScore={homeTeamScoreMatchThree}
@@ -353,7 +357,7 @@ export default function Matches({
                                   <CardTitle className="text-lg font-semibold">Warcraft logs</CardTitle>
                                   <div className="flex gap-4 flex-col ">
                                     {homeTeamHasLogs &&
-                                      matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                      matchResults?.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
                                         ?.warcraft_logs_report && (
                                         <div>
                                           <h3 className="text-sm font-medium mb-2">{match.teams[0].name} logs</h3>
@@ -416,7 +420,7 @@ export default function Matches({
                               ) : null}
                             </CardContent>
                           </Card>
-                        )}
+                        }
                       </AccordionContent>
                     </AccordionItem>
                   )
@@ -443,12 +447,16 @@ function MatchResult({
   matchName,
   homeScore,
   awayScore,
+  hasMatchResults,
 }: {
   title: string
   matchName: string
   homeScore: number
   awayScore: number
+  hasMatchResults: TMatchResults | undefined
 }) {
+  console.log(hasMatchResults)
+
   return (
     <div className="bg-gray-600 p-2 rounded-md">
       <div className="text-sm font-medium mb-1">{title}</div>
@@ -463,9 +471,13 @@ function MatchResult({
           />{' '}
           {matchName}
         </div>
-        <div className="text-sm font-semibold">
-          {homeScore} - {awayScore}
-        </div>
+        {hasMatchResults ? (
+          <div className="tex t-sm font-semibold">
+            {homeScore} - {awayScore}
+          </div>
+        ) : (
+          <div className="text-sm font-semibold">TBD</div>
+        )}
       </div>
     </div>
   )
