@@ -264,164 +264,170 @@ export default function Matches({
                           </div>
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent className="bg-gray-800 rounded-b-lg">
-                        {(homTeamTwitchChannels.length > 0 || awayTeamTwitchChannels.length > 0) && (
-                          <Card className="bg-gray-700 border-none mt-2">
-                            <CardHeader>
-                              <CardTitle className="text-lg font-semibold text-white">Live Streams</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                              {homTeamTwitchChannels.length > 0 && (
+                      {homeTeamPick && awayTeamPick ? (
+                        <AccordionContent className="bg-gray-800 rounded-b-lg">
+                          {(homTeamTwitchChannels.length > 0 || awayTeamTwitchChannels.length > 0) && (
+                            <Card className="bg-gray-700 border-none mt-2">
+                              <CardHeader>
+                                <CardTitle className="text-lg font-semibold text-white">Live Streams</CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                {homTeamTwitchChannels.length > 0 && (
+                                  <div>
+                                    <h3 className="text-sm font-medium mb-2 text-white">
+                                      {match.teams[0].name} Streams
+                                    </h3>
+                                    <div className="flex flex-wrap gap-2">
+                                      {homTeamTwitchChannels.map((channel, index) => (
+                                        <TwitchButton key={index} channel={channel} />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                {awayTeamTwitchChannels.length > 0 && (
+                                  <div>
+                                    <h3 className="text-sm font-medium mb-2 text-white">
+                                      {match.teams[1].name} Streams
+                                    </h3>
+                                    <div className="flex flex-wrap gap-2">
+                                      {awayTeamTwitchChannels.map((channel, index) => (
+                                        <TwitchButton key={index} channel={channel} />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </CardContent>
+                            </Card>
+                          )}
+                          {
+                            <Card className="bg-gray-700 border-none mt-2">
+                              <CardHeader>
+                                <CardTitle className="text-lg font-semibold">Kamp oversikt</CardTitle>
+                                <CardDescription className="">
+                                  {' '}
+                                  {match.teams[0].name} vs {match.teams[1].name}
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent className="grid gap-4">
                                 <div>
-                                  <h3 className="text-sm font-medium mb-2 text-white">{match.teams[0].name} Streams</h3>
+                                  <h3 className="text-sm font-medium mb-2">Banned Maps</h3>
                                   <div className="flex flex-wrap gap-2">
-                                    {homTeamTwitchChannels.map((channel, index) => (
-                                      <TwitchButton key={index} channel={channel} />
+                                    {allBansmapped.map((e, index) => (
+                                      <Badge
+                                        key={index}
+                                        variant="default"
+                                        className="flex items-center gap-1 p-2 bg-gray-600"
+                                      >
+                                        <Image
+                                          width={24}
+                                          height={24}
+                                          className="w-6 h-6 rounded-full border-2 border-primary"
+                                          alt={e.name || ''}
+                                          src={e.image || ''}
+                                        />
+                                        <span className="text-xs">{e.name}</span>
+                                      </Badge>
                                     ))}
                                   </div>
                                 </div>
-                              )}
-                              {awayTeamTwitchChannels.length > 0 && (
-                                <div>
-                                  <h3 className="text-sm font-medium mb-2 text-white">{match.teams[1].name} Streams</h3>
-                                  <div className="flex flex-wrap gap-2">
-                                    {awayTeamTwitchChannels.map((channel, index) => (
-                                      <TwitchButton key={index} channel={channel} />
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </CardContent>
-                          </Card>
-                        )}
-                        {
-                          <Card className="bg-gray-700 border-none mt-2">
-                            <CardHeader>
-                              <CardTitle className="text-lg font-semibold">Kamp oversikt</CardTitle>
-                              <CardDescription className="">
-                                {' '}
-                                {match.teams[0].name} vs {match.teams[1].name}
-                              </CardDescription>
-                            </CardHeader>
-                            <CardContent className="grid gap-4">
-                              <div>
-                                <h3 className="text-sm font-medium mb-2">Banned Maps</h3>
-                                <div className="flex flex-wrap gap-2">
-                                  {allBansmapped.map((e, index) => (
-                                    <Badge
-                                      key={index}
-                                      variant="default"
-                                      className="flex items-center gap-1 p-2 bg-gray-600"
-                                    >
-                                      <Image
-                                        width={24}
-                                        height={24}
-                                        className="w-6 h-6 rounded-full border-2 border-primary"
-                                        alt={e.name || ''}
-                                        src={e.image || ''}
-                                      />
-                                      <span className="text-xs">{e.name}</span>
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                              <Separator />
-                              <div className="grid gap-2">
-                                <MatchResult
-                                  title="Kamp 1"
-                                  hasMatchResults={hasMatchResults}
-                                  matchName={matchOneName || ''}
-                                  homeScore={homeTeamScoreMatchOne}
-                                  awayScore={awayTeamScoreMatchOne}
-                                />
-                                <MatchResult
-                                  hasMatchResults={hasMatchResults}
-                                  title="Kamp 2"
-                                  matchName={matchTwoName || ''}
-                                  homeScore={homeTeamScoreMatchTwo}
-                                  awayScore={awayTeamScoreMatchTwo}
-                                />
-                                {match.bo3 && hasTieBreaker && (
+                                <Separator />
+                                <div className="grid gap-2">
+                                  <MatchResult
+                                    title="Kamp 1"
+                                    hasMatchResults={hasMatchResults}
+                                    matchName={matchOneName || ''}
+                                    homeScore={homeTeamScoreMatchOne}
+                                    awayScore={awayTeamScoreMatchOne}
+                                  />
                                   <MatchResult
                                     hasMatchResults={hasMatchResults}
-                                    title="Tiebreaker"
-                                    matchName={tieBreaker?.name || ''}
-                                    homeScore={homeTeamScoreMatchThree}
-                                    awayScore={awayTeamScoreMatchThree}
+                                    title="Kamp 2"
+                                    matchName={matchTwoName || ''}
+                                    homeScore={homeTeamScoreMatchTwo}
+                                    awayScore={awayTeamScoreMatchTwo}
                                   />
-                                )}
-                              </div>
-                              <Separator className="mb-2" />
-                              {homeTeamHasLogs || awayTeamHasLogs ? (
-                                <>
-                                  <CardTitle className="text-lg font-semibold">Warcraft logs</CardTitle>
-                                  <div className="flex gap-4 flex-col ">
-                                    {homeTeamHasLogs &&
-                                      matchResults?.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
-                                        ?.warcraft_logs_report && (
-                                        <div>
-                                          <h3 className="text-sm font-medium mb-2">{match.teams[0].name} logs</h3>
-                                          <div className="bg-gray-600 p-4 rounded-lg">
-                                            <div className="flex  gap-2">
-                                              {matchResults
-                                                .find((e) => e.round === index + 1 && homeTeam === e.team_slug)
-                                                ?.warcraft_logs_report.map((link, index) => (
-                                                  <Button
-                                                    key={index}
-                                                    variant="secondary"
-                                                    className="bg-gray-800 hover:bg-gray-700 text-white"
-                                                  >
-                                                    <a
-                                                      className="flex items-center gap-2"
-                                                      href={`https://warcraftlogs.com/reports/${link}`}
-                                                      target="_blank"
-                                                      rel="noreferrer"
+                                  {match.bo3 && hasTieBreaker && (
+                                    <MatchResult
+                                      hasMatchResults={hasMatchResults}
+                                      title="Tiebreaker"
+                                      matchName={tieBreaker?.name || ''}
+                                      homeScore={homeTeamScoreMatchThree}
+                                      awayScore={awayTeamScoreMatchThree}
+                                    />
+                                  )}
+                                </div>
+                                <Separator className="mb-2" />
+                                {homeTeamHasLogs || awayTeamHasLogs ? (
+                                  <>
+                                    <CardTitle className="text-lg font-semibold">Warcraft logs</CardTitle>
+                                    <div className="flex gap-4 flex-col ">
+                                      {homeTeamHasLogs &&
+                                        matchResults?.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                          ?.warcraft_logs_report && (
+                                          <div>
+                                            <h3 className="text-sm font-medium mb-2">{match.teams[0].name} logs</h3>
+                                            <div className="bg-gray-600 p-4 rounded-lg">
+                                              <div className="flex  gap-2">
+                                                {matchResults
+                                                  .find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                                  ?.warcraft_logs_report.map((link, index) => (
+                                                    <Button
+                                                      key={index}
+                                                      variant="secondary"
+                                                      className="bg-gray-800 hover:bg-gray-700 text-white"
                                                     >
-                                                      Log {index + 1} <ExternalLink />{' '}
-                                                    </a>
-                                                  </Button>
-                                                ))}
+                                                      <a
+                                                        className="flex items-center gap-2"
+                                                        href={`https://warcraftlogs.com/reports/${link}`}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                      >
+                                                        Log {index + 1} <ExternalLink />{' '}
+                                                      </a>
+                                                    </Button>
+                                                  ))}
+                                              </div>
                                             </div>
                                           </div>
-                                        </div>
-                                      )}
-                                    {awayTeamHasLogs &&
-                                      matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
-                                        ?.warcraft_logs_report && (
-                                        <div>
-                                          <h3 className="text-sm font-medium mb-2">{match.teams[1].name} logs</h3>
+                                        )}
+                                      {awayTeamHasLogs &&
+                                        matchResults.find((e) => e.round === index + 1 && homeTeam === e.team_slug)
+                                          ?.warcraft_logs_report && (
+                                          <div>
+                                            <h3 className="text-sm font-medium mb-2">{match.teams[1].name} logs</h3>
 
-                                          <div className="bg-gray-600  p-4 rounded-lg">
-                                            <div className="flex  gap-2">
-                                              {matchResults
-                                                .find((e) => e.round === index + 1 && awayTeam === e.team_slug)
-                                                ?.warcraft_logs_report?.map((link, index) => (
-                                                  <Button
-                                                    key={index}
-                                                    variant="secondary"
-                                                    className="bg-gray-800 hover:bg-gray-700 text-white "
-                                                  >
-                                                    <a
-                                                      className="flex items-center gap-2"
-                                                      href={`https://warcraftlogs.com/reports/${link}`}
-                                                      target="_blank"
-                                                      rel="noreferrer"
+                                            <div className="bg-gray-600  p-4 rounded-lg">
+                                              <div className="flex  gap-2">
+                                                {matchResults
+                                                  .find((e) => e.round === index + 1 && awayTeam === e.team_slug)
+                                                  ?.warcraft_logs_report?.map((link, index) => (
+                                                    <Button
+                                                      key={index}
+                                                      variant="secondary"
+                                                      className="bg-gray-800 hover:bg-gray-700 text-white "
                                                     >
-                                                      Log {index + 1} <ExternalLink />{' '}
-                                                    </a>
-                                                  </Button>
-                                                ))}
+                                                      <a
+                                                        className="flex items-center gap-2"
+                                                        href={`https://warcraftlogs.com/reports/${link}`}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                      >
+                                                        Log {index + 1} <ExternalLink />{' '}
+                                                      </a>
+                                                    </Button>
+                                                  ))}
+                                              </div>
                                             </div>
                                           </div>
-                                        </div>
-                                      )}
-                                  </div>
-                                </>
-                              ) : null}
-                            </CardContent>
-                          </Card>
-                        }
-                      </AccordionContent>
+                                        )}
+                                    </div>
+                                  </>
+                                ) : null}
+                              </CardContent>
+                            </Card>
+                          }
+                        </AccordionContent>
+                      ) : null}
                     </AccordionItem>
                   )
                 })}

@@ -8,9 +8,13 @@ export async function getTwitchAccessToken(): Promise<string> {
   params.append('client_secret', process.env.TWITCH_CLIENT_SECRET!)
   params.append('grant_type', 'client_credentials')
 
+  //remove https://www.twitch.tv/ from channels
+
   const response = await fetch(`${TWITCH_TOKEN_URL}?${params.toString()}`, {
     method: 'POST',
   })
+
+  console.log(response)
 
   if (!response.ok) {
     console.error('Failed to fetch Twitch access token')
@@ -43,6 +47,8 @@ export async function getLiveStreams(accessToken: string, channels: string[]): P
   const baseUrl = 'https://api.twitch.tv/helix/streams'
   const url = new URL(baseUrl)
   channels.forEach((channel) => url.searchParams.append('user_login', channel))
+
+  channels = channels.map((channel) => channel.replace('https://www.twitch.tv/', ''))
 
   const response = await fetch(url.toString(), {
     headers: {
