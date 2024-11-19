@@ -165,9 +165,7 @@ export default function Matches({
 
                   const isDraw = homeTeamMatchResults?.draw || awayTeamMatchResults?.draw
 
-                  const homeTeamHasLogs = matchResults
-                    .find((e) => e.round === index + 1 && homeTeam === e.team_slug)
-                    ?.warcraft_logs_report.some((e) => e.length > 0)
+                  const homeTeamHasLogs = false
 
                   const awayTeamHasLogs = false
 
