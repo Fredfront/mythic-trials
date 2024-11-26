@@ -73,8 +73,12 @@ export default function Matches({
                   const awayTeamName = match.teams?.[1].name
                   const homeTeamImageUrl = sanityTeamData.find((e) => e.teamName === homeTeamName)?.teamImage.asset._ref
                   const awayTeamImageUrl = sanityTeamData.find((e) => e.teamName === awayTeamName)?.teamImage.asset._ref
-                  const homeTeamMatchResults = matchResults.find((result) => result.team_slug === homeTeam)
-                  const awayTeamMatchResults = matchResults.find((result) => result.team_slug === awayTeam)
+                  const homeTeamMatchResults = matchResults.find(
+                    (result) => result.team_slug === homeTeam && result.round === index + 1,
+                  )
+                  const awayTeamMatchResults = matchResults.find(
+                    (result) => result.team_slug === awayTeam && result.round === index + 1,
+                  )
 
                   const homeTeamWins = homeTeamMatchResults?.winner
 
