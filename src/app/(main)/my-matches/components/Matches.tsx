@@ -300,7 +300,7 @@ export function Matches({
                         const showNotification = showNotificationAwayTeam || showNotificationHomeTeam
 
                         if (match.teams?.[0].contactPerson !== email && match.teams?.[1].contactPerson !== email) {
-                          return <b key={index}>Du har ingen kamp denne runden </b>
+                          return null
                         }
 
                         return (
