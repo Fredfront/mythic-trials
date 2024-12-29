@@ -34,6 +34,8 @@ export type MatchRecord = {
   bo2: boolean
   bo3: boolean
   tournament_name: string
+  stage: 'group' | 'playoff'
+  playoff_round: 'final' | 'semifinal' | 'quarterfinal' | 'round of 16'
 }
 
 export type MatchWithTeams = {
@@ -68,6 +70,8 @@ export type TeamMatch = {
   bo3: boolean
   bo2: boolean
   tournament_name: string
+  stage?: 'group' | 'playoff'
+  playoff_round?: 'final' | 'semifinal' | 'quarterfinal' | 'round of 16'
 }
 
 export type Match = {
@@ -76,6 +80,8 @@ export type Match = {
   bo2: boolean
   bo3: boolean
   tournament_name: string
+  stage: 'group' | 'playoff'
+  playoff_round: 'final' | 'semifinal' | 'quarterfinal' | 'round of 16'
 }
 
 export type Round = Match[]

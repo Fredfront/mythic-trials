@@ -133,11 +133,24 @@ export function Matches({
         />
 
         {detailedSchedule.map((round, index) => {
+          const isPlayoffMatch = round.find((match) => match.stage === 'playoff') ? true : false
+          const isSemifinal = round.find((match) => match.playoff_round === 'semifinal') ? true : false
+          const isFinal = round.find((match) => match.playoff_round === 'final') ? true : false
+          const isQuarterFinal = round.find((match) => match.playoff_round === 'quarterfinal') ? true : false
+
+          const typeOfFinalString = isFinal
+            ? 'Finale'
+            : isSemifinal
+              ? 'Semifinaler'
+              : isQuarterFinal
+                ? 'Kvartfinaler'
+                : ''
+
           return (
             <div key={index + round.toString()}>
               <div className="bg-gray-800 p-4 rounded-lg">
                 <Accordion type="single" collapsible>
-                  <h2 className="feed-header">Runde {index + 1}</h2>
+                  <h2 className="feed-header">{isPlayoffMatch ? typeOfFinalString : `Runde ${index + 1}`}</h2>
                   <div className="bg-gray-800 p-4 rounded-lg">
                     <div className="grid grid-cols-1 gap-4 mt-4">
                       {round.map((match, matchIndex) => {

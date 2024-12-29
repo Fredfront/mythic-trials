@@ -3,7 +3,7 @@
 import React from 'react'
 import { ServerClient } from '@/utils/supabase/server'
 import Matches from './components/Matches'
-import { getAllTeams } from '@/app/api/getAllTeams'
+import { getAllTeams, MythicPlusTeam } from '@/app/api/getAllTeams'
 import { SupabaseTeamType, MatchRecord } from '../../../../types'
 import { createSortedRounds } from '../my-matches/page'
 import { getLiveStreams, getTwitchAccessToken, TeamLiveStatus } from '@/lib/twitch'
@@ -25,6 +25,20 @@ async function Page() {
   const matchResultsTable = await ServerClient.from('match_results').select('*')
   const sanityTeamData = await getAllTeams()
 
+  return (
+    <Matches
+      schedule={createSortedRounds(matchesData, teams)}
+      matchResults={matchResultsTable.data ?? []}
+      pickAndBanData={pickAndBansTable.data ?? []}
+      sanityTeamData={sanityTeamData}
+      teamsWithLiveChannels={await GetTwitchLiveStatus(sanityTeamData)}
+    />
+  )
+}
+
+export default Page
+
+async function GetTwitchLiveStatus(sanityTeamData: MythicPlusTeam[]) {
   // Extract unique Twitch channels
   const twitchChannels = Array.from(
     new Set(
@@ -59,15 +73,5 @@ async function Page() {
     })
     .filter((team): team is TeamLiveStatus => team !== null)
 
-  return (
-    <Matches
-      schedule={createSortedRounds(matchesData, teams)}
-      matchResults={matchResultsTable.data ?? []}
-      pickAndBanData={pickAndBansTable.data ?? []}
-      sanityTeamData={sanityTeamData}
-      teamsWithLiveChannels={teamsWithLiveChannels}
-    />
-  )
+  return teamsWithLiveChannels
 }
-
-export default Page
