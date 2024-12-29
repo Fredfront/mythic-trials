@@ -3,7 +3,6 @@ import { ServerClient } from '@/utils/supabase/server'
 import { getAllTeams } from '@/app/api/getAllTeams'
 import { Matches } from './components/Matches'
 import { Match, MatchRecord, SupabaseTeamType, TeamMatch, TournamentSchedule } from '../../../../types'
-import { matches } from 'lodash'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { CalendarX } from 'lucide-react'
 
