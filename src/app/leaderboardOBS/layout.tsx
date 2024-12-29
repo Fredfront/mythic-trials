@@ -28,9 +28,7 @@ export default function RootLayout({
   return (
     <html translate="no">
       <body className={cn(`min-h-screen bg-[#011624] antialiased ${DMSans.className} text-white`)}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children} <Analytics /> <SpeedInsights />
-        </ThemeProvider>
+        {children} <Analytics /> <SpeedInsights />
       </body>
     </html>
   )
