@@ -176,7 +176,7 @@ const NavBar = ({
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : loginAllowed ? (
+              ) : loginAllowed && !loading ? (
                 <Button
                   variant="outline"
                   className="hidden lg:flex bg-[#011624] text-white"

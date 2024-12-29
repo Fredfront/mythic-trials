@@ -3,11 +3,10 @@ import supabase from '@/utils/supabase/client'
 import { UserResponse } from '@supabase/supabase-js'
 
 export function useGetUserData() {
-  const [loading, setLoading] = React.useState<boolean>(false)
+  const [loading, setLoading] = React.useState<boolean>(true)
 
   const [user, setUser] = React.useState<UserResponse | undefined>(undefined)
   async function fetchUser() {
-    setLoading(true)
     await supabase.auth
       .getUser()
       .then((res) => {
