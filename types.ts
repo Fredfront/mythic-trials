@@ -81,7 +81,7 @@ export type Match = {
   bo3: boolean
   tournament_name: string
   stage: 'group' | 'playoff'
-  playoff_round: 'final' | 'semifinal' | 'quarterfinal' | 'round of 16'
+  playoff_round?: 'final' | 'semifinal' | 'quarterfinal' | 'round of 16'
 }
 
 export type Round = Match[]

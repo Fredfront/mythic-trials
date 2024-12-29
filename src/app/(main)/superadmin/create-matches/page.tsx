@@ -98,6 +98,8 @@ async function Page() {
       bo2: match.bo2,
       bo3: match.bo3,
       tournament_name: match.tournament_name,
+      stage: match.stage,
+      playoff_round: match.playoff_round,
     }
 
     scheduleMap[roundNumber].push(mappedMatch)
