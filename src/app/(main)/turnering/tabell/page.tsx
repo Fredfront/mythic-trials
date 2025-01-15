@@ -45,9 +45,9 @@ async function Page() {
       {matchResultsTable && isBestOfTwo && (
         <ResultsTableBo2 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />
       )}
-      {matchResultsTable && isBestOfThree && (
+      {/* {matchResultsTable && isBestOfThree && (
         <ResultsTableBo3 matchResults={matchResultsTable} sanityTeamData={sanityTeamData} />
-      )}
+      )} */}
     </>
   )
 }

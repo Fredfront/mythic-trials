@@ -21,6 +21,8 @@ interface ResultsTableProps {
 }
 
 const ResultsTableBo3: React.FC<ResultsTableProps> = ({ matchResults, sanityTeamData }) => {
+  console.log(matchResults, '@@@')
+
   // Calculate team stats based on match results
   const calculateTeamStats = (results: MatchResult[]): TeamStats[] => {
     const teamStatsMap: Record<string, TeamStats> = {}

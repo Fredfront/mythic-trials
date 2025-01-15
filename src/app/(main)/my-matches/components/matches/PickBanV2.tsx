@@ -48,9 +48,11 @@ function PickBanV2({
   const isBestOfTwo = matchData.bo2
   const isBestOfThree = matchData.bo3
 
+  const totalBanLength = opponentData?.bans && myTeamData?.bans && myTeamData?.bans?.length + opponentData?.bans?.length
+
   //To do: Add a check for best of 3
-  const isCompletedBo2 = isBestOfTwo && myTeamData?.pick && myTeamData.bans && myTeamData.bans.length === 1
-  const isCompletedBo3 = isBestOfThree && myTeamData?.pick && myTeamData.bans && myTeamData.bans.length === 5
+  const isCompletedBo2 = isBestOfTwo && myTeamData?.pick && myTeamData.bans && totalBanLength === 2
+  const isCompletedBo3 = isBestOfThree && myTeamData?.pick && totalBanLength === 5
 
   const isCompleted = isBestOfTwo ? isCompletedBo2 : isCompletedBo3
 

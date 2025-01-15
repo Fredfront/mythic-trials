@@ -66,14 +66,19 @@ export default function Matches({
           const isSemifinal = round.find((match) => match.playoff_round === 'semifinal') ? true : false
           const isFinal = round.find((match) => match.playoff_round === 'final') ? true : false
           const isQuarterFinal = round.find((match) => match.playoff_round === 'quarterfinal') ? true : false
+          const isBronzeFinal = round.find((match) => match.playoff_round === 'bronze_final') ? true : false
 
-          const typeOfFinalString = isFinal
-            ? 'Finale'
-            : isSemifinal
-              ? 'Semifinaler'
+          console.log(round.find((match) => match.playoff_round === 'bronze_final'))
+
+          const typeOfFinalString = isSemifinal
+            ? 'Semifinale'
+            : isFinal
+              ? 'Finale'
               : isQuarterFinal
-                ? 'Kvartfinaler'
-                : ''
+                ? 'Kvartfinale'
+                : isBronzeFinal
+                  ? 'Bronsefinale'
+                  : 'Playoff'
 
           return (
             <Accordion key={index} type="single" collapsible>
@@ -489,8 +494,6 @@ function MatchResult({
   awayScore: number
   hasMatchResults: TMatchResults | undefined
 }) {
-  console.log(hasMatchResults)
-
   return (
     <div className="bg-gray-600 p-2 rounded-md">
       <div className="text-sm font-medium mb-1">{title}</div>

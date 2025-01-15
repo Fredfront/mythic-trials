@@ -137,14 +137,17 @@ export function Matches({
           const isSemifinal = round.find((match) => match.playoff_round === 'semifinal') ? true : false
           const isFinal = round.find((match) => match.playoff_round === 'final') ? true : false
           const isQuarterFinal = round.find((match) => match.playoff_round === 'quarterfinal') ? true : false
+          const isBronzeFinal = round.find((match) => match.playoff_round === 'bronze_final') ? true : false
 
-          const typeOfFinalString = isFinal
-            ? 'Finale'
-            : isSemifinal
-              ? 'Semifinaler'
+          const typeOfFinalString = isSemifinal
+            ? 'Semifinale'
+            : isFinal
+              ? 'Finale'
               : isQuarterFinal
-                ? 'Kvartfinaler'
-                : ''
+                ? 'Kvartfinale'
+                : isBronzeFinal
+                  ? 'Bronsefinale'
+                  : 'Playoff'
 
           return (
             <div key={index + round.toString()}>
