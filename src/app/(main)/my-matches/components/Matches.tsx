@@ -313,6 +313,9 @@ export function Matches({
                         const showPickBanButtonOneWeekBeforeRound =
                           new Date(matchPlayTime).getTime() - new Date().getTime() < 604800000
 
+                        const showPickBanButtonTwoWeeksBeforeRound =
+                          new Date(matchPlayTime).getTime() - new Date().getTime() < 1209600000
+
                         const showNotification = showNotificationAwayTeam || showNotificationHomeTeam
 
                         if (match.teams?.[0].contactPerson !== email && match.teams?.[1].contactPerson !== email) {
@@ -526,7 +529,7 @@ Ny tid: ${proposedRescheduledDateTimeString} `
                             </AccordionItem>
 
                             <div className="flex gap-2 mt-4 flex-wrap">
-                              {!pickBanCompleted && showPickBanButtonOneWeekBeforeRound ? (
+                              {!pickBanCompleted && showPickBanButtonTwoWeeksBeforeRound ? (
                                 <>
                                   {opponentIsReadyToStartPickAndBan && !myTeamIsReadyToStartPickAndBan && (
                                     <div className="w-full flex gap-2 pb-4 pt-4">
