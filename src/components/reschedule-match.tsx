@@ -286,7 +286,7 @@ export default function RescheduleMatch({
                               )}
                             >
                               {field.value ? (
-                                format(field.value, 'PPP', {
+                                format(new Date(field.value), 'PPP', {
                                   locale: nb,
                                 })
                               ) : (
