@@ -191,13 +191,13 @@ function LeaderboardComponent() {
             placeholder="Søk..."
             name="filterTeam"
             id="filterTeam"
-            className="rounded-lg p-1 pl-2 mr-2 bg-[#011624] border-2 border-[#028AFD] focus:outline-none focus:border-[#028AFD] text-white"
+            className="rounded-lg p-1 pl-2 mr-2 bg-[#011624] border-2 border-[#028AFD] focus:outline-hidden focus:border-[#028AFD] text-white"
             onChange={(e) => setSearchTeam(e.target.value)}
           />{' '}
         </div>
       </div>
 
-      <Table className="max-w-screen-xlg  ">
+      <Table className="max-w-[theme(screens.xlg)]  ">
         <TableHeader className=" bg-[#028AFD] ">
           <TableRow className="border-[1px] border-black ">
             <TableHead className="text-white font-extrabold min-w-48">Lag</TableHead>

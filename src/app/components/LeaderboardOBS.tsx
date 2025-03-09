@@ -175,7 +175,7 @@ function LeaderboardComponentOBS() {
 
   return (
     <div className=" p-4 mt-4">
-      <Table className="max-w-screen-xlg  ">
+      <Table className="max-w-[theme(screens.xlg)]  ">
         <TableHeader className=" bg-[#028AFD] ">
           <TableRow className="border-[1px] border-black ">
             <TableHead className="text-white font-extrabold min-w-48">Lag</TableHead>

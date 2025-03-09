@@ -8,9 +8,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { TournamentSchedule } from '../../../../../types'
 import { PickAndBansType, TMatchResults } from '../../../../supabase/dbFunctions'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
-import { CalendarX, Circle, ExternalLink, TwitchIcon } from 'lucide-react'
+import { CalendarX, Circle, DivideCircle, ExternalLink, Medal, Trophy, TwitchIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { TeamLiveStatus } from '@/lib/twitch'
 import { dungeonConfig, dungeonConfigType } from '../utils/dungeonConfig'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
@@ -20,14 +19,12 @@ export default function Matches({
   matchResults,
   sanityTeamData,
   schedule,
-  teamsWithLiveChannels,
   pickAndBanData,
 }: {
   pickAndBanData: PickAndBansType[]
   matchResults: TMatchResults[]
   sanityTeamData: MythicPlusTeam[]
   schedule: TournamentSchedule
-  teamsWithLiveChannels: TeamLiveStatus[]
 }) {
   const detailedSchedule = schedule as TournamentSchedule
 
@@ -65,20 +62,8 @@ export default function Matches({
           const isPlayoffMatch = round.find((match) => match.stage === 'playoff') ? true : false
           const isSemifinal = round.find((match) => match.playoff_round === 'semifinal') ? true : false
           const isFinal = round.find((match) => match.playoff_round === 'final') ? true : false
-          const isQuarterFinal = round.find((match) => match.playoff_round === 'quarterfinal') ? true : false
-          const isBronzeFinal = round.find((match) => match.playoff_round === 'bronze_final') ? true : false
 
-          console.log(round.find((match) => match.playoff_round === 'bronze_final'))
-
-          const typeOfFinalString = isSemifinal
-            ? 'Semifinale'
-            : isFinal
-              ? 'Finale'
-              : isQuarterFinal
-                ? 'Kvartfinale'
-                : isBronzeFinal
-                  ? 'Bronsefinale'
-                  : 'Playoff'
+          const typeOfFinalString = isSemifinal ? 'Semifinale' : isFinal ? 'Finale' : 'Playoff'
 
           return (
             <Accordion key={index} type="single" collapsible>
@@ -143,11 +128,6 @@ export default function Matches({
                       timeStyle: 'short',
                     })
 
-                    const homTeamTwitchChannels =
-                      teamsWithLiveChannels.find((team) => team.teamSlug === homeTeam)?.twitch_channels || []
-                    const awayTeamTwitchChannels =
-                      teamsWithLiveChannels.find((team) => team.teamSlug === awayTeam)?.twitch_channels || []
-
                     const hasMatchResults = matchResults.find(
                       (e) =>
                         e.round === index + 1 && homeTeam === e.team_slug && e.match_1 !== null && e.match_2 !== null,
@@ -209,26 +189,40 @@ export default function Matches({
                       }
                     })
 
+                    const isFinal = match.playoff_round === 'final' || match.playoff_round === 'bronze_final'
+
                     return (
                       <AccordionItem key={matchIndex} value={matchIndex.toString()}>
-                        <AccordionTrigger className="bg-gray-700 p-4 w-full min-h-[120px] !no-underline rounded-lg  transition  ease-in-out cursor-pointer font-bold match_result_main_div ">
+                        {match.playoff_round === 'bronze_final' ? (
+                          <div className="bg-[#CD7F32] pl-2 rounded-t-lg font-bold">
+                            <span className="text-black flex gap-4 items-center h-8">
+                              {' '}
+                              <Medal /> Bronsefinale
+                            </span>
+                          </div>
+                        ) : null}
+                        {match.playoff_round === 'final' ? (
+                          <div className="bg-[#FFD700] ] pl-2 rounded-t-lg   font-bold ">
+                            {' '}
+                            <span className="text-black flex gap-4 items-center h-8">
+                              {' '}
+                              <Trophy /> Finale
+                            </span>
+                          </div>
+                        ) : null}
+                        <AccordionTrigger
+                          className={`bg-gray-700 p-4 w-full min-h-[120px] ${isFinal ? 'rounded-b-lg' : 'rounded-lg'} no-underline! transition  ease-in-out cursor-pointer font-bold match_result_main_div`}
+                        >
                           <div className="flex w-full relative  flex-wrap ">
-                            {match.featured ? (
+                            {!isFinal && match.featured ? (
                               <div className="hidden md:flex absolute top-0 left-0  -mt-4 ">
                                 <Badge>Featured</Badge>
                               </div>
                             ) : null}
-                            {hasRescheduled && (
+                            {!isFinal && hasRescheduled && (
                               <Badge className="hidden md:flex  absolute right-0 top-0 -mt-2 ">Kamp flyttet</Badge>
                             )}
-                            {(!match.featured && homTeamTwitchChannels && homTeamTwitchChannels.length > 0) ||
-                            (!match.featured && awayTeamTwitchChannels && awayTeamTwitchChannels.length > 0) ? (
-                              <div
-                                className={`hidden md:flex absolute top-0 ${hasRescheduled ? 'left-0' : 'right-0'} -mt-4 items-center gap-2 `}
-                              >
-                                Live <Circle width={10} height={10} fill="red" />
-                              </div>
-                            ) : null}
+
                             <div className="flex  md:w-2/5 m-auto justify-end w-auto">
                               <div className="flex-col text-ellipsis overflow-hidden text-nowrap truncate ">
                                 {confirmedResult ? (
@@ -298,39 +292,6 @@ export default function Matches({
                         </AccordionTrigger>
                         {homeTeamPick && awayTeamPick ? (
                           <AccordionContent className="bg-gray-800 rounded-b-lg">
-                            {(homTeamTwitchChannels.length > 0 || awayTeamTwitchChannels.length > 0) && (
-                              <Card className="bg-gray-700 border-none mt-2">
-                                <CardHeader>
-                                  <CardTitle className="text-lg font-semibold text-white">Live Streams</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                  {homTeamTwitchChannels.length > 0 && (
-                                    <div>
-                                      <h3 className="text-sm font-medium mb-2 text-white">
-                                        {match.teams[0].name} Streams
-                                      </h3>
-                                      <div className="flex flex-wrap gap-2">
-                                        {homTeamTwitchChannels.map((channel, index) => (
-                                          <TwitchButton key={index} channel={channel} />
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                  {awayTeamTwitchChannels.length > 0 && (
-                                    <div>
-                                      <h3 className="text-sm font-medium mb-2 text-white">
-                                        {match.teams[1].name} Streams
-                                      </h3>
-                                      <div className="flex flex-wrap gap-2">
-                                        {awayTeamTwitchChannels.map((channel, index) => (
-                                          <TwitchButton key={index} channel={channel} />
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                </CardContent>
-                              </Card>
-                            )}
                             {
                               <Card className="bg-gray-700 border-none mt-2">
                                 <CardHeader>

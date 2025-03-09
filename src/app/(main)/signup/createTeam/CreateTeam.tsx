@@ -427,7 +427,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                   Kontakt person
                 </label>
                 <Input
-                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
+                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden disabled:opacity-50"
                   name="contactPerson"
                   type="email"
                   value={user?.data.user?.email ?? ''}
@@ -446,7 +446,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                   name="teamName"
                   type="text"
                   placeholder="Lagnavn"
-                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden"
                   value={teamName}
                   onChange={(e) => {
                     setTeamNameError(false)
@@ -530,7 +530,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                         onChange={(e) => handlePlayerChange(index, e)}
                         name="characterName"
                         placeholder="Karakter navn"
-                        className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                        className="grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden"
                         required
                       />
                       {player.characterName &&
@@ -546,7 +546,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                       name="discordName"
                       disabled={index === 0 && discordUsername ? true : false}
                       placeholder="Discord brukernavn"
-                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
+                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden disabled:opacity-50"
                       required
                     />
                     <input
@@ -555,7 +555,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                       onChange={(e) => handlePlayerChange(index, e)}
                       name="twitchChannel"
                       placeholder="Twitch kanal (valgfritt)"
-                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden"
                     />
                     <Select
                       required
@@ -591,7 +591,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
                               onChange={(e) => handleAltPlayerChange(index, altIndex, e)}
                               name="altCharacterName"
                               placeholder="Karakter navn"
-                              className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                              className="grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden"
                             />
                             {alt.altCharacterName &&
                               alt.altRealmName &&
@@ -643,7 +643,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
 
                   <div className="flex space-x-2">
                     <Button
-                      className="flex-grow bg-yellow-500 text-black hover:bg-yellow-600 transition duration-300"
+                      className="grow bg-yellow-500 text-black hover:bg-yellow-600 transition duration-300"
                       type="button"
                       onClick={() => handleAddAltPlayer(index)}
                     >
@@ -683,7 +683,7 @@ function CreateTeam({ allTeams, supabaseTeams }: { allTeams: MythicPlusTeam[]; s
 
             {!hideCreateTeamButton && (
               <Button
-                className="w-full bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-black hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 transition duration-300"
+                className="w-full bg-linear-to-b from-yellow-400 via-yellow-500 to-orange-600 text-black hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 transition duration-300"
                 type="submit"
               >
                 {loadingCreateTeam ? (

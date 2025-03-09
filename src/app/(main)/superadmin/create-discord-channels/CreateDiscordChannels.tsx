@@ -242,7 +242,7 @@ export default function CreateDiscordChannels() {
                 value={round}
                 onChange={(e) => setRound(e.target.value)}
                 placeholder="Enter round number"
-                className="flex-grow bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                className="grow bg-gray-700 border-gray-600 text-white placeholder-gray-400"
               />
               <div className="flex gap-2">
                 <Button

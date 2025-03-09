@@ -84,7 +84,7 @@ const ResultsTableBo2: React.FC<ResultsTableProps> = ({ matchResults, sanityTeam
 
   return (
     <div className="p-4 mt-4">
-      <Table className="max-w-screen-xlg rounded-2xl overflow-hidden">
+      <Table className="max-w-[theme(screens.xlg)] rounded-2xl overflow-hidden">
         <TableHeader className="bg-[#028AFD] rounded-t-lg">
           <TableRow className="border-[1px] border-black">
             <TableHead className="text-white font-extrabold min-w-48">Team</TableHead>

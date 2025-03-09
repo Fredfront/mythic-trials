@@ -75,7 +75,7 @@ export default function Contact() {
     <main className="flex min-h-screen flex-col items-center">
       <h1 className="text-5xl font-bold mt-8 mb-4">Kontakt oss</h1>
       <p className="mb-4 p-4">Har du spørsmål eller ønsker å komme i kontakt med oss? Send oss en melding!</p>
-      <form onSubmit={handleSubmit} className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+      <form onSubmit={handleSubmit} className="mt-8 mb-2 w-80 max-w-(--breakpoint-lg) sm:w-96">
         <div className="mb-4 flex flex-col w-500">
           <label htmlFor="form-email"> Din email</label>
           <input

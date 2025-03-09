@@ -109,7 +109,7 @@ const NavBar = ({
   return (
     <nav className="bg-[#011624] items-center flex border-b-4 border-gradient h-[110px] ">
       <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center flex-shrink-0 text-white">
+        <Link href="/" className="flex items-center shrink-0 text-white">
           <Image
             className="h-[108px] w-[78px]"
             width={78}
@@ -197,7 +197,7 @@ const NavBar = ({
 
           {createTeamAllowed && !myTeam && !loading && (
             <Link href="/signup" prefetch>
-              <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
+              <Button className="bg-linear-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
                 Påmelding
               </Button>
             </Link>
@@ -217,7 +217,7 @@ const NavBar = ({
               <X className="h-6 w-6 text-white" />
             </Button>
           </div>
-          <div className="flex flex-col items-center justify-center flex-grow space-y-8">
+          <div className="flex flex-col items-center justify-center grow space-y-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -235,7 +235,7 @@ const NavBar = ({
 
             {createTeamAllowed && !myTeam && (
               <Link href="/signup" prefetch onClick={toggleMenu}>
-                <Button className="mt-4 px-6 py-3 bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold text-xl hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
+                <Button className="mt-4 px-6 py-3 bg-linear-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold text-xl hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600">
                   Påmelding
                 </Button>
               </Link>

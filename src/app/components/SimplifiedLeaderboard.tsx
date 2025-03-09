@@ -39,7 +39,7 @@ function SimplifiedLeaderboard() {
       <div className=" p-4 mt-4">
         <div className="flex gap-4 pb-2 justify-end w-full flex-col lg:flex-row md:flex-row"></div>
 
-        <Table className="max-w-screen-xlg">
+        <Table className="max-w-[theme(screens.xlg)]">
           <TableHeader className=" bg-[#028AFD]  ">
             <TableRow className="border-[1px] border-black ">
               <TableHead className="text-white font-extrabold rounded-tl-xl ">Plass</TableHead>

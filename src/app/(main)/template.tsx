@@ -24,7 +24,7 @@ export default async function Template({ children }: { children: React.ReactNode
     <div className="flex flex-col min-h-screen">
       <NavBarV2 sanityTeams={sanityTeams} teams={teams} matches={matches} featureFlags={featureFlags} />
       <MatchDataProvider>
-        <div className="flex-grow">{children}</div>
+        <div className="grow">{children}</div>
       </MatchDataProvider>
       <Toaster />
       <Footer />
@@ -37,8 +37,8 @@ const Footer = async () => {
   const showLeaderboard = showLeaderboardData && showLeaderboardData[0] && showLeaderboardData?.[0]?.enabled
 
   return (
-    <footer className="  shadow bg-gray-800 border-t-4 border-gradient">
-      <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+    <footer className="  shadow-sm bg-gray-800 border-t-4 border-gradient">
+      <div className="w-full max-w-(--breakpoint-xl) mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <ul className="flex gap-4 mt-4 mb-4">
             <li>

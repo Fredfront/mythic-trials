@@ -231,7 +231,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                   Kontakt person
                 </label>
                 <input
-                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden"
                   name="contactPerson"
                   type="email"
                   value={user?.data.user?.email ?? ''}
@@ -248,7 +248,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                   name="teamName"
                   type="text"
                   placeholder="Lagnavn"
-                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-800 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden"
                   readOnly
                   disabled
                   value={allTeams?.find((e) => e.contactPerson === user?.data.user?.email)?.teamName ?? ''}
@@ -287,7 +287,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                         onChange={(e) => handlePlayerChange(index, e)}
                         name="characterName"
                         placeholder="Karakter navn"
-                        className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
+                        className="grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden disabled:opacity-50"
                       />
                       {player.characterName &&
                         player.realmName &&
@@ -303,7 +303,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                       onChange={(e) => handlePlayerChange(index, e)}
                       name="discordName"
                       placeholder="Discord brukernavn"
-                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
+                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden disabled:opacity-50"
                     />
                     <input
                       type="text"
@@ -311,7 +311,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                       onChange={(e) => handlePlayerChange(index, e)}
                       name="twitchChannel"
                       placeholder="Twitch kanal (valgfritt)"
-                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
+                      className="w-full px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden disabled:opacity-50"
                     />
                     <Select
                       required
@@ -347,7 +347,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                               onChange={(e) => handleAltPlayerChange(index, altIndex, e)}
                               name="altCharacterName"
                               placeholder="Karakter navn"
-                              className="flex-grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50"
+                              className="grow px-3 py-2 bg-gray-700 rounded-md focus:ring-2 focus:ring-yellow-500 focus:outline-hidden disabled:opacity-50"
                             />
                             {alt.altCharacterName &&
                               alt.altRealmName &&
@@ -399,7 +399,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
 
                   <div className="flex space-x-2">
                     <Button
-                      className="flex-grow bg-yellow-500 text-black hover:bg-yellow-600 transition duration-300"
+                      className="grow bg-yellow-500 text-black hover:bg-yellow-600 transition duration-300"
                       type="button"
                       onClick={() => handleAddAltPlayer(index)}
                     >
@@ -448,7 +448,7 @@ function EditTeam({ allTeams }: { allTeams?: MythicPlusTeam[] }) {
                   loadingCreateTeam ||
                   (players && players.length <= 4)
                 }
-                className="w-full bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 transition duration-300"
+                className="w-full bg-linear-to-b from-yellow-400 via-yellow-500 to-orange-600 text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 transition duration-300"
                 type="submit"
               >
                 {players?.some((e) => e.characterName?.length === 0 || e.realmName?.length === 0) ||

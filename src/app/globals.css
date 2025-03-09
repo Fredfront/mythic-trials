@@ -1,22 +1,121 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@layer utilities {
-  .border-gradient {
-    border-image-source: linear-gradient(90deg, #054178 0%, #1375ce 48.5%, #043f75 100%);
-    border-image-slice: 1;
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-scroll: scroll var(--animation-duration, 40s)
+    var(--animation-direction, forwards) linear infinite;
+
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
   }
-
-  .feed-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    font-size: 1.2rem;
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes shimmer {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+}
 
-  .feed-header::before {
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility border-gradient {
+  border-image-source: linear-gradient(
+    90deg,
+    #054178 0%,
+    #1375ce 48.5%,
+    #043f75 100%
+  );
+  border-image-slice: 1;
+}
+
+@utility feed-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+
+  &::before {
     content: '';
     height: 30px;
     margin-right: 1rem;
@@ -24,19 +123,19 @@
     background-color: #fdb202;
   }
 
-  .feed-header::after {
+  &::after {
     margin-left: 1rem;
     content: '';
     flex: 1;
     border-bottom: 3px solid #fdb202;
   }
+}
 
-  .match_result_main_div {
-    position: relative;
-    overflow: hidden;
-  }
+@utility match_result_main_div {
+  position: relative;
+  overflow: hidden;
 
-  .match_result_main_div::after {
+  &::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -47,91 +146,91 @@
     transition: all 1s ease;
   }
 
-  .match_result_main_div:hover::after {
+  &:hover::after {
     left: 0;
     width: 100%;
   }
+}
 
-  .portableText {
-    padding: 1rem;
+@utility portableText {
+  padding: 1rem;
 
-    h2,
-    h3 {
-      @apply text-2xl font-bold;
-      margin-top: 2rem;
-    }
-    > p {
-      margin-top: 1rem;
-    }
-
-    a {
-      color: #fdb202;
-      text-decoration: underline;
-    }
-
-    h5 {
-      color: #fdb202;
-      margin-top: 1rem;
-      font-size: 1.3rem;
-    }
-
-    ol {
-      margin-bottom: 0.5rem;
-      margin-top: 0.5rem;
-      margin-left: 1rem;
-    }
-
-    ol > li {
-      list-style: lower-alpha;
-      margin-bottom: 0.5rem;
-    }
-    ul {
-      margin-top: 1rem;
-    }
-    ul > li {
-      list-style: disc;
-      margin-left: 1rem;
-    }
+  h2,
+  h3 {
+    @apply text-2xl font-bold;
+    margin-top: 2rem;
+  }
+  > p {
+    margin-top: 1rem;
   }
 
-  .portableText-frontpage {
-    h2,
-    h3 {
-      @apply text-2xl font-bold;
-      margin-top: 1rem;
-    }
-    > p {
-      margin-top: 1rem;
-    }
+  a {
+    color: #fdb202;
+    text-decoration: underline;
+  }
 
-    a {
-      color: #fdb202;
-      text-decoration: underline;
-    }
+  h5 {
+    color: #fdb202;
+    margin-top: 1rem;
+    font-size: 1.3rem;
+  }
 
-    h5 {
-      color: #fdb202;
-      margin-top: 1rem;
-      font-size: 1.3rem;
-    }
+  ol {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+  }
 
-    ol {
-      margin-bottom: 0.5rem;
-      margin-top: 0.5rem;
-      margin-left: 1rem;
-    }
+  ol > li {
+    list-style: lower-alpha;
+    margin-bottom: 0.5rem;
+  }
+  ul {
+    margin-top: 1rem;
+  }
+  ul > li {
+    list-style: disc;
+    margin-left: 1rem;
+  }
+}
 
-    ol > li {
-      list-style: lower-alpha;
-      margin-bottom: 0.5rem;
-    }
-    ul {
-      margin-top: 1rem;
-    }
-    ul > li {
-      list-style: disc;
-      margin-left: 1rem;
-    }
+@utility portableText-frontpage {
+  h2,
+  h3 {
+    @apply text-2xl font-bold;
+    margin-top: 1rem;
+  }
+  > p {
+    margin-top: 1rem;
+  }
+
+  a {
+    color: #fdb202;
+    text-decoration: underline;
+  }
+
+  h5 {
+    color: #fdb202;
+    margin-top: 1rem;
+    font-size: 1.3rem;
+  }
+
+  ol {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+  }
+
+  ol > li {
+    list-style: lower-alpha;
+    margin-bottom: 0.5rem;
+  }
+  ul {
+    margin-top: 1rem;
+  }
+  ul > li {
+    list-style: disc;
+    margin-left: 1rem;
   }
 }
 

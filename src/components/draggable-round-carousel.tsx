@@ -104,7 +104,7 @@ export function DraggableRoundCarousel({ roundsFromDB }: { roundsFromDB: RoundTy
         {rounds.map((round, index) => (
           <div
             key={index}
-            className={`flex-shrink-0 flex flex-col items-center bg-[#021F33] rounded-lg p-4 w-[200px] transition-transform ${
+            className={`shrink-0 flex flex-col items-center bg-[#021F33] rounded-lg p-4 w-[200px] transition-transform ${
               isDragging ? 'scale-[0.98]' : ''
             } ${round.date > new Date().getTime() ? 'opacity-100' : 'opacity-50'}`}
           >

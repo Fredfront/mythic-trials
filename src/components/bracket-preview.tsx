@@ -127,8 +127,8 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) => {
   }
 
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen text-white max-w-7xl m-auto ">
-      <Card className="mb-6 bg-gradient-to-r from-blue-600 to-blue-800 text-white border-none shadow-xl">
+    <div className="p-6 bg-linear-to-br from-gray-900 to-gray-800 min-h-screen text-white max-w-7xl m-auto ">
+      <Card className="mb-6 bg-linear-to-r from-blue-600 to-blue-800 text-white border-none shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center flex items-center justify-center">
             <Trophy className="mr-2 text-yellow-400 h-8 w-8" />
@@ -208,7 +208,7 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) => {
                               {...provided.droppableProps}
                               className={`relative transition-all duration-200 ${
                                 isFeatured
-                                  ? 'bg-gradient-to-r from-yellow-600 to-yellow-700 border-2 border-yellow-400 shadow-lg'
+                                  ? 'bg-linear-to-r from-yellow-600 to-yellow-700 border-2 border-yellow-400 shadow-lg'
                                   : snapshot.isDraggingOver
                                     ? 'bg-blue-700 shadow-lg'
                                     : 'bg-gray-700'
@@ -235,8 +235,8 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) => {
                                           snapshot.isDragging
                                             ? 'bg-blue-500 text-white'
                                             : team.home
-                                              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
-                                              : 'bg-gradient-to-r from-red-600 to-red-700 text-white'
+                                              ? 'bg-linear-to-r from-blue-600 to-blue-700 text-white'
+                                              : 'bg-linear-to-r from-red-600 to-red-700 text-white'
                                         }`}
                                       >
                                         <span className="font-medium">{team.name}</span>
@@ -281,7 +281,7 @@ const Matches: React.FC<Props> = ({ intitalSchedule }) => {
         <Button
           disabled={!tournamentName || (!isBo2 && !isBo3)}
           onClick={handleGenerateRoundRobin}
-          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
+          className="bg-linear-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
         >
           Generate Round-robin
         </Button>

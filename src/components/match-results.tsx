@@ -502,7 +502,7 @@ export function MatchResultsComponent({
                     value={report}
                     onChange={(e) => updateLogReport(index, e.target.value)}
                     placeholder="Legg inn Warcraft Logs rapport"
-                    className="flex-grow bg-gray-700 text-white border-gray-600"
+                    className="grow bg-gray-700 text-white border-gray-600"
                   />
                   {index === logReports.length - 1 ? (
                     <Button onClick={addLogReport} variant="outline" size="icon">

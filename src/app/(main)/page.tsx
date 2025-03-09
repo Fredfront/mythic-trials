@@ -68,7 +68,7 @@ const Home = async () => {
             </Link>
             {createTeamAllowed && (
               <Link href="/signup" prefetch>
-                <Button className="bg-gradient-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
+                <Button className="bg-linear-to-b rounded-3xl from-yellow-400 via-yellow-500 to-orange-600 text-white font-bold hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600  h-[40px]">
                   Påmelding
                 </Button>
               </Link>

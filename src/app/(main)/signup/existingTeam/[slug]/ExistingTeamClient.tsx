@@ -98,7 +98,7 @@ function ExistingTeam({
               onClick={() => {
                 setLoading(true)
               }}
-              className="mt-10 mb-8 inline-block text-xs px-2 py-2 leading-none rounded-xl bg-gradient-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
+              className="mt-10 mb-8 inline-block text-xs px-2 py-2 leading-none rounded-xl bg-linear-to-b from-yellow-400 via-yellow-500 to-orange-600 min-w-32 text-center font-bold text-white hover:from-yellow-500 hover:to-orange-500 hover:via-yellow-600 hover:text-white"
             >
               Legg til eller fjern spillere
             </Button>
